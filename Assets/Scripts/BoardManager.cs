@@ -12,6 +12,8 @@ public class BoardManager : MonoBehaviour
 
     private bool firstClick = true;
 
+    public static bool isLogbookOpen = false;
+
     [ContextMenu("Generate Board")]
     public void GenerateBoard()
     {
@@ -88,6 +90,8 @@ public class BoardManager : MonoBehaviour
 
     public void OnCellClicked(int cx, int cy)
     {
+        if (isLogbookOpen) return;
+
         if (firstClick)
         {
             var clickedCellView = cellObjs[cx, cy].GetComponent<CellView>();

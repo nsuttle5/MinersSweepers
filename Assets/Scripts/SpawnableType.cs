@@ -11,4 +11,7 @@ public class SpawnableSO : ScriptableObject
     public int damage;
     public int health;
 
+    public string description;
+    public string abilityTooltip;
+
 }

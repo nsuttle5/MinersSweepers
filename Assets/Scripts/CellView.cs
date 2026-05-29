@@ -34,6 +34,12 @@ public class CellView : MonoBehaviour
         if (revealed) return;
         revealed = true;
         UpdateVisual();
+
+        if (spawnable != null)
+        {
+            LogbookManager.Instance.Discover(spawnable);
+        }
+
         if (boardManager != null && spawnable == null)
         {
             int surroundingDamage = boardManager.GetNeighborDamage(x, y);
