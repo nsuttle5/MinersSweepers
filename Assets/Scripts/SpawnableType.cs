@@ -1,0 +1,14 @@
+using UnityEngine;
+
+public enum SpawnableType { Enemy, Exit }
+
+[CreateAssetMenu(fileName = "NewSpawnable", menuName = "Minesweeper/Spawnable")]
+public class SpawnableSO : ScriptableObject
+{
+    public SpawnableType type;
+    public string displayName;
+    public Sprite sprite;
+    public int damage;
+    public int health;
+
+}

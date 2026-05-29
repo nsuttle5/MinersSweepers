@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eecac403b39c0c489f30c42179e2c5e, type: 3}
+  m_Name: NathanEnemy
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnableSO
+  type: 0
+  displayName: Nathan
+  sprite: {fileID: 2301018971360383993, guid: 2e8c499a55c0eb84395207c9373269f5, type: 3}
+  damage: 1000
+  health: 1000

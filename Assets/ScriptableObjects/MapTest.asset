@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64988ea936fc7d04c8d70adf9b3a8642, type: 3}
+  m_Name: MapTest
+  m_EditorClassIdentifier: Assembly-CSharp::MinesweeperMapSO
+  width: 8
+  height: 8
+  spawnConstraints:
+  - spawnable: {fileID: 11400000, guid: 82249f9b9a379f5449ae5af2c3adb0b8, type: 2}
+    useRange: 1
+    exactAmount: 0
+    minMaxAmount: {x: 1, y: 20}
+  - spawnable: {fileID: 11400000, guid: d343df6a7c622d649bb67441093cf175, type: 2}
+    useRange: 0
+    exactAmount: 1
+    minMaxAmount: {x: 0, y: 0}
+  - spawnable: {fileID: 11400000, guid: 4b08fb4c1226cf945afb86745b680907, type: 2}
+    useRange: 0
+    exactAmount: 1
+    minMaxAmount: {x: 0, y: 0}
