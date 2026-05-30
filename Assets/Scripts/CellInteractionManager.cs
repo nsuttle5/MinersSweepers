@@ -24,6 +24,8 @@ public class CellInteractionManager : MonoBehaviour
         switch (cell.spawnable.type)
         {
             case SpawnableType.Enemy:
+                if (cell.spawnable.displayName == "Nathan") GameData.Instance.MinesFound++;
+                else GameData.Instance.EnemiesDefeated++;
                 break;
             case SpawnableType.Exit:
                 break;

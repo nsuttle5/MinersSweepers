@@ -65,6 +65,6 @@ public class GameData : MonoBehaviour
     {
         int minutes = Mathf.FloorToInt(timePassed / 60);
         int remainingSeconds = Mathf.FloorToInt(timePassed % 60);
-        return string.Format("[{0}:{1:00}]", minutes, remainingSeconds);
+        return string.Format("{0}:{1:00}", minutes, remainingSeconds);
     }
 }
