@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class BoardManager : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class BoardManager : MonoBehaviour
     private bool firstClick = true;
 
     public static bool isLogbookOpen = false;
+
+    public static UnityAction<CellView> OnCellRevealed;
+    public static UnityAction<CellView> OnRevealedCellClick;
 
     [ContextMenu("Generate Board")]
     public void GenerateBoard()
@@ -51,6 +55,8 @@ public class BoardManager : MonoBehaviour
                 toSpawn.Add(constraint.spawnable);
         }
 
+        SetGameData(toSpawn);
+
         for (int i = toSpawn.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
@@ -88,63 +94,101 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    private void SetGameData(List<SpawnableSO> spawnables)
+    {
+        int mineCount = 0;
+        int enemyCount = 0;
+        int goldCount = 0;
+
+        foreach (var spawnable in spawnables)
+        {
+            if (spawnable == null) continue;
+
+            if (spawnable.displayName == "Nathan") mineCount++;
+            else if (spawnable.type == SpawnableType.Enemy) enemyCount++;
+            else if (spawnable.displayName == "Gold") goldCount++;
+        }
+
+        GameData.Instance.ResetData();
+
+        GameData.Instance.TotalMines = mineCount;
+        GameData.Instance.TotalEnemies = enemyCount;
+        GameData.Instance.TotalGold = goldCount;
+    }
+
     public void OnCellClicked(int cx, int cy)
     {
         if (isLogbookOpen) return;
 
         if (firstClick)
         {
-            var clickedCellView = cellObjs[cx, cy].GetComponent<CellView>();
-
-            // Guarantee first-clicked cell is empty
-            if (clickedCellView.spawnable != null)
-            {
-                var emptyCells = new List<CellView>();
-                for (int x = 0; x < width; x++)
-                    for (int y = 0; y < height; y++)
-                    {
-                        var cell = cellObjs[x, y].GetComponent<CellView>();
-                        if (cell.spawnable == null && !(cell.x == cx && cell.y == cy))
-                        {
-                            emptyCells.Add(cell);
-                        }
-                    }
-                if (emptyCells.Count > 0)
-                {
-                    var swapWith = emptyCells[Random.Range(0, emptyCells.Count)];
-                    var temp = clickedCellView.spawnable;
-                    clickedCellView.spawnable = swapWith.spawnable;
-                    swapWith.spawnable = temp;
-                    clickedCellView.UpdateVisual();
-                    swapWith.UpdateVisual();
-                }
-            }
-
-            // After the swap, reveal the full 3x3 radius as before
-            for (int x = cx - 1; x <= cx + 1; x++)
-            {
-                for (int y = cy - 1; y <= cy + 1; y++)
-                {
-                    if (x >= 0 && x < width && y >= 0 && y < height)
-                    {
-                        var cell = cellObjs[x, y].GetComponent<CellView>();
-                        if (cell != null && !cell.revealed)
-                        {
-                            cell.Reveal();
-                        }
-                    }
-                }
-            }
-            firstClick = false;
+            HandleFirstClick(cx, cy);
         }
         else
         {
             var cell = cellObjs[cx, cy].GetComponent<CellView>();
-            if (cell != null && !cell.revealed)
+            if (cell == null) return;
+            
+            if (!cell.revealed)
             {
                 cell.Reveal();
+                OnCellRevealed?.Invoke(cell);
+            }
+            else
+            {
+                OnRevealedCellClick?.Invoke(cell);
             }
         }
+    }
+
+    private void HandleFirstClick(int cx, int cy)
+    {
+        var clickedCellView = cellObjs[cx, cy].GetComponent<CellView>();
+
+        // Guarantee first-clicked cell is empty
+        if (clickedCellView.spawnable != null)
+        {
+            var emptyCells = new List<CellView>();
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                {
+                    var cell = cellObjs[x, y].GetComponent<CellView>();
+                    if (cell.spawnable == null && !(cell.x == cx && cell.y == cy))
+                    {
+                        emptyCells.Add(cell);
+                    }
+                }
+            if (emptyCells.Count > 0)
+            {
+                var swapWith = emptyCells[Random.Range(0, emptyCells.Count)];
+                var temp = clickedCellView.spawnable;
+                clickedCellView.spawnable = swapWith.spawnable;
+                swapWith.spawnable = temp;
+                clickedCellView.UpdateVisual();
+                swapWith.UpdateVisual();
+            }
+        }
+
+        // After the swap, reveal the full 3x3 radius as before
+        for (int x = cx - 1; x <= cx + 1; x++)
+        {
+            for (int y = cy - 1; y <= cy + 1; y++)
+            {
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                {
+                    var cell = cellObjs[x, y].GetComponent<CellView>();
+                    if (cell != null && !cell.revealed)
+                    {
+                        cell.Reveal();
+                        OnCellRevealed?.Invoke(cell);
+                    }
+                }
+            }
+        }
+
+        GameData.Instance.GameStarted = true;
+
+        firstClick = false;
     }
 
     public int GetNeighborDamage(int cx, int cy)
