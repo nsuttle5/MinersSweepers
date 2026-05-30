@@ -1,7 +1,9 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
-public class CellView : MonoBehaviour
+public class CellView : MonoBehaviour, IPointerClickHandler
 {
     public int x, y;
     public SpawnableSO spawnable;
@@ -9,25 +11,49 @@ public class CellView : MonoBehaviour
     private SpriteRenderer sr;
     public bool revealed = false;
 
-    public TextMeshPro damageText;
+    [SerializeField] private TextMeshPro markText;
+    [SerializeField] private TextMeshPro damageText;
+
+    public static UnityAction<CellView, Vector2> OnCellRightClick;
 
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
-        if (!damageText)
-            damageText = GetComponentInChildren<TextMeshPro>();
-        if (damageText)
-            damageText.gameObject.SetActive(false);
+        if (!damageText) Debug.LogError("DamageText not set on CellView prefab");
+        if (!markText) Debug.LogError("MarkText not set on CellView prefab");
+        
+        if (damageText) damageText.gameObject.SetActive(false);
+        if (markText) markText.gameObject.SetActive(false);
     }
 
-    private void OnMouseDown()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (!revealed && boardManager != null)
+        if (eventData.button == PointerEventData.InputButton.Left)
         {
-            boardManager.OnCellClicked(x, y);
+            if (!revealed && boardManager != null)
+            {
+                boardManager.OnCellClicked(x, y);
+            }
+        }
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (revealed) return; 
+
+            OnCellRightClick?.Invoke(this, transform.position);
         }
     }
 
+    public void Mark(string symbol)
+    {
+        if (symbol == string.Empty) 
+        {        
+            markText.gameObject.SetActive(false);
+            return;
+        }
+
+        markText.text = symbol;
+        markText.gameObject.SetActive(true);
+    }
 
     public void Reveal()
     {
@@ -61,6 +87,8 @@ public class CellView : MonoBehaviour
         {
             if (damageText) damageText.gameObject.SetActive(false);
         }
+
+        if (markText) markText.gameObject.SetActive(false);
     }
 
     public void UpdateVisual()
