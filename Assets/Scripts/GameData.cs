@@ -58,6 +58,7 @@ public class GameData : MonoBehaviour
         TotalMines = 0;
         TotalEnemies = 0;
         TotalGold = 0;
+        timePassed = 0;
         GameStarted = false;
     }
 
