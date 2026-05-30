@@ -1,10 +1,10 @@
+using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class CellInteractionManager : MonoBehaviour
 {
-    public static UnityAction OnExitTileClicked;
-
     private void OnEnable()
     {
         BoardManager.OnCellRevealed += HandleCellReveal;
@@ -42,7 +42,10 @@ public class CellInteractionManager : MonoBehaviour
                 break;
             case SpawnableType.Exit:
                 Debug.Log("Exit Tile Clicked!");
-                OnExitTileClicked?.Invoke();
+                GameData.Instance.GameStarted = false;
+
+                if (SceneTransitionManager.Instance) SceneTransitionManager.Instance.LoadScene("ResultsScreen");
+                else SceneManager.LoadScene("ResultsScreen");
                 break;
             default:
                 break;
