@@ -11,6 +11,9 @@ public class CellView : MonoBehaviour, IPointerClickHandler
     private SpriteRenderer sr;
     public bool revealed = false;
 
+    [SerializeField] private Sprite hiddenSprite;
+    [SerializeField] private Sprite revealedSprite;
+
     [SerializeField] private TextMeshPro markText;
     [SerializeField] private TextMeshPro damageText;
 
@@ -21,7 +24,17 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         sr = GetComponent<SpriteRenderer>();
         if (!damageText) Debug.LogError("DamageText not set on CellView prefab");
         if (!markText) Debug.LogError("MarkText not set on CellView prefab");
-        
+
+        if (markText)
+        {
+            markText.sortingOrder = sr.sortingOrder + 1;
+        }
+
+        if (damageText)
+        {
+            damageText.sortingOrder = sr.sortingOrder + 1;
+        }
+
         if (damageText) damageText.gameObject.SetActive(false);
         if (markText) markText.gameObject.SetActive(false);
     }
@@ -37,7 +50,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         }
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
-            if (revealed) return; 
+            if (revealed) return;
 
             OnCellRightClick?.Invoke(this, transform.position);
         }
@@ -45,8 +58,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler
 
     public void Mark(string symbol)
     {
-        if (symbol == string.Empty) 
-        {        
+        if (symbol == string.Empty)
+        {
             markText.gameObject.SetActive(false);
             return;
         }
@@ -94,25 +107,41 @@ public class CellView : MonoBehaviour, IPointerClickHandler
     public void UpdateVisual()
     {
         if (!sr) sr = GetComponent<SpriteRenderer>();
+        sr.sortingOrder = y;
+
+        if (markText)
+        {
+            markText.sortingOrder = sr.sortingOrder + 1;
+        }
+
+        if (damageText)
+        {
+            damageText.sortingOrder = sr.sortingOrder + 1;
+        }
+
         if (!revealed)
         {
-            sr.color = Color.gray;
-            // sr.sprite = hiddenSprite;  //when we have a covered-tile sprite
+            if (hiddenSprite != null)
+            {
+                sr.sprite = hiddenSprite;
+            }
+
+            sr.color = Color.white;
 
             if (damageText) damageText.gameObject.SetActive(false);
         }
-        else if (spawnable == null)
-        {
-            sr.color = Color.white;
-
-        }
         else
         {
-            sr.color = Color.white;
-            if (spawnable.sprite != null)
+            if (spawnable != null && spawnable.sprite != null)
             {
                 sr.sprite = spawnable.sprite;
             }
+            else if (revealedSprite != null)
+            {
+                sr.sprite = revealedSprite;
+            }
+
+            sr.color = Color.white;
 
             if (damageText) damageText.gameObject.SetActive(false);
         }

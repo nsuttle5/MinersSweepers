@@ -8,6 +8,8 @@ public class BoardManager : MonoBehaviour
     public GameObject cellPrefab;
     public Transform boardRoot;
 
+    [SerializeField] private float verticalSpacing = 1f;
+
     private int width, height;
     private GameObject[,] cellObjs;
 
@@ -68,7 +70,7 @@ public class BoardManager : MonoBehaviour
         {
             Vector2Int pos = positions[i];
             GameObject cell = Instantiate(cellPrefab, boardRoot);
-            cell.transform.localPosition = new Vector3(pos.x, -pos.y, 0);
+            cell.transform.localPosition = new Vector3(pos.x, -pos.y * verticalSpacing, 0);
             cell.name = $"Cell_{pos.x}_{pos.y}";
 
             var cellComp = cell.GetComponent<CellView>();
