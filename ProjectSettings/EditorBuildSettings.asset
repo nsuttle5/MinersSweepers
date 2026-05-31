@@ -8,5 +8,14 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/MapTesting.unity
+    guid: 670fa026b3ecb514f8239ba861d30762
+  - enabled: 1
+    path: Assets/Scenes/TavernShop.unity
+    guid: a5b722c618f0ee64fa89f3358c2cab7a
+  - enabled: 1
+    path: Assets/Scenes/BackToMapTest.unity
+    guid: a65c398573cb21a4899890c1f01ef13a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
