@@ -43,7 +43,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if (!revealed && boardManager != null)
+            if (boardManager != null)
             {
                 boardManager.OnCellClicked(x, y);
             }
