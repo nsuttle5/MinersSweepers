@@ -13,12 +13,22 @@ public class BoardManager : MonoBehaviour
     private int width, height;
     private GameObject[,] cellObjs;
 
-    private bool firstClick = true;
+    public List<CellView> unrevealedCells = new List<CellView>();
+    public List<CellView> revealedCells = new List<CellView>();
 
+    private bool firstClick = true;
     public static bool isLogbookOpen = false;
 
     public static UnityAction<CellView> OnCellRevealed;
     public static UnityAction<CellView> OnRevealedCellClick;
+
+    public int Width => width;
+    public int Height => height;
+    public CellView GetCellView(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= width || y >= height) return null;
+        return cellObjs[x, y]?.GetComponent<CellView>();
+    }
 
     [ContextMenu("Generate Board")]
     public void GenerateBoard()
@@ -34,6 +44,8 @@ public class BoardManager : MonoBehaviour
         width = mapLayout.width;
         height = mapLayout.height;
         cellObjs = new GameObject[width, height];
+        unrevealedCells.Clear();
+        revealedCells.Clear();
 
         for (int i = boardRoot.childCount - 1; i >= 0; i--)
             DestroyImmediate(boardRoot.GetChild(i).gameObject);
@@ -77,7 +89,6 @@ public class BoardManager : MonoBehaviour
             if (cellComp == null) cellComp = cell.AddComponent<CellView>();
 
             cellComp.boardManager = this;
-
             cellComp.x = pos.x;
             cellComp.y = pos.y;
 
@@ -90,29 +101,27 @@ public class BoardManager : MonoBehaviour
             {
                 cellComp.spawnable = null;
             }
-            cellComp.UpdateVisual();
 
+            cellComp.UpdateVisual();
             cellObjs[pos.x, pos.y] = cell;
+
+            // Add all to unrevealed at the start
+            unrevealedCells.Add(cellComp);
         }
     }
 
     private void SetGameData(List<SpawnableSO> spawnables)
     {
-        int mineCount = 0;
-        int enemyCount = 0;
-        int goldCount = 0;
-
+        int mineCount = 0, enemyCount = 0, goldCount = 0;
         foreach (var spawnable in spawnables)
         {
             if (spawnable == null) continue;
-
             if (spawnable.displayName == "Nathan") mineCount++;
             else if (spawnable.type == SpawnableType.Enemy) enemyCount++;
             else if (spawnable.displayName == "Gold") goldCount++;
         }
 
         GameData.Instance.ResetData();
-
         GameData.Instance.TotalMines = mineCount;
         GameData.Instance.TotalEnemies = enemyCount;
         GameData.Instance.TotalGold = goldCount;
@@ -121,7 +130,6 @@ public class BoardManager : MonoBehaviour
     public void OnCellClicked(int cx, int cy)
     {
         if (isLogbookOpen) return;
-
         if (firstClick)
         {
             HandleFirstClick(cx, cy);
@@ -130,7 +138,6 @@ public class BoardManager : MonoBehaviour
         {
             var cell = cellObjs[cx, cy].GetComponent<CellView>();
             if (cell == null) return;
-            
             if (!cell.revealed)
             {
                 cell.Reveal();
@@ -146,20 +153,13 @@ public class BoardManager : MonoBehaviour
     private void HandleFirstClick(int cx, int cy)
     {
         var clickedCellView = cellObjs[cx, cy].GetComponent<CellView>();
-
-        // Guarantee first-clicked cell is empty
         if (clickedCellView.spawnable != null)
         {
             var emptyCells = new List<CellView>();
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
-                {
-                    var cell = cellObjs[x, y].GetComponent<CellView>();
-                    if (cell.spawnable == null && !(cell.x == cx && cell.y == cy))
-                    {
-                        emptyCells.Add(cell);
-                    }
-                }
+                    if (cellObjs[x, y].GetComponent<CellView>().spawnable == null && !(x == cx && y == cy))
+                        emptyCells.Add(cellObjs[x, y].GetComponent<CellView>());
             if (emptyCells.Count > 0)
             {
                 var swapWith = emptyCells[Random.Range(0, emptyCells.Count)];
@@ -171,26 +171,29 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        // After the swap, reveal the full 3x3 radius as before
+
         for (int x = cx - 1; x <= cx + 1; x++)
-        {
             for (int y = cy - 1; y <= cy + 1; y++)
-            {
                 if (x >= 0 && x < width && y >= 0 && y < height)
                 {
                     var cell = cellObjs[x, y].GetComponent<CellView>();
                     if (cell != null && !cell.revealed)
                     {
-                        cell.Reveal();
+                        cell.Reveal(false);
                         OnCellRevealed?.Invoke(cell);
                     }
                 }
-            }
-        }
 
         GameData.Instance.GameStarted = true;
-
         firstClick = false;
+    }
+
+    public void NotifyCellRevealed(CellView cell)
+    {
+        if (unrevealedCells.Contains(cell))
+            unrevealedCells.Remove(cell);
+        if (!revealedCells.Contains(cell))
+            revealedCells.Add(cell);
     }
 
     public int GetNeighborDamage(int cx, int cy)
@@ -199,15 +202,12 @@ public class BoardManager : MonoBehaviour
         for (int x = cx - 1; x <= cx + 1; x++)
             for (int y = cy - 1; y <= cy + 1; y++)
             {
-                if (x == cx && y == cy) continue; // Skip self
+                if (x == cx && y == cy) continue;
                 if (x >= 0 && x < width && y >= 0 && y < height)
                 {
                     var neighbor = cellObjs[x, y].GetComponent<CellView>();
-                    if (neighbor != null && neighbor.spawnable != null
-                        && neighbor.spawnable.type == SpawnableType.Enemy)
-                    {
+                    if (neighbor != null && neighbor.spawnable != null && neighbor.spawnable.type == SpawnableType.Enemy)
                         total += neighbor.spawnable.damage;
-                    }
                 }
             }
         return total;
