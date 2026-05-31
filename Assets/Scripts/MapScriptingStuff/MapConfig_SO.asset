@@ -13,7 +13,22 @@ MonoBehaviour:
   m_Name: MapConfig_SO
   m_EditorClassIdentifier: Assembly-CSharp::MapGenConfigSO
   numLevels: 5
-  nodesPerLevel: 0100000002000000030000000200000001000000
+  nodesPerLevel:
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 1
+    setNumber: 0
+    range: {x: 1, y: 3}
+  - useRange: 1
+    setNumber: 0
+    range: {x: 1, y: 3}
+  - useRange: 1
+    setNumber: 0
+    range: {x: 1, y: 2}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
   weightsPerLevel:
   - level: 0
     nodeWeights:
