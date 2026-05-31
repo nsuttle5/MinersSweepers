@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum SpawnableType { Enemy, Exit }
 
@@ -13,5 +14,6 @@ public class SpawnableSO : ScriptableObject
 
     public string description;
     public string abilityTooltip;
+    public List<SpawnableAbilitiesSO> abilities;
 
 }

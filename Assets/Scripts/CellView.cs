@@ -68,15 +68,28 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         markText.gameObject.SetActive(true);
     }
 
-    public void Reveal()
+    public void Reveal(bool triggerAbilities = true)
     {
         if (revealed) return;
         revealed = true;
+
+        if (boardManager != null)
+        {
+            boardManager.NotifyCellRevealed(this);
+        }
         UpdateVisual();
 
         if (spawnable != null)
         {
             LogbookManager.Instance.Discover(spawnable);
+
+            if (triggerAbilities && spawnable.abilities != null)
+            {
+                foreach (var ability in spawnable.abilities)
+                {
+                    if (ability != null) ability.OnReveal(this, boardManager);
+                }
+            }
         }
 
         if (boardManager != null && spawnable == null)
