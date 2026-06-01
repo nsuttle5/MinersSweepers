@@ -16,8 +16,8 @@ public class HUDController : MonoBehaviour
     {
         if (GameData.Instance != null)
         {
-            UpdateGoldUI(GameData.Instance.GoldFound);
-            GameData.Instance.OnGoldChanged += UpdateGoldUI;
+            UpdateGoldUI(PlayerStats.Instance.CurrentGold);
+            PlayerStats.Instance.OnGoldChanged += UpdateGoldUI;
         }
         if (PlayerStats.Instance != null)
         {
@@ -28,8 +28,8 @@ public class HUDController : MonoBehaviour
 
     private void OnDisable()
     {
-        if (GameData.HasInstance)
-            GameData.Instance.OnGoldChanged -= UpdateGoldUI;
+        if (PlayerStats.HasInstance)
+            PlayerStats.Instance.OnGoldChanged -= UpdateGoldUI;
         if (PlayerStats.HasInstance)
             PlayerStats.Instance.OnHealthChanged -= UpdateHPUI;
     }

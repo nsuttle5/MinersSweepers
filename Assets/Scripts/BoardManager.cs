@@ -130,7 +130,7 @@ public class BoardManager : MonoBehaviour
             else if (spawnable.type == SpawnableType.Gold) goldCount++;
         }
 
-        GameData.Instance.ResetData();
+        GameData.Instance.ResetMineData();
         GameData.Instance.TotalMines = mineCount;
         GameData.Instance.TotalEnemies = enemyCount;
         GameData.Instance.TotalGold = goldCount;

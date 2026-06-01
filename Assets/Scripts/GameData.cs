@@ -67,7 +67,7 @@ public class GameData : MonoBehaviour
         timePassed += Time.deltaTime;
     }
 
-    public void ResetData()
+    public void ResetMineData()
     {
         MinesFound = 0;
         EnemiesDefeated = 0;
@@ -77,9 +77,12 @@ public class GameData : MonoBehaviour
         TotalGold = 0;
         timePassed = 0;
         GameStarted = false;
+    }
 
+    public void ResetAllData()
+    {
+        ResetMineData();
         if (PlayerStats.Instance != null) PlayerStats.Instance.ResetHealth();
-
         seenInteractionIDs.Clear();
     }
 
