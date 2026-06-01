@@ -42,6 +42,12 @@ public class CellInteractionManager : MonoBehaviour
         {
             case SpawnableType.Enemy:
                 break;
+            case SpawnableType.Gold:
+                GameData.Instance.GoldFound++;
+                cell.spawnable = null;
+                cell.UpdateVisual();
+                cell.TryDisplaySurroundingDamage();
+                break;
             case SpawnableType.Exit:
                 Debug.Log("Exit Tile Clicked!");
                 GameData.Instance.GameStarted = false;
