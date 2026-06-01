@@ -10,9 +10,14 @@ public class MapManager : MonoBehaviour
     [SerializeField] GameObject nodePrefab;
     [SerializeField] bool mapAlreadyGenerated = false;
 
-    [Header("Node Layout")]
-    [SerializeField] float xSpacing = 150f;
-    [SerializeField] float ySpacing = 150f;
+    [Header("Node Anchors")]
+    [SerializeField] Transform startAnchor;
+    [SerializeField] Transform endAnchor;
+
+    [Header("Node Bounding Box")]
+    [SerializeField] Transform boundingBoxMin;
+    [SerializeField] Transform boundingBoxMax;
+    [SerializeField] bool useBoundingBox = true;
 
     [Header("Connection Lines")]
     [SerializeField] GameObject linePrefab;
@@ -28,9 +33,29 @@ public class MapManager : MonoBehaviour
     public MapNode currentNode;
     public static MapManager Instance { get; private set; }
 
+    Vector2 ClampPositionToBoundingBox(Vector2 position)
+    {
+        if (!useBoundingBox || boundingBoxMin == null || boundingBoxMax == null)
+            return position;
+
+        Vector2 minPos = mapRoot.GetComponent<RectTransform>().InverseTransformPoint(boundingBoxMin.position);
+        Vector2 maxPos = mapRoot.GetComponent<RectTransform>().InverseTransformPoint(boundingBoxMax.position);
+
+        return new Vector2(
+            Mathf.Clamp(position.x, Mathf.Min(minPos.x, maxPos.x), Mathf.Max(minPos.x, maxPos.x)),
+            Mathf.Clamp(position.y, Mathf.Min(minPos.y, maxPos.y), Mathf.Max(minPos.y, maxPos.y))
+        );
+    }
+
     [ContextMenu("GenerateMap")]
     public void GenerateMap()
     {
+        if (startAnchor == null || endAnchor == null)
+        {
+            Debug.LogError("Start and End anchors must be assigned!");
+            return;
+        }
+
         mapAlreadyGenerated = false;
         currentNode = null;
         nodeRows.Clear();
@@ -44,12 +69,19 @@ public class MapManager : MonoBehaviour
 #endif
 
         int levels = mapConfig.numLevels;
+        Vector2 startPos = mapRoot.GetComponent<RectTransform>().InverseTransformPoint(startAnchor.position);
+        Vector2 endPos = mapRoot.GetComponent<RectTransform>().InverseTransformPoint(endAnchor.position);
+
         for (int level = 0; level < levels; level++)
         {
             int nodesInRow = mapConfig.nodesPerLevel[level].GetValue();
             var weightsData = mapConfig.weightsPerLevel.Find(w => w.level == level);
             var weights = (weightsData != null && weightsData.nodeWeights.Count > 0) ? weightsData.nodeWeights : mapConfig.weightsPerLevel[0].nodeWeights;
             var rowList = new List<MapNode>();
+
+            float levelProgress = levels > 1 ? (float)level / (levels - 1) : 0f;
+            float xPos = Mathf.Lerp(startPos.x, endPos.x, levelProgress);
+
             for (int n = 0; n < nodesInRow; n++)
             {
                 MapNode node = new()
@@ -69,14 +101,19 @@ public class MapManager : MonoBehaviour
                     button.button.onClick.RemoveAllListeners();
                     button.button.onClick.AddListener(() => button.OnClick());
                 }
+
                 var rt = go.GetComponent<RectTransform>();
-                float x = level * xSpacing;
-                float totalColHeight = (nodesInRow - 1) * ySpacing;
-                float y = n * ySpacing - totalColHeight / 2f;
-                rt.anchoredPosition = new Vector2(x, y);
+                float totalColHeight = (nodesInRow - 1) * (endPos.y - startPos.y) / (nodesInRow > 1 ? nodesInRow - 1 : 1);
+                float yOffset = n * totalColHeight / (nodesInRow > 1 ? nodesInRow - 1 : 1) - totalColHeight / 2f;
+                float yPos = Mathf.Lerp(startPos.y, endPos.y, levelProgress) + yOffset;
+
+                Vector2 finalPos = new Vector2(xPos, yPos);
+                finalPos = ClampPositionToBoundingBox(finalPos);
+                rt.anchoredPosition = finalPos;
             }
             nodeRows.Add(rowList);
         }
+
         GenerateConnections();
         DrawAllConnections();
         UpdateNodeInteractability();
@@ -106,10 +143,18 @@ public class MapManager : MonoBehaviour
             foreach (var node in row)
                 node.buttonUI = null;
 
-        for (int level = 0; level < nodeRows.Count; level++)
+        Vector2 startPos = mapRoot.GetComponent<RectTransform>().InverseTransformPoint(startAnchor.position);
+        Vector2 endPos = mapRoot.GetComponent<RectTransform>().InverseTransformPoint(endAnchor.position);
+        int levels = nodeRows.Count;
+
+        for (int level = 0; level < levels; level++)
         {
             var rowList = nodeRows[level];
             int nodesInRow = rowList.Count;
+
+            float levelProgress = levels > 1 ? (float)level / (levels - 1) : 0f;
+            float xPos = Mathf.Lerp(startPos.x, endPos.x, levelProgress);
+
             for (int n = 0; n < nodesInRow; n++)
             {
                 MapNode node = rowList[n];
@@ -122,11 +167,15 @@ public class MapManager : MonoBehaviour
                     button.button.onClick.RemoveAllListeners();
                     button.button.onClick.AddListener(() => button.OnClick());
                 }
+
                 var rt = go.GetComponent<RectTransform>();
-                float x = level * xSpacing;
-                float totalColHeight = (nodesInRow - 1) * ySpacing;
-                float y = n * ySpacing - totalColHeight / 2f;
-                rt.anchoredPosition = new Vector2(x, y);
+                float totalColHeight = (nodesInRow - 1) * (endPos.y - startPos.y) / (nodesInRow > 1 ? nodesInRow - 1 : 1);
+                float yOffset = n * totalColHeight / (nodesInRow > 1 ? nodesInRow - 1 : 1) - totalColHeight / 2f;
+                float yPos = Mathf.Lerp(startPos.y, endPos.y, levelProgress) + yOffset;
+
+                Vector2 finalPos = new Vector2(xPos, yPos);
+                finalPos = ClampPositionToBoundingBox(finalPos);
+                rt.anchoredPosition = finalPos;
             }
         }
         DrawAllConnections();
@@ -170,7 +219,6 @@ public class MapManager : MonoBehaviour
     {
         if (!IsNodeSelectable(clickedButton.nodeData)) return;
         currentNode = clickedButton.nodeData;
-        //UpdateNodeInteractability();
     }
 
     public bool IsNodeSelectable(MapNode node)
