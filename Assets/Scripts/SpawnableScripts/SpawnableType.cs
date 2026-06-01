@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public enum SpawnableType { Enemy, Exit }
+public enum SpawnableType { Enemy, Gold, Exit }
 
 [CreateAssetMenu(fileName = "NewSpawnable", menuName = "Minesweeper/Spawnable")]
 public class SpawnableSO : ScriptableObject

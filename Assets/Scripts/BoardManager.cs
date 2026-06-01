@@ -30,6 +30,15 @@ public class BoardManager : MonoBehaviour
         return cellObjs[x, y]?.GetComponent<CellView>();
     }
 
+    private void Start()
+    {
+        if (MapManager.Instance == null) return;
+        if (MapManager.Instance.currentNode.type is not MapLevelNodeTypeSO) return;
+
+        mapLayout = (MapManager.Instance.currentNode.type as MapLevelNodeTypeSO).mapLayout;
+        GenerateBoard();
+    }
+
     [ContextMenu("Generate Board")]
     public void GenerateBoard()
     {
@@ -118,7 +127,7 @@ public class BoardManager : MonoBehaviour
             if (spawnable == null) continue;
             if (spawnable.displayName == "Nathan") mineCount++;
             else if (spawnable.type == SpawnableType.Enemy) enemyCount++;
-            else if (spawnable.displayName == "Gold") goldCount++;
+            else if (spawnable.type == SpawnableType.Gold) goldCount++;
         }
 
         GameData.Instance.ResetData();

@@ -337,12 +337,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
   mapConfig: {fileID: 11400000, guid: fa5aac31dc60fa54590708e8f933dc53, type: 2}
   allNodeTypes:
-  - {fileID: 11400000, guid: 02cc2a2b7e9d7914a961bf29e08d933a, type: 2}
+  - {fileID: 11400000, guid: 894613739ddd305478b09a1bca968b94, type: 2}
   - {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
-  - {fileID: 11400000, guid: 0c3a50110815c564c883fac272f44227, type: 2}
+  - {fileID: 11400000, guid: 2e21398149444824ab95e2c5b137f57a, type: 2}
   - {fileID: 11400000, guid: 53729dee7213c7e40b38e9d8ef116d54, type: 2}
-  - {fileID: 11400000, guid: efec753a1348a3542a74f73124c2ac59, type: 2}
-  - {fileID: 11400000, guid: afe75452f89aa06449e2deeb5ebfa673, type: 2}
+  - {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+  - {fileID: 11400000, guid: 77200b8f0a0b0c94d920d9729f0225c5, type: 2}
   mapRoot: {fileID: 327290462}
   nodePrefab: {fileID: 8683045728773786557, guid: 7e2688c04afba474191e996fd657b5ea, type: 3}
   mapAlreadyGenerated: 0
