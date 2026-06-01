@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cf179add98ed224393d24d17829ca9a, type: 3}
+  m_Name: TestInteraction1
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionDataSO
+  interactionID: INT_TEST
+  interactionTitle: Testing Cave Stability
+  initialDescription: 'You approach a open path in the cave ahead
+
+
+    It looks....sketchy....like
+    it might collapse at any moment. But it looks like there''s <color=yellow>gold</color>
+    this way!
+
+
+    You could procede at the risk of losing <color=red>10 HP</color>
+    to grab <color=yellow>10 gold</color>. Or head back and rest a bit for <color=green>10
+    HP</color> before looking for another path.'
+  interactionArtwork: {fileID: 21300000, guid: e4947a7fcd5d2694aafd00ccb35b3f97, type: 3}
+  choices:
+  - buttonText: Procede
+    type: 0
+    requirementValue: 0
+    potentialOutcomes:
+    - weight: 50
+      outcomeText: A cave in!! Luckily you made it out, but lost <color=red>10 HP</color>
+        trying to escape.
+      effects:
+      - effectType: 1
+        value: -10
+      nextInterationStage: {fileID: 0}
+    - weight: 50
+      outcomeText: The path turned out to be safe and you found <color=yellow>10
+        gold</color> along the way.
+      effects:
+      - effectType: 2
+        value: 10
+      nextInterationStage: {fileID: 0}
+  - buttonText: Head Back
+    type: 0
+    requirementValue: 0
+    potentialOutcomes:
+    - weight: 100
+      outcomeText: You decided to head back and rest for <color=green>10 HP</color>.
+      effects:
+      - effectType: 1
+        value: 10
+      nextInterationStage: {fileID: 0}

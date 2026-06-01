@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cf179add98ed224393d24d17829ca9a, type: 3}
+  m_Name: TestInteraction2
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionDataSO
+  interactionID: INT_TEST2
+  interactionTitle: Sharing is Caring
+  initialDescription: 'You meet up with some miners before a large opening in the
+    cave. There seems to be a giant beast inside.
+
+
+    You could team up with the
+    miners to take it down, but then you''d have to share the treasure its guarding...
+
+
+    What
+    do you do?'
+  interactionArtwork: {fileID: 21300000, guid: 0ab57e0f0da5cc34a9cd8f02cd34c07f, type: 3}
+  choices:
+  - buttonText: I can solo him (<color=yellow>+50 gold</color> <color=red>-10 HP</color>)
+    type: 0
+    requirementValue: 0
+    potentialOutcomes:
+    - weight: 100
+      outcomeText: "Luckily you managed to take it down and grab your reward (<color=yellow>+10
+        gold</color>). \nHowever, it came at a cost (<color=red>-10 HP</color>).
+        \nThe other miners are impressed."
+      effects:
+      - effectType: 1
+        value: -10
+      - effectType: 2
+        value: 50
+      nextInterationStage: {fileID: 0}
+  - buttonText: Use the power of friendship  (<color=yellow>+10 gold</color>)
+    type: 0
+    requirementValue: 0
+    potentialOutcomes:
+    - weight: 100
+      outcomeText: "You manage to get the final blow on the monster. You and the
+        other miners celebrate with a party! \nAfterwards, the treasure is split
+        and you all go your separate ways (<color=yellow>+10 gold</color>)."
+      effects:
+      - effectType: 2
+        value: 10
+      nextInterationStage: {fileID: 0}

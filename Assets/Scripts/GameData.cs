@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameData : MonoBehaviour
@@ -30,6 +31,7 @@ public class GameData : MonoBehaviour
     public bool GameStarted { get; set; }
 
     private float timePassed;
+    private HashSet<string> seenInteractionIDs = new();
 
     private void Awake()
     {
@@ -41,6 +43,8 @@ public class GameData : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(gameObject);
+
+        seenInteractionIDs = new();
     }
 
     private void Update()
@@ -60,6 +64,10 @@ public class GameData : MonoBehaviour
         TotalGold = 0;
         timePassed = 0;
         GameStarted = false;
+
+        if (PlayerStats.Instance != null) PlayerStats.Instance.ResetHealth();
+
+        seenInteractionIDs.Clear();
     }
 
     private string GetTime()
@@ -67,5 +75,42 @@ public class GameData : MonoBehaviour
         int minutes = Mathf.FloorToInt(timePassed / 60);
         int remainingSeconds = Mathf.FloorToInt(timePassed % 60);
         return string.Format("{0}:{1:00}", minutes, remainingSeconds);
+    }
+
+    public void MarkInteractionAsSeen(string id)
+    {
+        if (!string.IsNullOrEmpty(id)) seenInteractionIDs.Add(id);
+    }
+
+    public bool IsInteractionSeen(string id)
+    {
+        return seenInteractionIDs.Contains(id);
+    }
+
+    public bool ValidateRequirement(InteractionChoice choice)
+    {
+        return choice.type switch
+        {
+            InteractionRequirement.HPAmount => PlayerStats.Instance.CurrentHP >= choice.requirementValue,
+            InteractionRequirement.GoldAmount => GoldFound >= choice.requirementValue,
+            InteractionRequirement.None => true,
+            _ => true,
+        };
+    }
+
+    public void ExecuteEffect(InteractionEffect effect, int value)
+    {
+        switch (effect)
+        {
+            case InteractionEffect.ChangeGold:
+                GoldFound = Mathf.Max(0, GoldFound + value);
+                break;
+            case InteractionEffect.ChangeHP:
+                PlayerStats.Instance.ModifyHealth(value);
+                break;
+            case InteractionEffect.None:
+            default:
+            break;
+        }
     }
 }
