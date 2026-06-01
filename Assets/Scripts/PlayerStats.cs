@@ -28,8 +28,8 @@ public class PlayerStats : MonoBehaviour
     public int CurrentHP => currentHP;
     public int MaxHP => maxHP;
 
-    public UnityEvent<int, int> OnHealthChanged;
-    public UnityEvent OnPlayerDeath;
+    public UnityAction<int, int> OnHealthChanged;
+    public UnityAction OnPlayerDeath;
 
     private void Awake()
     {

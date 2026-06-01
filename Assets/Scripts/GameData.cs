@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameData : MonoBehaviour
 {
@@ -21,8 +22,20 @@ public class GameData : MonoBehaviour
         }
     }
 
+    private float timePassed;
+    private int goldFound;
+    private HashSet<string> seenInteractionIDs = new();
+
     public int MinesFound { get; set; }
-    public int GoldFound { get; set; }
+    public int GoldFound
+    {
+        get => goldFound;
+        set
+        {
+            goldFound = value;
+            OnGoldChanged?.Invoke(goldFound);
+        }
+    }
     public int EnemiesDefeated { get; set; }
     public int TotalMines { get; set; }
     public int TotalGold { get; set; }
@@ -30,8 +43,7 @@ public class GameData : MonoBehaviour
     public string TimePassed => GetTime();
     public bool GameStarted { get; set; }
 
-    private float timePassed;
-    private HashSet<string> seenInteractionIDs = new();
+    public UnityAction<int> OnGoldChanged;
 
     private void Awake()
     {
