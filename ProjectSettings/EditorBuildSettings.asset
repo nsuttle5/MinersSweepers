@@ -4,5 +4,29 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: d2eaab0f2d488734f9fc5e89042c9c85
+  - enabled: 1
+    path: Assets/Scenes/MapTesting.unity
+    guid: 670fa026b3ecb514f8239ba861d30762
+  - enabled: 1
+    path: Assets/Scenes/TavernShop.unity
+    guid: a5b722c618f0ee64fa89f3358c2cab7a
+  - enabled: 1
+    path: Assets/Scenes/CaveShop.unity
+    guid: 9e309e4c29fd3e4409ce485654e72e0f
+  - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/ResultsScreen.unity
+    guid: e7726d390f6575a498153df025168a06
+  - enabled: 1
+    path: Assets/Scenes/InteractionScene.unity
+    guid: 9e5b0b1ed89770e499ab7ac038767897
+  - enabled: 1
+    path: Assets/Scenes/HUDScene.unity
+    guid: af8e56a1776d88043a200d2214c9c60b
   m_configObjects: {}

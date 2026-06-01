@@ -29,7 +29,10 @@ public class MapNodeButton : MonoBehaviour
         if (nodeData != null && nodeData.type != null && !string.IsNullOrEmpty(nodeData.type.sceneToLoad))
         {
             MapManager.Instance.SelectNode(this);
-            SceneManager.LoadScene(nodeData.type.sceneToLoad);
+            if (SceneTransitionManager.Instance != null)
+                SceneTransitionManager.Instance.LoadScene(nodeData.type.sceneToLoad);
+            else 
+                SceneManager.LoadScene(nodeData.type.sceneToLoad);
         }
     }
 

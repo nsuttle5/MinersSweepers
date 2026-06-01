@@ -92,27 +92,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler
             }
         }
 
-        if (boardManager != null && spawnable == null)
-        {
-            int surroundingDamage = boardManager.GetNeighborDamage(x, y);
-            if (damageText)
-            {
-                if (surroundingDamage > 0)
-                {
-                    damageText.text = surroundingDamage.ToString();
-                    damageText.gameObject.SetActive(true);
-                }
-                else
-                {
-                    damageText.text = "";
-                    damageText.gameObject.SetActive(false);
-                }
-            }
-        }
-        else
-        {
-            if (damageText) damageText.gameObject.SetActive(false);
-        }
+        TryDisplaySurroundingDamage();
 
         if (markText) markText.gameObject.SetActive(false);
     }
@@ -158,5 +138,31 @@ public class CellView : MonoBehaviour, IPointerClickHandler
 
             if (damageText) damageText.gameObject.SetActive(false);
         }
+    }
+
+    public void TryDisplaySurroundingDamage()
+    {
+        if (boardManager != null && spawnable == null)
+        {
+            int surroundingDamage = boardManager.GetNeighborDamage(x, y);
+            if (damageText)
+            {
+                if (surroundingDamage > 0)
+                {
+                    damageText.text = surroundingDamage.ToString();
+                    damageText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    damageText.text = "";
+                    damageText.gameObject.SetActive(false);
+                }
+            }
+        }
+        else
+        {
+            if (damageText) damageText.gameObject.SetActive(false);
+        }
+
     }
 }

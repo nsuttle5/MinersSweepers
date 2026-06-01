@@ -52,10 +52,12 @@ public class MapManager : MonoBehaviour
             var rowList = new List<MapNode>();
             for (int n = 0; n < nodesInRow; n++)
             {
-                MapNode node = new();
-                node.levelIndex = level;
-                node.nodeIndex = n;
-                node.type = PickWeightedNodeType(weights);
+                MapNode node = new()
+                {
+                    levelIndex = level,
+                    nodeIndex = n,
+                    type = PickWeightedNodeType(weights)
+                };
                 rowList.Add(node);
 
                 var go = Instantiate(nodePrefab, mapRoot);
@@ -168,7 +170,7 @@ public class MapManager : MonoBehaviour
     {
         if (!IsNodeSelectable(clickedButton.nodeData)) return;
         currentNode = clickedButton.nodeData;
-        UpdateNodeInteractability();
+        //UpdateNodeInteractability();
     }
 
     public bool IsNodeSelectable(MapNode node)
