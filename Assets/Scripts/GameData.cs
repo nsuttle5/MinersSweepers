@@ -21,6 +21,7 @@ public class GameData : MonoBehaviour
             return _instance;
         }
     }
+    public static bool HasInstance => _instance != null;
 
     private float timePassed;
     private int goldFound;

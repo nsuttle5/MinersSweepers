@@ -20,6 +20,7 @@ public class PlayerStats : MonoBehaviour
             return _instance;
         }
     }
+    public static bool HasInstance => _instance != null;
 
     [Header("Health")]
     [SerializeField] private int maxHP = 100;

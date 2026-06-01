@@ -28,9 +28,9 @@ public class HUDController : MonoBehaviour
 
     private void OnDisable()
     {
-        if (GameData.Instance != null)
+        if (GameData.HasInstance)
             GameData.Instance.OnGoldChanged -= UpdateGoldUI;
-        if (PlayerStats.Instance != null)
+        if (PlayerStats.HasInstance)
             PlayerStats.Instance.OnHealthChanged -= UpdateHPUI;
     }
 
