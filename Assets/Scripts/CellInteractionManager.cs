@@ -44,6 +44,7 @@ public class CellInteractionManager : MonoBehaviour
                 break;
             case SpawnableType.Gold:
                 GameData.Instance.GoldFound++;
+                PlayerStats.Instance.ModifyGold(1);
                 cell.spawnable = null;
                 cell.UpdateVisual();
                 cell.TryDisplaySurroundingDamage();

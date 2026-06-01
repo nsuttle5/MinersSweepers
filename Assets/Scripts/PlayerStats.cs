@@ -24,12 +24,16 @@ public class PlayerStats : MonoBehaviour
 
     [Header("Health")]
     [SerializeField] private int maxHP = 100;
+
     private int currentHP;
+    private int currentGold;
 
     public int CurrentHP => currentHP;
     public int MaxHP => maxHP;
+    public int CurrentGold => currentGold;
 
     public UnityAction<int, int> OnHealthChanged;
+    public UnityAction<int> OnGoldChanged;
     public UnityAction OnPlayerDeath;
 
     private void Awake()
@@ -57,9 +61,21 @@ public class PlayerStats : MonoBehaviour
         if (currentHP <= 0) OnPlayerDeath?.Invoke();
     }
 
+    public void ModifyGold(int amount)
+    {
+        currentGold = Mathf.Max(currentGold + amount, 0);
+        OnGoldChanged?.Invoke(currentGold);
+    }
+
     public void ResetHealth()
     {
         currentHP = maxHP;
         OnHealthChanged?.Invoke(currentHP, maxHP);
+    }
+
+    public void ResetGold()
+    {
+        currentGold = 0;
+        OnGoldChanged?.Invoke(currentGold);
     }
 }
