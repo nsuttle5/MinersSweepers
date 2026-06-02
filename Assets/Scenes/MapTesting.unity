@@ -346,17 +346,17 @@ MonoBehaviour:
   mapRoot: {fileID: 327290462}
   nodePrefab: {fileID: 8683045728773786557, guid: 7e2688c04afba474191e996fd657b5ea, type: 3}
   mapAlreadyGenerated: 0
-  startAnchor: {fileID: 1711474478}
-  endAnchor: {fileID: 1563890143}
-  boundingBoxMin: {fileID: 1806246155}
-  boundingBoxMax: {fileID: 2089377675}
-  useBoundingBox: 1
+  startAnchorName: StartTransform
+  endAnchorName: EndTransform
+  boundingBoxMinName: BoundingBoxMin
+  boundingBoxMaxName: BoundingBoxMax
   linePrefab: {fileID: 4535573024231470681, guid: 75df1bcc6c60dea40be77ac0df4d3a1c, type: 3}
   lineCutDistance: 40
   lineThickness: 5
   lineColor: {r: 1, g: 1, b: 1, a: 1}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  useBoundingBox: 1
 --- !u!4 &652075433
 Transform:
   m_ObjectHideFlags: 0
