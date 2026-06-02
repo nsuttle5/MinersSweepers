@@ -54,7 +54,14 @@ public class CellInteractionManager : MonoBehaviour
         switch (cell.spawnable.type)
         {
             case SpawnableType.Enemy:
-                Debug.Log($"Attacking exposed enemy");
+                if (cell.spawnable is EnemySpawnableSO revealedEnemy)
+                {
+                    if (PlayerStats.Instance != null)
+                    {
+                        Debug.Log($"Attacking revealed enemy. Took {-revealedEnemy.damage} counter-attack damage!");
+                        PlayerStats.Instance.ModifyHealth(-revealedEnemy.damage);
+                    }
+                }
                 TransitionToInteractedState(cell);
                 break;
             case SpawnableType.Gold:
