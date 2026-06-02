@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class MapManager : MonoBehaviour
 {
@@ -10,14 +11,16 @@ public class MapManager : MonoBehaviour
     [SerializeField] GameObject nodePrefab;
     [SerializeField] bool mapAlreadyGenerated = false;
 
-    [Header("Node Anchors")]
-    [SerializeField] Transform startAnchor;
-    [SerializeField] Transform endAnchor;
+    [Header("Anchor Object Names")]
+    [SerializeField] private string startAnchorName = "StartTransform";
+    [SerializeField] private string endAnchorName = "EndTransform";
+    [SerializeField] private string boundingBoxMinName = "BottomMin";
+    [SerializeField] private string boundingBoxMaxName = "TopMax";
 
-    [Header("Node Bounding Box")]
-    [SerializeField] Transform boundingBoxMin;
-    [SerializeField] Transform boundingBoxMax;
-    [SerializeField] bool useBoundingBox = true;
+    private Transform startAnchor;
+    private Transform endAnchor;
+    private Transform boundingBoxMin;
+    private Transform boundingBoxMax;
 
     [Header("Connection Lines")]
     [SerializeField] GameObject linePrefab;
@@ -29,9 +32,27 @@ public class MapManager : MonoBehaviour
     [SerializeField] Color normalColor = Color.white;
     [SerializeField] Color disabledColor = Color.gray;
 
+    [SerializeField] bool useBoundingBox = true;
+
     List<List<MapNode>> nodeRows = new();
     public MapNode currentNode;
     public static MapManager Instance { get; private set; }
+
+    private bool FindAnchorsInScene()
+    {
+        startAnchor = GameObject.Find(startAnchorName)?.transform;
+        endAnchor = GameObject.Find(endAnchorName)?.transform;
+        boundingBoxMin = GameObject.Find(boundingBoxMinName)?.transform;
+        boundingBoxMax = GameObject.Find(boundingBoxMaxName)?.transform;
+
+        if (startAnchor == null || endAnchor == null)
+        {
+            Debug.LogError($"Could not find anchors! Looking for '{startAnchorName}' and '{endAnchorName}'");
+            return false;
+        }
+
+        return true;
+    }
 
     Vector2 ClampPositionToBoundingBox(Vector2 position)
     {
@@ -50,11 +71,8 @@ public class MapManager : MonoBehaviour
     [ContextMenu("GenerateMap")]
     public void GenerateMap()
     {
-        if (startAnchor == null || endAnchor == null)
-        {
-            Debug.LogError("Start and End anchors must be assigned!");
+        if (!FindAnchorsInScene())
             return;
-        }
 
         mapAlreadyGenerated = false;
         currentNode = null;
@@ -131,6 +149,9 @@ public class MapManager : MonoBehaviour
 
     public void RebuildMapUI(Transform newMapRoot)
     {
+        if (!FindAnchorsInScene())
+            return;
+
 #if UNITY_EDITOR
         foreach (Transform child in newMapRoot)
             if (Application.isPlaying) Destroy(child.gameObject);
@@ -193,12 +214,38 @@ public class MapManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Find the mapRoot in the newly loaded scene
+        var mapRootObj = GameObject.Find("MapRoot");
+        if (mapRootObj != null)
+        {
+            mapRoot = mapRootObj.transform;
+
+            if (mapAlreadyGenerated)
+            {
+                RebuildMapUI(mapRoot);
+            }
+            else
+            {
+                GenerateMap();
+            }
+        }
+    }
+
     void Start()
     {
-        if (mapAlreadyGenerated)
-            RebuildMapUI(mapRoot);
-        else
-            GenerateMap();
+
     }
 
     MapNodeTypeSO PickWeightedNodeType(List<NodeTypeWeight> weights)
