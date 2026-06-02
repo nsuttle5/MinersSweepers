@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9eecac403b39c0c489f30c42179e2c5e, type: 3}
+  m_Script: {fileID: 11500000, guid: 7876c95321fe10249bc668eacf234dbf, type: 3}
   m_Name: Exit
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnableSO
+  m_EditorClassIdentifier: Assembly-CSharp::ExitSpawnableSO
   type: 2
   displayName: Exit
   sprite: {fileID: 21300000, guid: 79501cfa8ab56fe4f885437ba0259647, type: 3}

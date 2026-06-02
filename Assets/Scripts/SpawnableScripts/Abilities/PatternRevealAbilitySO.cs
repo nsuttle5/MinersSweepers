@@ -28,7 +28,7 @@ public class PatternRevealAbilitySO : SpawnableAbilitiesSO
                     int nx = cx + dx;
                     int ny = cy + dy;
                     var cell = board.GetCellView(nx, ny);
-                    if (cell != null && !cell.revealed)
+                    if (cell != null && !cell.Revealed)
                         cell.Reveal();
                 }
             }

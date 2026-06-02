@@ -9,11 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9eecac403b39c0c489f30c42179e2c5e, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c5f0410f1c7bb8409cf8e253c0e64aa, type: 3}
   m_Name: NathanEnemy
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnableSO
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnableSO
   type: 0
-  displayName: Nathan
-  sprite: {fileID: 2301018971360383993, guid: 2e8c499a55c0eb84395207c9373269f5, type: 3}
+  displayName: Nathan Enemy
+  sprite: {fileID: 21300000, guid: 2e8c499a55c0eb84395207c9373269f5, type: 3}
   damage: 1000
   health: 1000
+  description: 
+  abilityTooltip: 
+  abilities: []
+  interactedSprite: {fileID: 21300000, guid: 1cd8ad606b4d7c2488a54f8d71af0798, type: 3}

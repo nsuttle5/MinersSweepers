@@ -212,6 +212,8 @@ public class MapManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        nodeRows = new();
     }
 
     void OnEnable()
