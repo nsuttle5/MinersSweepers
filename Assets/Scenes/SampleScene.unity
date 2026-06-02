@@ -1173,9 +1173,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LogbookManager
   allEntries:
-  - {fileID: 11400000, guid: 82249f9b9a379f5449ae5af2c3adb0b8, type: 2}
-  - {fileID: 11400000, guid: d343df6a7c622d649bb67441093cf175, type: 2}
-  - {fileID: 11400000, guid: 4b08fb4c1226cf945afb86745b680907, type: 2}
+  - {fileID: 11400000, guid: 4a28a2171382c4944a45726c5cf58311, type: 2}
+  - {fileID: 11400000, guid: 5c260f77e6e2350428e55f89612e3379, type: 2}
+  - {fileID: 11400000, guid: ea186cf3dc6feff4296efa06402896ec, type: 2}
 --- !u!4 &993887869
 Transform:
   m_ObjectHideFlags: 0

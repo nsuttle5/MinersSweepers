@@ -16,12 +16,13 @@ public class LogbookUI : MonoBehaviour
     public TMP_Text nameText, damageText, abilitiesText, descriptionText;
     public Image detailSpriteImg;
 
-    private List<GameObject> entrySlots = new List<GameObject>();
+    private List<GameObject> entrySlots = new();
 
     public Button closeButton;
 
     void Start()
     {
+        entrySlots = new();
         logbookButton.onClick.AddListener(OpenLogbook);
         logbookPanel.SetActive(false);
         closeButton.onClick.AddListener(CloseLogbook);

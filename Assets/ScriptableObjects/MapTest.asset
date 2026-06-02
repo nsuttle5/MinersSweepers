@@ -15,15 +15,15 @@ MonoBehaviour:
   width: 8
   height: 8
   spawnConstraints:
-  - spawnable: {fileID: 11400000, guid: 82249f9b9a379f5449ae5af2c3adb0b8, type: 2}
+  - spawnable: {fileID: 11400000, guid: 4a28a2171382c4944a45726c5cf58311, type: 2}
     useRange: 1
     exactAmount: 0
     minMaxAmount: {x: 1, y: 20}
-  - spawnable: {fileID: 11400000, guid: d343df6a7c622d649bb67441093cf175, type: 2}
+  - spawnable: {fileID: 11400000, guid: ea186cf3dc6feff4296efa06402896ec, type: 2}
     useRange: 0
     exactAmount: 1
     minMaxAmount: {x: 0, y: 0}
-  - spawnable: {fileID: 11400000, guid: 4b08fb4c1226cf945afb86745b680907, type: 2}
+  - spawnable: {fileID: 11400000, guid: 5c260f77e6e2350428e55f89612e3379, type: 2}
     useRange: 0
     exactAmount: 1
     minMaxAmount: {x: 0, y: 0}
