@@ -348,8 +348,8 @@ MonoBehaviour:
   mapAlreadyGenerated: 0
   startAnchorName: StartTransform
   endAnchorName: EndTransform
-  boundingBoxMinName: BoundingBoxMin
-  boundingBoxMaxName: BoundingBoxMax
+  boundingBoxMinName: BottomMin
+  boundingBoxMaxName: TopMax
   linePrefab: {fileID: 4535573024231470681, guid: 75df1bcc6c60dea40be77ac0df4d3a1c, type: 3}
   lineCutDistance: 40
   lineThickness: 5
