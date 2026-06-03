@@ -8,6 +8,9 @@ public class SpriteAnimationTrigger : MonoBehaviour
     private Vector3 spawnPosition;
     private Quaternion spawnRotation;
 
+    [Header("Wait Time")]
+    public float waitTime = 0.5f;
+
     [Header("Slow drift (CCW + top-left)")]
     public float phase1Duration = 1.5f;
     public float phase1RotationDegrees = 30f;
@@ -52,6 +55,8 @@ public class SpriteAnimationTrigger : MonoBehaviour
     private IEnumerator PlaySequence()
     {
         _isPlaying = true;
+
+        yield return new WaitForSeconds(waitTime);
 
         Vector3 phase1EndPos = spawnPosition + new Vector3(phase1Translation.x, phase1Translation.y, 0f);
         Quaternion phase1EndRot = spawnRotation * Quaternion.Euler(0f, 0f, phase1RotationDegrees);
