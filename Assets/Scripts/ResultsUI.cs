@@ -1,8 +1,12 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class ResultsUI : MonoBehaviour
 {
+    public static UnityAction OnPlayerWin;
+
     [SerializeField] private TextMeshProUGUI timeTextBox;
     [SerializeField] private TextMeshProUGUI goldTextBox;
     [SerializeField] private TextMeshProUGUI enemiesTextBox;
@@ -19,5 +23,25 @@ public class ResultsUI : MonoBehaviour
         goldTextBox.text = "Gold Found: " + GameData.Instance.GoldFound + "/" + GameData.Instance.TotalGold;
         enemiesTextBox.text = "Enemies Defeated: " + GameData.Instance.EnemiesDefeated + "/" + GameData.Instance.TotalEnemies;
         minesTextBox.text = "Mines Found: " + GameData.Instance.MinesFound + "/" + GameData.Instance.TotalMines;
+    }
+
+    public void ExitResultsScreen()
+    {
+        if (MapManager.Instance != null)
+        {
+            if (MapManager.Instance.IsMapDone)
+            {
+                OnPlayerWin?.Invoke();
+
+                if (SceneTransitionManager.Instance != null)
+                    SceneTransitionManager.Instance.LoadScene("WinScreen");
+                else SceneManager.LoadScene("WinScreen");
+                return;
+            }
+        }
+
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadScene("MapTesting");
+        else SceneManager.LoadScene("MapTesting");
     }
 }

@@ -38,6 +38,8 @@ public class MapManager : MonoBehaviour
     public MapNode currentNode;
     public static MapManager Instance { get; private set; }
 
+    public bool IsMapDone => HasMapBeenCompleted();
+
     private bool FindAnchorsInScene()
     {
         startAnchor = GameObject.Find(startAnchorName)?.transform;
@@ -219,11 +221,21 @@ public class MapManager : MonoBehaviour
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        ResultsUI.OnPlayerWin += () => Destroy(gameObject);
+
+        if (PlayerStats.HasInstance)
+            PlayerStats.Instance.OnPlayerDeath += () => Destroy(gameObject);
     }
 
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        ResultsUI.OnPlayerWin -= () => Destroy(gameObject);
+
+        if (PlayerStats.HasInstance)
+            PlayerStats.Instance.OnPlayerDeath -= () => Destroy(gameObject);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -243,11 +255,6 @@ public class MapManager : MonoBehaviour
                 GenerateMap();
             }
         }
-    }
-
-    void Start()
-    {
-
     }
 
     MapNodeTypeSO PickWeightedNodeType(List<NodeTypeWeight> weights)
@@ -351,5 +358,13 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool HasMapBeenCompleted()
+    {
+        if (currentNode == null || nodeRows == null || nodeRows.Count == 0) return false;
+
+        if (currentNode.levelIndex == nodeRows.Count - 1) return true;
+        else return false;
     }
 }

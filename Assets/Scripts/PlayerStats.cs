@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -58,7 +59,14 @@ public class PlayerStats : MonoBehaviour
         currentHP = Mathf.Clamp(currentHP + amount, 0, maxHP);
         OnHealthChanged?.Invoke(currentHP, maxHP);
 
-        if (currentHP <= 0) OnPlayerDeath?.Invoke();
+        if (currentHP <= 0)
+        {
+            OnPlayerDeath?.Invoke();
+
+            if (SceneTransitionManager.Instance != null)
+                SceneTransitionManager.Instance.LoadScene("LoseScreen");
+            else SceneManager.LoadScene("LoseScreen");
+        }
     }
 
     public void ModifyGold(int amount)
