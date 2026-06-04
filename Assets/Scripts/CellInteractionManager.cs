@@ -75,6 +75,7 @@ public class CellInteractionManager : MonoBehaviour
                 break;
             case SpawnableType.Exit:
                 Debug.Log("Leaving room");
+
                 if (SceneTransitionManager.Instance != null)
                     SceneTransitionManager.Instance.LoadScene("ResultsScreen");
                 else

@@ -20,4 +20,4 @@ MonoBehaviour:
   description: 
   abilityTooltip: 
   abilities: []
-  goldValue: 0
+  goldValue: 1
