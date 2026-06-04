@@ -119,7 +119,7 @@ public class GameData : MonoBehaviour
         switch (effect)
         {
             case InteractionEffect.ChangeGold:
-                GoldFound = Mathf.Max(0, GoldFound + value);
+                PlayerStats.Instance.ModifyGold(value);
                 break;
             case InteractionEffect.ChangeHP:
                 PlayerStats.Instance.ModifyHealth(value);

@@ -14,15 +14,12 @@ public class HUDController : MonoBehaviour
 
     private void InitializeHUD()
     {
-        if (GameData.Instance != null)
-        {
-            UpdateGoldUI(PlayerStats.Instance.CurrentGold);
-            PlayerStats.Instance.OnGoldChanged += UpdateGoldUI;
-        }
         if (PlayerStats.Instance != null)
         {
-            UpdateHPUI(PlayerStats.Instance.CurrentHP, PlayerStats.Instance.MaxHP);
+            PlayerStats.Instance.OnGoldChanged += UpdateGoldUI;
             PlayerStats.Instance.OnHealthChanged += UpdateHPUI;
+            UpdateGoldUI(PlayerStats.Instance.CurrentGold);
+            UpdateHPUI(PlayerStats.Instance.CurrentHP, PlayerStats.Instance.MaxHP);
         }
     }
 
