@@ -82,7 +82,6 @@ public class GameData : MonoBehaviour
     public void ResetAllData()
     {
         ResetMineData();
-        if (PlayerStats.Instance != null) PlayerStats.Instance.ResetHealth();
         seenInteractionIDs.Clear();
     }
 

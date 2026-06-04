@@ -27,6 +27,9 @@ EditorBuildSettings:
     path: Assets/Scenes/InteractionScene.unity
     guid: 9e5b0b1ed89770e499ab7ac038767897
   - enabled: 1
-    path: Assets/Scenes/HUDScene.unity
-    guid: af8e56a1776d88043a200d2214c9c60b
+    path: Assets/Scenes/WinScreen.unity
+    guid: 6e1134bca8dcbde44b08aa60d9c4254c
+  - enabled: 1
+    path: Assets/Scenes/LoseScreen.unity
+    guid: 4ce3a3694c609444e98c626b6e9a6d4f
   m_configObjects: {}
