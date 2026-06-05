@@ -29,6 +29,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler
 
     public static UnityAction<CellView, Vector2> OnCellRightClick;
 
+    public SpawnableSO spawnableBeforeAbilities { get; set; }
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -100,6 +102,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         {
             LogbookManager.Instance.Discover(spawnable);
 
+            spawnableBeforeAbilities = spawnable;
+
             if (triggerAbilities && spawnable.abilities != null)
             {
                 foreach (var ability in spawnable.abilities)
@@ -109,6 +113,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        UpdateVisual();
         if (markText) markText.gameObject.SetActive(false);
     }
 

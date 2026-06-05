@@ -10,9 +10,13 @@ public abstract class SpawnableSO : ScriptableObject
     public int damage;
     public int health;
 
-    [TextArea(2,5)] public string description;
+    [TextArea(2, 5)] public string description;
     public string abilityTooltip;
     public List<SpawnableAbilitiesSO> abilities;
+
+    [Header("Audio")]
+    public AudioClip onSpawnAudio;
+    public AudioClip onDeathAudio;
 }
 
 public enum SpawnableType { Enemy, Gold, Exit }
