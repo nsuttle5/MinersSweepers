@@ -25,9 +25,9 @@ public class CellInteractionManager : MonoBehaviour
         {
             if (cell.spawnable is EnemySpawnableSO enemy)
             {
-                if (PlayerStats.Instance != null)
+                if (PlayerRunStats.Instance != null)
                 {
-                    PlayerStats.Instance.ModifyHealth(-enemy.damage);
+                    PlayerRunStats.Instance.ModifyHealth(-enemy.damage);
                 }
                 TransitionToInteractedState(cell);
             }
@@ -53,9 +53,9 @@ public class CellInteractionManager : MonoBehaviour
             case SpawnableType.Enemy:
                 if (cell.spawnable is EnemySpawnableSO revealedEnemy)
                 {
-                    if (PlayerStats.Instance != null)
+                    if (PlayerRunStats.Instance != null)
                     {
-                        PlayerStats.Instance.ModifyHealth(-revealedEnemy.damage);
+                        PlayerRunStats.Instance.ModifyHealth(-revealedEnemy.damage);
                     }
                 }
                 TransitionToInteractedState(cell);
@@ -63,12 +63,13 @@ public class CellInteractionManager : MonoBehaviour
             case SpawnableType.Gold:
                 if (cell.spawnable is GoldSpawnableSO goldData)
                 {
-                    GameData.Instance.GoldFound += goldData.goldValue;
-                    PlayerStats.Instance.ModifyGold(goldData.goldValue);
+                    GameData.Instance.CollectGold(goldData.goldValue);
                     TransitionToClearedState(cell);
                 }
                 break;
             case SpawnableType.Exit:
+                GameData.Instance.StopGame();
+
                 if (SceneTransitionManager.Instance != null)
                     SceneTransitionManager.Instance.LoadScene("ResultsScreen");
                 else
@@ -88,8 +89,10 @@ public class CellInteractionManager : MonoBehaviour
 
     private void TransitionToClearedState(CellView cell)
     {
-        if (cell.State == CellState.Interacted) GameData.Instance.EnemiesDefeated++;
+        if (cell.State == CellState.Interacted) GameData.Instance.DefeatedEnemy();
+
         cell.SetState(CellState.Cleared);
+
         if (cell.boardManager != null)
             cell.boardManager.RefreshAllCellDamageValues();
         else

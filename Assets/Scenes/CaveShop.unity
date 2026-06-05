@@ -119,54 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &153563800
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 153563802}
-  - component: {fileID: 153563801}
-  m_Layer: 0
-  m_Name: TavernManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &153563801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 153563800}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a062e947f414ed54e99123bfdb8bbab3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TavernManager
-  gold: 100
-  damageUpgradeLevel: 1
-  healthUpgradeLevel: 1
-  luckUpgradeLevel: 1
---- !u!4 &153563802
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 153563800}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1272.7601, y: 595.20386, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &167114948
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,7 +572,7 @@ PrefabInstance:
     - target: {fileID: 4110352748140794245, guid: 68fcb4d3d62c5bf4780aabf77ea336b8, type: 3}
       propertyPath: tavernManager
       value: 
-      objectReference: {fileID: 153563801}
+      objectReference: {fileID: 0}
     - target: {fileID: 8975936821451478302, guid: 68fcb4d3d62c5bf4780aabf77ea336b8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1180,7 +1132,7 @@ PrefabInstance:
     - target: {fileID: 4110352748140794245, guid: 68fcb4d3d62c5bf4780aabf77ea336b8, type: 3}
       propertyPath: tavernManager
       value: 
-      objectReference: {fileID: 153563801}
+      objectReference: {fileID: 0}
     - target: {fileID: 8975936821451478302, guid: 68fcb4d3d62c5bf4780aabf77ea336b8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1714,7 +1666,7 @@ PrefabInstance:
     - target: {fileID: 4110352748140794245, guid: 68fcb4d3d62c5bf4780aabf77ea336b8, type: 3}
       propertyPath: tavernManager
       value: 
-      objectReference: {fileID: 153563801}
+      objectReference: {fileID: 0}
     - target: {fileID: 8975936821451478302, guid: 68fcb4d3d62c5bf4780aabf77ea336b8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1807,6 +1759,5 @@ SceneRoots:
   - {fileID: 187047487}
   - {fileID: 1906522119}
   - {fileID: 527258351}
-  - {fileID: 153563802}
   - {fileID: 225748562}
   - {fileID: 1909056241}

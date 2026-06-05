@@ -30,14 +30,14 @@ public class InteractionUI : MonoBehaviour
 
         foreach (InteractionDataSO interaction in interactions)
         {
-            if (!GameData.Instance.IsInteractionSeen(interaction.interactionID))
+            if (!PlayerRunStats.Instance.IsInteractionSeen(interaction.interactionID))
                 unseenInteractions.Add(interaction);
         }
 
         if (unseenInteractions.Count == 0) unseenInteractions = new(interactions);
 
         InteractionDataSO selectedInteraction = unseenInteractions[Random.Range(0, unseenInteractions.Count)];
-        GameData.Instance.MarkInteractionAsSeen(selectedInteraction.interactionID);
+        PlayerRunStats.Instance.MarkInteractionAsSeen(selectedInteraction.interactionID);
         DisplayInteraction(selectedInteraction);
     }
 
@@ -52,7 +52,7 @@ public class InteractionUI : MonoBehaviour
         foreach (InteractionChoice choice in data.choices)
         {
             InteractionButtonUI btn = Instantiate(buttonPrefab, choiceButtonContainer);
-            bool canChoose = GameData.Instance.ValidateRequirement(choice);
+            bool canChoose = ValidateRequirement(choice);
 
             btn.Setup(choice, canChoose, () => OnChoiceSelected(choice));
         }
@@ -65,7 +65,7 @@ public class InteractionUI : MonoBehaviour
         if (winningOutcome != null)
         {
             foreach (AppliedEffect appliedEffect in winningOutcome.effects)
-                GameData.Instance.ExecuteEffect(appliedEffect.effectType, appliedEffect.value);
+                ExecuteEffect(appliedEffect.effectType, appliedEffect.value);
             bodyTextBox.text = winningOutcome.outcomeText;
         }
 
@@ -114,5 +114,32 @@ public class InteractionUI : MonoBehaviour
             SceneTransitionManager.Instance.LoadScene("MapTesting");
         else
             SceneManager.LoadScene("MapTesting");
+    }
+
+    public bool ValidateRequirement(InteractionChoice choice)
+    {
+        return choice.type switch
+        {
+            InteractionRequirement.HPAmount => PlayerRunStats.Instance.CurrentHP >= choice.requirementValue,
+            InteractionRequirement.GoldAmount => PlayerProfileManager.Instance.TotalGold >= choice.requirementValue,
+            InteractionRequirement.None => true,
+            _ => true,
+        };
+    }
+
+    public void ExecuteEffect(InteractionEffect effect, int value)
+    {
+        switch (effect)
+        {
+            case InteractionEffect.ChangeGold:
+                PlayerProfileManager.Instance.AddGoldToWallet(value);
+                break;
+            case InteractionEffect.ChangeHP:
+                PlayerRunStats.Instance.ModifyHealth(value);
+                break;
+            case InteractionEffect.None:
+            default:
+                break;
+        }
     }
 }

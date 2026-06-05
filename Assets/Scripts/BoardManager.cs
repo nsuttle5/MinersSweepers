@@ -132,10 +132,7 @@ public class BoardManager : MonoBehaviour
             else if (spawnable.type == SpawnableType.Gold) goldCount++;
         }
 
-        GameData.Instance.ResetMineData();
-        GameData.Instance.TotalMines = mineCount;
-        GameData.Instance.TotalEnemies = enemyCount;
-        GameData.Instance.TotalGold = goldCount;
+        GameData.Instance.SetMineData(goldCount, mineCount, enemyCount);
     }
 
     public void OnCellClicked(int cx, int cy)
@@ -200,7 +197,7 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        GameData.Instance.GameStarted = true;
+        GameData.Instance.StartGame();
         firstClick = false;
         RefreshAllCellDamageValues();
         RefreshAllCellVisuals();
