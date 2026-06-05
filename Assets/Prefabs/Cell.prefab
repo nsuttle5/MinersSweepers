@@ -433,8 +433,9 @@ MonoBehaviour:
   spawnable: {fileID: 0}
   boardManager: {fileID: 0}
   hiddenSprite: {fileID: 21300000, guid: 15509f7fd8e2b214287b6023ba95154f, type: 3}
-  partialRevealedSprite: {fileID: 21300000, guid: 6361246d841fdb94ab6405cbfec3f3e9, type: 3}
-  revealedSprite: {fileID: 21300000, guid: 08cbb398d50e4154cb94dfaf97e2199f, type: 3}
+  loneSprite: {fileID: 21300000, guid: 08cbb398d50e4154cb94dfaf97e2199f, type: 3}
+  edgeSprite: {fileID: 21300000, guid: 6361246d841fdb94ab6405cbfec3f3e9, type: 3}
+  revealedSprite: {fileID: 21300000, guid: 78136430fe3bfb947a3ecb7469563697, type: 3}
   markText: {fileID: 6251900581852857883}
   damageText: {fileID: 58061358421396337}
   occupantSR: {fileID: 1303425463999194137}

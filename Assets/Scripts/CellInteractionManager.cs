@@ -27,14 +27,12 @@ public class CellInteractionManager : MonoBehaviour
             {
                 if (PlayerStats.Instance != null)
                 {
-                    Debug.Log($"Enemy hit. Took {-enemy.damage} damage");
                     PlayerStats.Instance.ModifyHealth(-enemy.damage);
                 }
                 TransitionToInteractedState(cell);
             }
             else
             {
-                Debug.Log($"Hit smth that's not an enemy");
 
             }
         }
@@ -44,7 +42,6 @@ public class CellInteractionManager : MonoBehaviour
     {
         if (cell.State == CellState.Interacted)
         {
-            Debug.Log("Getting rid of dead enemy");
             TransitionToClearedState(cell);
             return;
         }
@@ -58,7 +55,6 @@ public class CellInteractionManager : MonoBehaviour
                 {
                     if (PlayerStats.Instance != null)
                     {
-                        Debug.Log($"Attacking revealed enemy. Took {-revealedEnemy.damage} counter-attack damage!");
                         PlayerStats.Instance.ModifyHealth(-revealedEnemy.damage);
                     }
                 }
@@ -67,15 +63,12 @@ public class CellInteractionManager : MonoBehaviour
             case SpawnableType.Gold:
                 if (cell.spawnable is GoldSpawnableSO goldData)
                 {
-                    Debug.Log("Grabbing Gold");
                     GameData.Instance.GoldFound += goldData.goldValue;
                     PlayerStats.Instance.ModifyGold(goldData.goldValue);
                     TransitionToClearedState(cell);
                 }
                 break;
             case SpawnableType.Exit:
-                Debug.Log("Leaving room");
-
                 if (SceneTransitionManager.Instance != null)
                     SceneTransitionManager.Instance.LoadScene("ResultsScreen");
                 else
@@ -120,9 +113,6 @@ public class CellInteractionManager : MonoBehaviour
                 if (adjacentCell == null) continue;
 
                 adjacentCell.TryDisplaySurroundingDamage();
-                {
-                    
-                }
             }
     }
 }

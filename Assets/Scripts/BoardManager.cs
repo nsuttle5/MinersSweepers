@@ -111,12 +111,14 @@ public class BoardManager : MonoBehaviour
                 cellComp.spawnable = null;
             }
 
-            cellComp.UpdateVisual();
+            
             cellObjs[pos.x, pos.y] = cell;
 
             // Add all to unrevealed at the start
             unrevealedCells.Add(cellComp);
         }
+
+        RefreshAllCellVisuals();
     }
 
     private void SetGameData(List<SpawnableSO> spawnables)
@@ -201,6 +203,7 @@ public class BoardManager : MonoBehaviour
         GameData.Instance.GameStarted = true;
         firstClick = false;
         RefreshAllCellDamageValues();
+        RefreshAllCellVisuals();
     }
 
     public void NotifyCellRevealed(CellView cell)
@@ -216,6 +219,56 @@ public class BoardManager : MonoBehaviour
         if (cellAbove != null && !cellAbove.Revealed)
         {
             cellAbove.SetPartialReveal(true);
+        }
+
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+
+                CellView neighbor = GetCellView(cell.x + dx, cell.y + dy);
+                if (neighbor != null)
+                {
+                    neighbor.UpdateVisual();
+                }
+            }
+        }
+    }
+
+    public bool IsSurroundedByRevealed(int cellX, int cellY)
+    {
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+
+                int checkX = cellX + dx;
+                int checkY = cellY + dy;
+
+                if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height)
+                {
+                    CellView neighbor = GetCellView(checkX, checkY);
+                    if (neighbor == null || !neighbor.Revealed) return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void RefreshAllCellVisuals()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                CellView cell = GetCellView(x, y);
+                if (cell != null)
+                {
+                    cell.UpdateVisual();
+                }
+            }
         }
     }
 

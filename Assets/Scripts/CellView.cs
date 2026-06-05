@@ -13,7 +13,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler
     public bool Revealed => State != CellState.Hidden;
 
     [SerializeField] private Sprite hiddenSprite;
-    [SerializeField] private Sprite partialRevealedSprite;
+    [SerializeField] private Sprite loneSprite;
+    [SerializeField] private Sprite edgeSprite;
     [SerializeField] private Sprite revealedSprite;
 
     [SerializeField] private TextMeshPro markText;
@@ -125,8 +126,12 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         switch (State)
         {
             case CellState.Hidden:
-                if (isPartialRevealed && partialRevealedSprite != null)
-                    sr.sprite = partialRevealedSprite;
+                if (boardManager != null && y == boardManager.Height - 1 && edgeSprite != null)
+                    sr.sprite = edgeSprite;
+                else if (boardManager != null && boardManager.IsSurroundedByRevealed(x, y) && loneSprite != null)
+                    sr.sprite = loneSprite;
+                else if (isPartialRevealed && edgeSprite != null)
+                    sr.sprite = edgeSprite;
                 else if (hiddenSprite != null)
                     sr.sprite = hiddenSprite;
 
