@@ -209,6 +209,14 @@ public class BoardManager : MonoBehaviour
             unrevealedCells.Remove(cell);
         if (!revealedCells.Contains(cell))
             revealedCells.Add(cell);
+
+        cell.SetPartialReveal(false);
+
+        CellView cellAbove = GetCellView(cell.x, cell.y - 1);
+        if (cellAbove != null && !cellAbove.Revealed)
+        {
+            cellAbove.SetPartialReveal(true);
+        }
     }
 
     public void RefreshAllCellDamageValues()
