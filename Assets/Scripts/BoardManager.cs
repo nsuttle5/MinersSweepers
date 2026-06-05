@@ -27,7 +27,7 @@ public class BoardManager : MonoBehaviour
     public CellView GetCellView(int x, int y)
     {
         if (x < 0 || y < 0 || x >= width || y >= height) return null;
-        if (cellObjs[x,y] == null) return null;
+        if (cellObjs[x, y] == null) return null;
         return cellObjs[x, y].GetComponent<CellView>();
     }
 
@@ -238,5 +238,13 @@ public class BoardManager : MonoBehaviour
                 }
             }
         return total;
+    }
+
+    public void NotifyCellHidden(CellView cell)
+    {
+        if (revealedCells.Contains(cell))
+            revealedCells.Remove(cell);
+        if (!unrevealedCells.Contains(cell))
+            unrevealedCells.Add(cell);
     }
 }
