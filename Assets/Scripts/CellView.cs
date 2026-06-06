@@ -2,8 +2,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using System.Collections;
 
-public class CellView : MonoBehaviour, IPointerClickHandler
+public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public int x, y;
     public SpawnableSO spawnable;
@@ -31,6 +32,16 @@ public class CellView : MonoBehaviour, IPointerClickHandler
 
     public SpawnableSO spawnableBeforeAbilities { get; set; }
 
+    [Header("Audio Shit")]
+    [SerializeField] private float hoverScale = 1.15f;
+    [SerializeField] private float hoverDuration = 0.1f;
+    [SerializeField] private AudioClip hoverSound;
+    [SerializeField] private AudioSource audioSource;
+    private Vector3 originalScale;
+    private Coroutine hoverCoroutine;
+    private float lastHoverTime = -999f;
+    [SerializeField] private float hoverCooldown = 0.05f;
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -45,6 +56,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         if (damageText) damageText.gameObject.SetActive(false);
         if (markText) markText.gameObject.SetActive(false);
         if (occupantSR) occupantSR.gameObject.SetActive(false);
+
+        originalScale = transform.localScale;
     }
 
     public void SetPartialReveal(bool active)
@@ -216,6 +229,37 @@ public class CellView : MonoBehaviour, IPointerClickHandler
             if (damageText) damageText.gameObject.SetActive(false);
         }
 
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (hoverCoroutine != null) StopCoroutine(hoverCoroutine);
+        hoverCoroutine = StartCoroutine(ScaleTo(transform.localScale, originalScale * hoverScale, hoverDuration));
+
+        if (hoverSound != null && audioSource != null && Time.time - lastHoverTime >= hoverCooldown)
+        {
+            audioSource.PlayOneShot(hoverSound);
+            lastHoverTime = Time.time;
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (hoverCoroutine != null) StopCoroutine(hoverCoroutine);
+        hoverCoroutine = StartCoroutine(ScaleTo(transform.localScale, originalScale, hoverDuration));
+    }
+
+    private IEnumerator ScaleTo(Vector3 from, Vector3 to, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            transform.localScale = Vector3.Lerp(from, to, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.localScale = to;
+        hoverCoroutine = null;
     }
 }
 
