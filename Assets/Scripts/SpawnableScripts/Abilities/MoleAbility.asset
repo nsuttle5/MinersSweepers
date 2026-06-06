@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b10edcf2d6d4fe42a6bbc5ec1f93c8d, type: 3}
   m_Name: MoleAbility
   m_EditorClassIdentifier: Assembly-CSharp::MoleAbilitySO
-  moleHoleType: {fileID: 0}
+  moleHoleType: {fileID: 11400000, guid: 5877361936a4d8841803b6351aec21a4, type: 2}

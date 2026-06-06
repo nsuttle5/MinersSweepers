@@ -27,3 +27,15 @@ MonoBehaviour:
     useRange: 0
     exactAmount: 1
     minMaxAmount: {x: 0, y: 0}
+  - spawnable: {fileID: 11400000, guid: 537f79622c15b4948a337fdfb442e67b, type: 2}
+    useRange: 0
+    exactAmount: 1
+    minMaxAmount: {x: 0, y: 0}
+  - spawnable: {fileID: 11400000, guid: d6cd299f4e087e14b84afc7415f10e2f, type: 2}
+    useRange: 0
+    exactAmount: 1
+    minMaxAmount: {x: 0, y: 0}
+  - spawnable: {fileID: 11400000, guid: 5877361936a4d8841803b6351aec21a4, type: 2}
+    useRange: 0
+    exactAmount: 4
+    minMaxAmount: {x: 0, y: 0}
