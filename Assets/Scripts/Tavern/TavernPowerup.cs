@@ -5,7 +5,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class TavernPowerup : MonoBehaviour
 {
-    [SerializeField] private TavernManager tavernManager;
     [SerializeField] private TavernUpgradeType upgradeType;
     [SerializeField] private int cost = 10;
     [SerializeField] private int maxLevel = -1;
@@ -19,78 +18,35 @@ public class TavernPowerup : MonoBehaviour
 
     private void Awake()
     {
-        button = GetComponent<Button>();
-        button.onClick.AddListener(HandleClick);
-
-        if (tavernManager == null)
-        {
-            tavernManager = TavernManager.Instance;
-        }
+        TryGetComponent(out button);
     }
 
     private void OnEnable()
     {
-        if (tavernManager == null)
-        {
-            tavernManager = TavernManager.Instance;
-        }
-
-        if (tavernManager != null)
-        {
-            tavernManager.OnStateChanged += Refresh;
-        }
-
+        if (button != null) button.onClick.AddListener(HandleClick);
+        TavernManager.OnStateChanged += Refresh;
         Refresh();
     }
 
     private void OnDisable()
     {
-        if (tavernManager != null)
-        {
-            tavernManager.OnStateChanged -= Refresh;
-        }
-
-        if (button != null)
-        {
-            button.onClick.RemoveListener(HandleClick);
-        }
+        if (button != null) button.onClick.RemoveListener(HandleClick);
+        TavernManager.OnStateChanged -= Refresh;
     }
 
     private void HandleClick()
     {
-        if (tavernManager == null)
-        {
-            return;
-        }
-
-        if (tavernManager.TryPurchaseUpgrade(upgradeType, cost, maxLevel))
-        {
-            Refresh();
-        }
+        if (TavernManager.TryPurchaseUpgrade(upgradeType, cost, maxLevel)) Refresh();
     }
 
     public void Refresh()
     {
-        if (button == null)
-        {
-            button = GetComponent<Button>();
-        }
+        if (button == null) return;
 
-        if (tavernManager == null)
-        {
-            tavernManager = TavernManager.Instance;
-        }
-
-        if (tavernManager == null)
-        {
-            button.interactable = false;
-            return;
-        }
-
-        int currentLevel = tavernManager.GetUpgradeLevel(upgradeType);
+        int currentLevel = TavernManager.GetUpgradeLevel(upgradeType);
         bool atMaxLevel = maxLevel >= 0 && currentLevel >= maxLevel;
 
-        button.interactable = !atMaxLevel && tavernManager.CanAfford(cost);
+        button.interactable = !atMaxLevel && (PlayerProfileManager.Instance.TotalGold >= cost);
 
         if (titleText != null)
         {

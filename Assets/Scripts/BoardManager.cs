@@ -111,12 +111,14 @@ public class BoardManager : MonoBehaviour
                 cellComp.spawnable = null;
             }
 
-            cellComp.UpdateVisual();
+            
             cellObjs[pos.x, pos.y] = cell;
 
             // Add all to unrevealed at the start
             unrevealedCells.Add(cellComp);
         }
+
+        RefreshAllCellVisuals();
     }
 
     private void SetGameData(List<SpawnableSO> spawnables)
@@ -130,10 +132,7 @@ public class BoardManager : MonoBehaviour
             else if (spawnable.type == SpawnableType.Gold) goldCount++;
         }
 
-        GameData.Instance.ResetMineData();
-        GameData.Instance.TotalMines = mineCount;
-        GameData.Instance.TotalEnemies = enemyCount;
-        GameData.Instance.TotalGold = goldCount;
+        GameData.Instance.SetMineData(goldCount, mineCount, enemyCount);
     }
 
     public void OnCellClicked(int cx, int cy)
@@ -198,9 +197,10 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        GameData.Instance.GameStarted = true;
+        GameData.Instance.StartGame();
         firstClick = false;
         RefreshAllCellDamageValues();
+        RefreshAllCellVisuals();
     }
 
     public void NotifyCellRevealed(CellView cell)
@@ -209,6 +209,64 @@ public class BoardManager : MonoBehaviour
             unrevealedCells.Remove(cell);
         if (!revealedCells.Contains(cell))
             revealedCells.Add(cell);
+
+        cell.SetPartialReveal(false);
+
+        CellView cellAbove = GetCellView(cell.x, cell.y - 1);
+        if (cellAbove != null && !cellAbove.Revealed)
+        {
+            cellAbove.SetPartialReveal(true);
+        }
+
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+
+                CellView neighbor = GetCellView(cell.x + dx, cell.y + dy);
+                if (neighbor != null)
+                {
+                    neighbor.UpdateVisual();
+                }
+            }
+        }
+    }
+
+    public bool IsSurroundedByRevealed(int cellX, int cellY)
+    {
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+
+                int checkX = cellX + dx;
+                int checkY = cellY + dy;
+
+                if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height)
+                {
+                    CellView neighbor = GetCellView(checkX, checkY);
+                    if (neighbor == null || !neighbor.Revealed) return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void RefreshAllCellVisuals()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                CellView cell = GetCellView(x, y);
+                if (cell != null)
+                {
+                    cell.UpdateVisual();
+                }
+            }
+        }
     }
 
     public void RefreshAllCellDamageValues()

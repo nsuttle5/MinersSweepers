@@ -19,7 +19,7 @@ public class CellInteractionManager : MonoBehaviour
 
     private void HandleCellReveal(CellView cell)
     {
-        SpawnableSO interactedSpawnable = cell.spawnableBeforeAbilities ?? cell.spawnable;
+        SpawnableSO interactedSpawnable = (cell != null) ? cell.spawnable : null;
         if (interactedSpawnable == null) return;
 
         if (cell.WasDirectlyClicked)
@@ -28,10 +28,9 @@ public class CellInteractionManager : MonoBehaviour
 
             if (interactedSpawnable is EnemySpawnableSO enemy)
             {
-                if (PlayerStats.Instance != null)
+                if (PlayerRunStats.Instance != null)
                 {
-                    Debug.Log($"Enemy hit. Took {-enemy.damage} damage");
-                    PlayerStats.Instance.ModifyHealth(-enemy.damage);
+                    PlayerRunStats.Instance.ModifyHealth(-enemy.damage);
                 }
                 TransitionToInteractedState(cell);
             }
@@ -42,7 +41,6 @@ public class CellInteractionManager : MonoBehaviour
     {
         if (cell.State == CellState.Interacted)
         {
-            Debug.Log("Getting rid of dead enemy");
             TransitionToClearedState(cell);
             return;
         }
@@ -60,10 +58,9 @@ public class CellInteractionManager : MonoBehaviour
 
                 if (cell.spawnable is EnemySpawnableSO revealedEnemy)
                 {
-                    if (PlayerStats.Instance != null)
+                    if (PlayerRunStats.Instance != null)
                     {
-                        Debug.Log($"Attacking revealed enemy. Took {-revealedEnemy.damage} counter-attack damage");
-                        PlayerStats.Instance.ModifyHealth(-revealedEnemy.damage);
+                        PlayerRunStats.Instance.ModifyHealth(-revealedEnemy.damage);
                     }
 
                     cell.spawnableBeforeAbilities = cell.spawnable;
@@ -74,24 +71,19 @@ public class CellInteractionManager : MonoBehaviour
                             if (ability != null) ability.OnReveal(cell, cell.boardManager);
                         }
                     }
-
-                    if (cell.spawnable is MoleHoleSpawnableSO)
-                        return;
-
-                    TransitionToClearedState(cell);
                 }
+                TransitionToInteractedState(cell);
                 break;
             case SpawnableType.Gold:
                 if (cell.spawnable is GoldSpawnableSO goldData)
                 {
-                    Debug.Log("Grabbing Gold");
-                    GameData.Instance.GoldFound += goldData.goldValue;
-                    PlayerStats.Instance.ModifyGold(goldData.goldValue);
+                    GameData.Instance.CollectGold(goldData.goldValue);
                     TransitionToClearedState(cell);
                 }
                 break;
             case SpawnableType.Exit:
-                Debug.Log("Leaving room");
+                GameData.Instance.StopGame();
+
                 if (SceneTransitionManager.Instance != null)
                     SceneTransitionManager.Instance.LoadScene("ResultsScreen");
                 else
@@ -111,9 +103,11 @@ public class CellInteractionManager : MonoBehaviour
 
     private void TransitionToClearedState(CellView cell)
     {
-        if (cell.State == CellState.Interacted) GameData.Instance.EnemiesDefeated++;
+        if (cell.State == CellState.Interacted) GameData.Instance.DefeatedEnemy();
         cell.spawnable = null;
+
         cell.SetState(CellState.Cleared);
+        
         if (cell.boardManager != null)
             cell.boardManager.RefreshAllCellDamageValues();
         else
@@ -137,9 +131,6 @@ public class CellInteractionManager : MonoBehaviour
                 if (adjacentCell == null) continue;
 
                 adjacentCell.TryDisplaySurroundingDamage();
-                {
-
-                }
             }
     }
 }

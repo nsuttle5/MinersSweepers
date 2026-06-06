@@ -14,21 +14,25 @@ public class HUDController : MonoBehaviour
 
     private void InitializeHUD()
     {
-        if (PlayerStats.Instance != null)
+        if (PlayerRunStats.Instance != null)
         {
-            PlayerStats.Instance.OnGoldChanged += UpdateGoldUI;
-            PlayerStats.Instance.OnHealthChanged += UpdateHPUI;
-            UpdateGoldUI(PlayerStats.Instance.CurrentGold);
-            UpdateHPUI(PlayerStats.Instance.CurrentHP, PlayerStats.Instance.MaxHP);
+            PlayerRunStats.Instance.OnHealthChanged += UpdateHPUI;
+            UpdateHPUI(PlayerRunStats.Instance.CurrentHP, PlayerRunStats.Instance.MaxHp);
+        }
+
+        if (PlayerProfileManager.Instance != null)
+        {
+            PlayerProfileManager.Instance.OnGlobalGoldChanged += UpdateGoldUI;
+            UpdateGoldUI(PlayerProfileManager.Instance.TotalGold);
         }
     }
 
     private void OnDisable()
     {
-        if (PlayerStats.HasInstance)
-            PlayerStats.Instance.OnGoldChanged -= UpdateGoldUI;
-        if (PlayerStats.HasInstance)
-            PlayerStats.Instance.OnHealthChanged -= UpdateHPUI;
+        if (PlayerProfileManager.HasInstance)
+            PlayerProfileManager.Instance.OnGlobalGoldChanged -= UpdateGoldUI;
+        if (PlayerRunStats.HasInstance)
+            PlayerRunStats.Instance.OnHealthChanged -= UpdateHPUI;
     }
 
     private void UpdateGoldUI(int goldFound)
