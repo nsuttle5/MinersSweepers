@@ -13,14 +13,18 @@ public class CellView : MonoBehaviour, IPointerClickHandler
     public bool Revealed => State != CellState.Hidden;
 
     [SerializeField] private Sprite hiddenSprite;
+    [SerializeField] private Sprite loneSprite;
+    [SerializeField] private Sprite edgeSprite;
     [SerializeField] private Sprite revealedSprite;
 
     [SerializeField] private TextMeshPro markText;
     [SerializeField] private TextMeshPro damageText;
+    [SerializeField] private SpriteRenderer occupantSR;
 
     public CellState State { get; private set; } = CellState.Hidden;
     public bool WasDirectlyClicked { get; private set; } = false;
 
+    private bool isPartialRevealed = false;
     public bool IsActiveThreat => (State == CellState.Hidden || State == CellState.Revealed) && spawnable != null && spawnable.type == SpawnableType.Enemy;
 
     public static UnityAction<CellView, Vector2> OnCellRightClick;
@@ -32,19 +36,21 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         sr = GetComponent<SpriteRenderer>();
         if (!damageText) Debug.LogError("DamageText not set on CellView prefab");
         if (!markText) Debug.LogError("MarkText not set on CellView prefab");
+        if (!occupantSR) Debug.LogError("OccupantSR not set on CellView prefab");
 
-        if (markText)
-        {
-            markText.sortingOrder = sr.sortingOrder + 1;
-        }
-
-        if (damageText)
-        {
-            damageText.sortingOrder = sr.sortingOrder + 1;
-        }
+        if (markText) markText.sortingOrder = sr.sortingOrder + 1;
+        if (damageText) damageText.sortingOrder = sr.sortingOrder + 1;
+        if (occupantSR) occupantSR.sortingOrder = sr.sortingOrder + 1;
 
         if (damageText) damageText.gameObject.SetActive(false);
         if (markText) markText.gameObject.SetActive(false);
+        if (occupantSR) occupantSR.gameObject.SetActive(false);
+    }
+
+    public void SetPartialReveal(bool active)
+    {
+        isPartialRevealed = active;
+        UpdateVisual();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -116,33 +122,33 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         if (!sr) sr = GetComponent<SpriteRenderer>();
         sr.sortingOrder = y;
 
-        if (markText)
-        {
-            markText.sortingOrder = sr.sortingOrder + 1;
-        }
+        if (occupantSR) occupantSR.sortingOrder = sr.sortingOrder + 1;
+        if (markText) markText.sortingOrder = sr.sortingOrder + 2;
+        if (damageText) damageText.sortingOrder = sr.sortingOrder + 2;
 
-        if (damageText)
-        {
-            damageText.sortingOrder = sr.sortingOrder + 1;
-        }
+        if (occupantSR) occupantSR.gameObject.SetActive(false);
 
         switch (State)
         {
             case CellState.Hidden:
-                if (hiddenSprite != null) sr.sprite = hiddenSprite;
+                if (boardManager != null && y == boardManager.Height - 1 && edgeSprite != null)
+                    sr.sprite = edgeSprite;
+                else if (boardManager != null && boardManager.IsSurroundedByRevealed(x, y) && loneSprite != null)
+                    sr.sprite = loneSprite;
+                else if (isPartialRevealed && edgeSprite != null)
+                    sr.sprite = edgeSprite;
+                else if (hiddenSprite != null)
+                    sr.sprite = hiddenSprite;
+
                 if (damageText) damageText.gameObject.SetActive(false);
                 break;
             case CellState.Revealed:
-                if (spawnable != null && spawnable.sprite != null)
-                    sr.sprite = spawnable.sprite;
-                else if (revealedSprite != null)
-                    sr.sprite = revealedSprite;
+                if (revealedSprite != null) sr.sprite = revealedSprite;
+                HandleOccupantVisual();
                 break;
             case CellState.Interacted:
-                if (spawnable is EnemySpawnableSO enemy && enemy.interactedSprite != null)
-                    sr.sprite = enemy.interactedSprite;
-                else if (revealedSprite != null)
-                    sr.sprite = revealedSprite;
+                if (revealedSprite != null) sr.sprite = revealedSprite;
+                HandleOccupantVisual();
                 break;
             case CellState.Cleared:
                 if (revealedSprite != null) sr.sprite = revealedSprite;
@@ -153,9 +159,32 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         TryDisplaySurroundingDamage();
     }
 
+    private void HandleOccupantVisual()
+    {
+        if (!occupantSR || spawnable == null) return;
+
+        Sprite activeOccupantSprite = null;
+
+        if (State == CellState.Interacted && spawnable is EnemySpawnableSO enemy && enemy.interactedSprite != null)
+        {
+            activeOccupantSprite = enemy.interactedSprite;
+        }
+        else
+        {
+            activeOccupantSprite = spawnable.sprite;
+        }
+
+        if (activeOccupantSprite != null)
+        {
+            occupantSR.sprite = activeOccupantSprite;
+            occupantSR.gameObject.SetActive(true);
+        }
+    }
+
+
     public void TryDisplaySurroundingDamage()
     {
-        if (State == CellState.Hidden)
+        if (State == CellState.Hidden || isPartialRevealed)
         {
             if (damageText) damageText.gameObject.SetActive(false);
             return;

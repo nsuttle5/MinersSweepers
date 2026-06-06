@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 public class GameData : MonoBehaviour
 {
+    #region Instance
     private static GameData _instance;
     public static GameData Instance
     {
@@ -22,27 +23,18 @@ public class GameData : MonoBehaviour
         }
     }
     public static bool HasInstance => _instance != null;
+    #endregion
 
     private float timePassed;
-    private int goldFound;
-    private HashSet<string> seenInteractionIDs = new();
 
-    public int MinesFound { get; set; }
-    public int GoldFound
-    {
-        get => goldFound;
-        set
-        {
-            goldFound = value;
-            OnGoldChanged?.Invoke(goldFound);
-        }
-    }
-    public int EnemiesDefeated { get; set; }
-    public int TotalMines { get; set; }
-    public int TotalGold { get; set; }
-    public int TotalEnemies { get; set; }
+    public int MinesFoundThisMatch { get; private set; }
+    public int GoldFoundThisMatch{ get; private set; }
+    public int EnemiesDefeatedThisMatch { get; private set; }
+    public int TotalMines { get; private set; }
+    public int TotalGold { get; private set; }
+    public int TotalEnemies { get; private set; }
     public string TimePassed => GetTime();
-    public bool GameStarted { get; set; }
+    public bool GameStarted { get; private set; }
 
     public UnityAction<int> OnGoldChanged;
 
@@ -56,8 +48,6 @@ public class GameData : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(gameObject);
-
-        seenInteractionIDs = new();
     }
 
     private void Update()
@@ -67,22 +57,18 @@ public class GameData : MonoBehaviour
         timePassed += Time.deltaTime;
     }
 
-    public void ResetMineData()
+    public void SetMineData(int totalGold, int totalMines, int totalEnemies)
     {
-        MinesFound = 0;
-        EnemiesDefeated = 0;
-        GoldFound = 0;
-        TotalMines = 0;
-        TotalEnemies = 0;
-        TotalGold = 0;
-        timePassed = 0;
-        GameStarted = false;
-    }
+        GoldFoundThisMatch = 0;
+        MinesFoundThisMatch = 0;
+        EnemiesDefeatedThisMatch = 0;
 
-    public void ResetAllData()
-    {
-        ResetMineData();
-        seenInteractionIDs.Clear();
+        TotalGold = totalGold;
+        TotalMines = totalMines;
+        TotalEnemies = totalEnemies;
+
+        timePassed = 0;
+        StopGame();
     }
 
     private string GetTime()
@@ -92,40 +78,16 @@ public class GameData : MonoBehaviour
         return string.Format("{0}:{1:00}", minutes, remainingSeconds);
     }
 
-    public void MarkInteractionAsSeen(string id)
+    public void CollectGold(int amount)
     {
-        if (!string.IsNullOrEmpty(id)) seenInteractionIDs.Add(id);
+        GoldFoundThisMatch += amount;
+        OnGoldChanged?.Invoke(GoldFoundThisMatch);
+
+        PlayerProfileManager.Instance.AddGoldToWallet(amount);
     }
 
-    public bool IsInteractionSeen(string id)
-    {
-        return seenInteractionIDs.Contains(id);
-    }
-
-    public bool ValidateRequirement(InteractionChoice choice)
-    {
-        return choice.type switch
-        {
-            InteractionRequirement.HPAmount => PlayerStats.Instance.CurrentHP >= choice.requirementValue,
-            InteractionRequirement.GoldAmount => GoldFound >= choice.requirementValue,
-            InteractionRequirement.None => true,
-            _ => true,
-        };
-    }
-
-    public void ExecuteEffect(InteractionEffect effect, int value)
-    {
-        switch (effect)
-        {
-            case InteractionEffect.ChangeGold:
-                PlayerStats.Instance.ModifyGold(value);
-                break;
-            case InteractionEffect.ChangeHP:
-                PlayerStats.Instance.ModifyHealth(value);
-                break;
-            case InteractionEffect.None:
-            default:
-            break;
-        }
-    }
+    public void DefeatedEnemy() => EnemiesDefeatedThisMatch++;
+    public void FoundMine() => MinesFoundThisMatch++;
+    public void StartGame() => GameStarted = true;
+    public void StopGame() => GameStarted = false;
 }
