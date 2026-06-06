@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Yeti
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnableSO
   type: 0
-  displayName: 
-  sprite: {fileID: 0}
-  damage: 0
-  health: 0
+  displayName: Yeti
+  sprite: {fileID: 21300000, guid: 55e1c52141e2c3645a3ca3fc417a6bd8, type: 3}
+  damage: 18
+  health: 18
   description: 
   abilityTooltip: 
-  abilities: []
+  abilities:
+  - {fileID: 11400000, guid: ffeb40d180db89d4692f4dcfe3bcc61d, type: 2}
   onSpawnAudio: {fileID: 0}
   onDeathAudio: {fileID: 0}
   interactedSprite: {fileID: 0}

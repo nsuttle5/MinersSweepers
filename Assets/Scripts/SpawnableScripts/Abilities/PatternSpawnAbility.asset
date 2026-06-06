@@ -14,21 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PatternSpawnAbilitySO
   size: 3
   spawnPattern:
+  - active: 1
+    spawnableToPlace: {fileID: 11400000, guid: ed7ffcd545035a24e9a411152e044136, type: 2}
+  - active: 1
+    spawnableToPlace: {fileID: 11400000, guid: ed7ffcd545035a24e9a411152e044136, type: 2}
+  - active: 1
+    spawnableToPlace: {fileID: 11400000, guid: ed7ffcd545035a24e9a411152e044136, type: 2}
+  - active: 1
+    spawnableToPlace: {fileID: 11400000, guid: ed7ffcd545035a24e9a411152e044136, type: 2}
   - active: 0
     spawnableToPlace: {fileID: 0}
+  - active: 1
+    spawnableToPlace: {fileID: 11400000, guid: ed7ffcd545035a24e9a411152e044136, type: 2}
+  - active: 1
+    spawnableToPlace: {fileID: 11400000, guid: ed7ffcd545035a24e9a411152e044136, type: 2}
   - active: 0
     spawnableToPlace: {fileID: 0}
-  - active: 0
-    spawnableToPlace: {fileID: 0}
-  - active: 0
-    spawnableToPlace: {fileID: 0}
-  - active: 0
-    spawnableToPlace: {fileID: 0}
-  - active: 0
-    spawnableToPlace: {fileID: 0}
-  - active: 0
-    spawnableToPlace: {fileID: 0}
-  - active: 0
-    spawnableToPlace: {fileID: 0}
-  - active: 0
-    spawnableToPlace: {fileID: 0}
+  - active: 1
+    spawnableToPlace: {fileID: 11400000, guid: ed7ffcd545035a24e9a411152e044136, type: 2}
