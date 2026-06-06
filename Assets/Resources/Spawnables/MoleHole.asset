@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: MoleHole
   m_EditorClassIdentifier: Assembly-CSharp::MoleHoleSpawnableSO
   type: 0
-  displayName: 
-  sprite: {fileID: 0}
+  displayName: Mole Hole
+  sprite: {fileID: 21300000, guid: eb767bee7bfbb3f4eb6e37295694e6a5, type: 3}
   damage: 0
   health: 0
   description: 
