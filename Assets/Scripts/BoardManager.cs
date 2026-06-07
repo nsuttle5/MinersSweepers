@@ -307,7 +307,7 @@ public class BoardManager : MonoBehaviour
                 {
                     var neighbor = cellObjs[x, y].GetComponent<CellView>();
                     if (neighbor != null && neighbor.IsActiveThreat)
-                        total += neighbor.spawnable.damage;
+                        total += neighbor.effectiveDamage;
                 }
             }
         return total;
