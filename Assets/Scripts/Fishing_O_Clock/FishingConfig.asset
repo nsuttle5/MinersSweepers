@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c854efab810674d8881b270f3e7c96, type: 3}
+  m_Name: FishingConfig
+  m_EditorClassIdentifier: Assembly-CSharp::FishingConfigSO
+  columnCount: 3
+  cellSize: 1
+  initialScrollSpeed: 2
+  maxScrollSpeed: 8
+  speedIncreaseRate: 0.1
+  visibleRowBuffer: 5
+  difficultyTiers:
+  - timeThreshold: 0
+    bombChance: 0.1
+    fishChance: 0.3
+  - timeThreshold: 10
+    bombChance: 0.15
+    fishChance: 0.4
+  - timeThreshold: 20
+    bombChance: 0.2
+    fishChance: 0.45
+  - timeThreshold: 30
+    bombChance: 0.25
+    fishChance: 0.5
