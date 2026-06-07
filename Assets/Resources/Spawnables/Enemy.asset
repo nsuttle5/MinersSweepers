@@ -20,4 +20,6 @@ MonoBehaviour:
   description: 
   abilityTooltip: 
   abilities: []
+  onSpawnAudio: {fileID: 0}
+  onDeathAudio: {fileID: 0}
   interactedSprite: {fileID: 21300000, guid: 1ccb3420ff0f384469c8663a6d4dc291, type: 3}
