@@ -2,15 +2,22 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "FakeMineAbility", menuName = "Minesweeper/Abilities/FakeMineAbility")]
-public class FakeMineSO : SpawnableAbilitiesSO
+public class FakeMineSO : SpawnableAbilitiesSO, ISpawnableOnBoard
 {
+    public int displayDmg = 1001;
+    public int actualDmg = 1;
+
     public override void OnReveal(CellView revealedCell, BoardManager board)
     {
-        if (revealedCell.spawnable == null) return;
-        if (revealedCell.spawnable.type != SpawnableType.Enemy) return;
+        revealedCell.damageOverride = actualDmg;
 
-        revealedCell.spawnable.damage = 1;
-        revealedCell.UpdateVisual();
+        board.RefreshAllCellDamageValues();
 
+    }
+
+    public void OnBoardSpawn(CellView sourceCell, BoardManager board)
+    {
+        sourceCell.damageOverride = displayDmg;
+        board.RefreshAllCellDamageValues();
     }
 }
