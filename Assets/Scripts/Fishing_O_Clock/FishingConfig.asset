@@ -17,7 +17,7 @@ MonoBehaviour:
   initialScrollSpeed: 2
   maxScrollSpeed: 8
   speedIncreaseRate: 0.1
-  visibleRowBuffer: 5
+  visibleRowBuffer: 10
   difficultyTiers:
   - timeThreshold: 0
     bombChance: 0.1
