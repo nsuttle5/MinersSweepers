@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Enemy
   sprite: {fileID: 21300000, guid: 22a05f37b2f53694489b1b94f47f23b1, type: 3}
   damage: 3
-  health: 3
+  health: 4
   description: 
   abilityTooltip: 
   abilities: []
