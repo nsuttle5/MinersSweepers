@@ -29,9 +29,8 @@ public class CellInteractionManager : MonoBehaviour
             if (interactedSpawnable is EnemySpawnableSO enemy)
             {
                 if (PlayerRunStats.Instance != null)
-                {
                     PlayerRunStats.Instance.ModifyHealth(-enemy.damage);
-                }
+
                 TransitionToInteractedState(cell);
             }
         }
@@ -59,9 +58,7 @@ public class CellInteractionManager : MonoBehaviour
                 if (cell.spawnable is EnemySpawnableSO revealedEnemy)
                 {
                     if (PlayerRunStats.Instance != null)
-                    {
                         PlayerRunStats.Instance.ModifyHealth(-revealedEnemy.damage);
-                    }
 
                     cell.spawnableBeforeAbilities = cell.spawnable;
                     if (revealedEnemy.abilities != null)
@@ -71,9 +68,14 @@ public class CellInteractionManager : MonoBehaviour
                             if (ability != null) ability.OnReveal(cell, cell.boardManager);
                         }
                     }
+
+                    if (cell.spawnable is MoleHoleSpawnableSO)
+                        return;
+
+                    TransitionToClearedState(cell);
                 }
-                TransitionToInteractedState(cell);
                 break;
+
             case SpawnableType.Gold:
                 if (cell.spawnable is GoldSpawnableSO goldData)
                 {
@@ -81,6 +83,7 @@ public class CellInteractionManager : MonoBehaviour
                     TransitionToClearedState(cell);
                 }
                 break;
+
             case SpawnableType.Exit:
                 GameData.Instance.StopGame();
 
@@ -103,11 +106,26 @@ public class CellInteractionManager : MonoBehaviour
 
     private void TransitionToClearedState(CellView cell)
     {
-        if (cell.State == CellState.Interacted) GameData.Instance.DefeatedEnemy();
-        cell.spawnable = null;
+        if (cell.State == CellState.Interacted)
+        {
+            GameData.Instance.DefeatedEnemy();
 
+            if (cell.spawnable != null && cell.spawnable.abilities != null)
+            {
+                foreach (var ability in cell.spawnable.abilities)
+                {
+                    if (ability is PatternModifyDamageAbilitySO modAbility)
+                        modAbility.RevertModifications(cell, cell.boardManager);
+
+                    if (ability is ObscureAttackValuesAbilitySO obscureAbility)
+                        obscureAbility.RevertObscure(cell, cell.boardManager);
+                }
+            }
+        }
+
+        cell.spawnable = null;
         cell.SetState(CellState.Cleared);
-        
+
         if (cell.boardManager != null)
             cell.boardManager.RefreshAllCellDamageValues();
         else
