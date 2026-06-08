@@ -15,7 +15,7 @@ MonoBehaviour:
   type: 0
   displayName: Nathan Enemy
   sprite: {fileID: 21300000, guid: 2e8c499a55c0eb84395207c9373269f5, type: 3}
-  damage: 1
+  damage: 1000
   health: 0
   description: 
   abilityTooltip: 
