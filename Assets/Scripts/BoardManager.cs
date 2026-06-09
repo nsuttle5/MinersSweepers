@@ -24,6 +24,7 @@ public class BoardManager : MonoBehaviour
 
     public int Width => width;
     public int Height => height;
+
     public CellView GetCellView(int x, int y)
     {
         if (x < 0 || y < 0 || x >= width || y >= height) return null;
@@ -50,7 +51,6 @@ public class BoardManager : MonoBehaviour
         }
 
         firstClick = true;
-
         width = mapLayout.width;
         height = mapLayout.height;
         cellObjs = new GameObject[width, height];
@@ -71,21 +71,12 @@ public class BoardManager : MonoBehaviour
             (positions[j], positions[i]) = (positions[i], positions[j]);
         }
 
-        List<SpawnableSO> toSpawn = new();
-        foreach (var constraint in mapLayout.spawnConstraints)
-        {
-            int count = constraint.GetQuantity();
-            for (int k = 0; k < count; k++)
-                toSpawn.Add(constraint.spawnable);
-        }
+        List<SpawnConstraint> sortedConstraints = new(mapLayout.spawnConstraints);
+        sortedConstraints.Sort((a, b) => ((int)a.priority).CompareTo((int)b.priority));
+
+        List<SpawnableSO> toSpawn = ShuffleWithinPriorityGroups(sortedConstraints);
 
         SetGameData(toSpawn);
-
-        for (int i = toSpawn.Count - 1; i > 0; i--)
-        {
-            int j = Random.Range(0, i + 1);
-            (toSpawn[j], toSpawn[i]) = (toSpawn[i], toSpawn[j]);
-        }
 
         int t = 0;
         for (int i = 0; i < positions.Count; i++)
@@ -95,30 +86,64 @@ public class BoardManager : MonoBehaviour
             cell.transform.localPosition = new Vector3(pos.x, -pos.y * verticalSpacing, 0);
             cell.name = $"Cell_{pos.x}_{pos.y}";
 
-            if (!cell.TryGetComponent(out CellView cellComp)) cellComp = cell.AddComponent<CellView>();
+            if (!cell.TryGetComponent(out CellView cellComp))
+                cellComp = cell.AddComponent<CellView>();
 
             cellComp.boardManager = this;
             cellComp.x = pos.x;
             cellComp.y = pos.y;
+            cellComp.spawnable = t < toSpawn.Count ? toSpawn[t++] : null;
 
-            if (t < toSpawn.Count)
-            {
-                cellComp.spawnable = toSpawn[t];
-                t++;
-            }
-            else
-            {
-                cellComp.spawnable = null;
-            }
-
-            
             cellObjs[pos.x, pos.y] = cell;
-
-            // Add all to unrevealed at the start
             unrevealedCells.Add(cellComp);
         }
 
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                CellView cell = GetCellView(x, y);
+                if (cell == null || cell.spawnable == null || cell.spawnable.abilities == null) continue;
+
+                foreach (var ability in cell.spawnable.abilities)
+                {
+                    if (ability is ISpawnableOnBoard boardAbility)
+                        boardAbility.OnBoardSpawn(cell, this);
+                }
+            }
+        }
+
         RefreshAllCellVisuals();
+    }
+
+    private List<SpawnableSO> ShuffleWithinPriorityGroups(List<SpawnConstraint> sortedConstraints)
+    {
+        List<SpawnableSO> result = new();
+
+        int i = 0;
+        while (i < sortedConstraints.Count)
+        {
+            SpawnPriority currentPriority = sortedConstraints[i].priority;
+            List<SpawnableSO> group = new();
+
+            while (i < sortedConstraints.Count && sortedConstraints[i].priority == currentPriority)
+            {
+                int count = sortedConstraints[i].GetQuantity();
+                for (int k = 0; k < count; k++)
+                    group.Add(sortedConstraints[i].spawnable);
+                i++;
+            }
+
+            for (int j = group.Count - 1; j > 0; j--)
+            {
+                int r = Random.Range(0, j + 1);
+                (group[r], group[j]) = (group[j], group[r]);
+            }
+
+            result.AddRange(group);
+        }
+
+        return result;
     }
 
     private void SetGameData(List<SpawnableSO> spawnables)
@@ -214,21 +239,16 @@ public class BoardManager : MonoBehaviour
 
         CellView cellAbove = GetCellView(cell.x, cell.y - 1);
         if (cellAbove != null && !cellAbove.Revealed)
-        {
             cellAbove.SetPartialReveal(true);
-        }
 
         for (int dx = -1; dx <= 1; dx++)
         {
             for (int dy = -1; dy <= 1; dy++)
             {
                 if (dx == 0 && dy == 0) continue;
-
                 CellView neighbor = GetCellView(cell.x + dx, cell.y + dy);
                 if (neighbor != null)
-                {
                     neighbor.UpdateVisual();
-                }
             }
         }
     }
@@ -257,16 +277,12 @@ public class BoardManager : MonoBehaviour
     public void RefreshAllCellVisuals()
     {
         for (int x = 0; x < width; x++)
-        {
             for (int y = 0; y < height; y++)
             {
                 CellView cell = GetCellView(x, y);
                 if (cell != null)
-                {
                     cell.UpdateVisual();
-                }
             }
-        }
     }
 
     public void RefreshAllCellDamageValues()
@@ -276,7 +292,6 @@ public class BoardManager : MonoBehaviour
             {
                 CellView cell = GetCellView(x, y);
                 if (cell == null) continue;
-
                 cell.TryDisplaySurroundingDamage();
             }
     }
@@ -292,7 +307,7 @@ public class BoardManager : MonoBehaviour
                 {
                     var neighbor = cellObjs[x, y].GetComponent<CellView>();
                     if (neighbor != null && neighbor.IsActiveThreat)
-                        total += neighbor.spawnable.damage;
+                        total += neighbor.effectiveDamage;
                 }
             }
         return total;

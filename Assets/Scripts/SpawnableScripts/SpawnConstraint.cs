@@ -7,6 +7,7 @@ public class SpawnConstraint
     public bool useRange = false;
     public int exactAmount = 1;
     public Vector2Int minMaxAmount = new Vector2Int(1, 5);
+    public SpawnPriority priority = SpawnPriority.Medium;
 
     public int GetQuantity()
     {

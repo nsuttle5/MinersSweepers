@@ -22,6 +22,9 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private SpriteRenderer occupantSR;
 
+    public int? damageOverride = null;
+    public int effectiveDamage => damageOverride.HasValue ? damageOverride.Value : (spawnable != null ? spawnable.damage : 0);
+
     public CellState State { get; private set; } = CellState.Hidden;
     public bool WasDirectlyClicked { get; private set; } = false;
 
@@ -41,6 +44,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     private Coroutine hoverCoroutine;
     private float lastHoverTime = -999f;
     [SerializeField] private float hoverCooldown = 0.05f;
+
+    public bool isDamageObscured = false;
 
     private void Awake()
     {
@@ -212,7 +217,12 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             int surroundingDamage = boardManager.GetNeighborDamage(x, y);
             if (damageText)
             {
-                if (surroundingDamage > 0)
+                if (isDamageObscured)
+                {
+                    damageText.text = "?";
+                    damageText.gameObject.SetActive(true);
+                }
+                else if (surroundingDamage > 0)
                 {
                     damageText.text = surroundingDamage.ToString();
                     damageText.gameObject.SetActive(true);

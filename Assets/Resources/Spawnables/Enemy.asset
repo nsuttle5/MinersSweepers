@@ -16,8 +16,10 @@ MonoBehaviour:
   displayName: Enemy
   sprite: {fileID: 21300000, guid: 22a05f37b2f53694489b1b94f47f23b1, type: 3}
   damage: 3
-  health: 3
+  health: 4
   description: 
   abilityTooltip: 
   abilities: []
+  onSpawnAudio: {fileID: 0}
+  onDeathAudio: {fileID: 0}
   interactedSprite: {fileID: 21300000, guid: 1ccb3420ff0f384469c8663a6d4dc291, type: 3}
