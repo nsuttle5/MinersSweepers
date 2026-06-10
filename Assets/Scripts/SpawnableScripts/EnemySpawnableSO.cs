@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemySpawnableSO : SpawnableSO
 {
     public Sprite interactedSprite;
+    public bool isBoss = false;
 
     private void Awake() => type = SpawnableType.Enemy;
 }

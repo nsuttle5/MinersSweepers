@@ -119,6 +119,82 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &159538875
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 159538879}
+  - component: {fileID: 159538878}
+  - component: {fileID: 159538877}
+  - component: {fileID: 159538876}
+  m_Layer: 0
+  m_Name: ArtifactManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &159538876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159538875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67bc0ead570ccf429e9e6ec770bb408, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConsumableTestUSer
+  consumableToTest: {fileID: 11400000, guid: 690623125f9bf8443bc10c0b22df7984, type: 2}
+--- !u!114 &159538877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159538875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb130b8fd015d04b90d4a8e09bb24b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactTestGiver
+  artifactsToGive:
+  - {fileID: 11400000, guid: d77ab6e9b9023994b87a513f72b8e1eb, type: 2}
+  - {fileID: 11400000, guid: 6d69c3fa2c3593f498618bbeb4231603, type: 2}
+  consumablesToGive:
+  - {fileID: 11400000, guid: 690623125f9bf8443bc10c0b22df7984, type: 2}
+--- !u!114 &159538878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159538875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e37c25913412dfb438067234470dead0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactManager
+--- !u!4 &159538879
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159538875}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.35172, y: 1.16267, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &438863992
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,3 +1257,4 @@ SceneRoots:
   - {fileID: 1177510845}
   - {fileID: 457718991}
   - {fileID: 8977545906819228677}
+  - {fileID: 159538879}

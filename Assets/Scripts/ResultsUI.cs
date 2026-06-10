@@ -35,6 +35,9 @@ public class ResultsUI : MonoBehaviour
             {
                 OnPlayerWin?.Invoke();
 
+                if (ArtifactManager.Instance != null)
+                    ArtifactManager.Instance.ClearAll();
+
                 Destroy(MapManager.Instance.gameObject);
                 Destroy(PlayerRunStats.Instance.gameObject);
 

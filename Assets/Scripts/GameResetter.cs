@@ -4,6 +4,9 @@ public class GameResetter : MonoBehaviour
 {
     public void ResetGame()
     {
+        if (ArtifactManager.Instance != null)
+            ArtifactManager.Instance.ClearAll();
+
         if (GameData.HasInstance)
             Destroy(GameData.Instance.gameObject);
 

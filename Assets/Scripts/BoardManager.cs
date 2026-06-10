@@ -25,6 +25,8 @@ public class BoardManager : MonoBehaviour
     public int Width => width;
     public int Height => height;
 
+    private int totalCells;
+
     public CellView GetCellView(int x, int y)
     {
         if (x < 0 || y < 0 || x >= width || y >= height) return null;
@@ -114,6 +116,8 @@ public class BoardManager : MonoBehaviour
         }
 
         RefreshAllCellVisuals();
+        totalCells = width * height;
+        GameEvents.OnBoardGenerated?.Invoke(); //Board Generated event call
     }
 
     private List<SpawnableSO> ShuffleWithinPriorityGroups(List<SpawnConstraint> sortedConstraints)
@@ -185,13 +189,18 @@ public class BoardManager : MonoBehaviour
     private void HandleFirstClick(int cx, int cy)
     {
         var clickedCellView = cellObjs[cx, cy].GetComponent<CellView>();
+
+
         if (clickedCellView.spawnable != null)
         {
             var emptyCells = new List<CellView>();
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
-                    if (cellObjs[x, y].GetComponent<CellView>().spawnable == null && !(x == cx && y == cy))
-                        emptyCells.Add(cellObjs[x, y].GetComponent<CellView>());
+                {
+                    var candidate = cellObjs[x, y].GetComponent<CellView>();
+                    if (candidate.spawnable == null && !(x == cx && y == cy))
+                        emptyCells.Add(candidate);
+                }
             if (emptyCells.Count > 0)
             {
                 CellView swapWith = emptyCells[Random.Range(0, emptyCells.Count)];
@@ -201,7 +210,12 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        clickedCellView.Reveal(wasDirectClick: true);
+        firstClick = false;
+        GameData.Instance.StartGame();
+        GameEvents.OnFirstCellRevealed?.Invoke(); //First Cell Revealed event call
+
+
+        clickedCellView.Reveal(wasDirectClick: true, triggerAbilities: false);
         OnCellRevealed?.Invoke(clickedCellView);
 
         for (int x = cx - 1; x <= cx + 1; x++)
@@ -209,21 +223,17 @@ public class BoardManager : MonoBehaviour
             for (int y = cy - 1; y <= cy + 1; y++)
             {
                 if (x == cx && y == cy) continue;
+                if (x < 0 || x >= width || y < 0 || y >= height) continue;
 
-                if (x >= 0 && x < width && y >= 0 && y < height)
+                var cell = cellObjs[x, y].GetComponent<CellView>();
+                if (cell != null && !cell.Revealed && cell.spawnable == null)
                 {
-                    var cell = cellObjs[x, y].GetComponent<CellView>();
-                    if (cell != null && !cell.Revealed)
-                    {
-                        cell.Reveal(wasDirectClick: false, triggerAbilities: true);
-                        OnCellRevealed?.Invoke(cell);
-                    }
+                    cell.Reveal(wasDirectClick: false, triggerAbilities: false);
+                    OnCellRevealed?.Invoke(cell);
                 }
             }
         }
 
-        GameData.Instance.StartGame();
-        firstClick = false;
         RefreshAllCellDamageValues();
         RefreshAllCellVisuals();
     }
@@ -251,6 +261,15 @@ public class BoardManager : MonoBehaviour
                     neighbor.UpdateVisual();
             }
         }
+
+        GameEvents.OnCellRevealed?.Invoke(cell); //CellRevealed event call
+
+        float percent = (float)revealedCells.Count / totalCells;
+        GameEvents.OnBoardPercentRevealed?.Invoke(percent); //BoardPercentRevealed event call
+
+        int revealed = revealedCells.Count;
+        //Run at arbitrary number
+        GameEvents.OnCellRevealedCountReached?.Invoke(revealed); //CellRevealedCountReached event call
     }
 
     public bool IsSurroundedByRevealed(int cellX, int cellY)
@@ -319,5 +338,7 @@ public class BoardManager : MonoBehaviour
             revealedCells.Remove(cell);
         if (!unrevealedCells.Contains(cell))
             unrevealedCells.Add(cell);
+
+        GameEvents.OnCellHidden?.Invoke(cell); //CellHidden event call
     }
 }

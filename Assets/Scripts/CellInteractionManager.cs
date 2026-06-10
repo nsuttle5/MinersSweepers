@@ -20,7 +20,14 @@ public class CellInteractionManager : MonoBehaviour
     private void HandleCellReveal(CellView cell)
     {
         SpawnableSO interactedSpawnable = (cell != null) ? cell.spawnable : null;
-        if (interactedSpawnable == null) return;
+        if (interactedSpawnable == null)
+        {
+            if (cell.WasDirectlyClicked)
+            {
+                GameEvents.OnEmptyCellRevealed?.Invoke(cell); //EmptyCellRevealed event call
+            }
+            return;
+        }
 
         if (cell.WasDirectlyClicked)
         {
@@ -28,6 +35,12 @@ public class CellInteractionManager : MonoBehaviour
 
             if (interactedSpawnable is EnemySpawnableSO enemy)
             {
+                GameEvents.OnEnemyRevealed?.Invoke(cell); //EnemyRevealed event call
+                if (enemy.displayName == "Nathan") //Change to mine later
+                {
+                    GameData.Instance.FoundMine();
+                    GameEvents.OnMineRevealed?.Invoke(cell); //MineFound event call
+                }
                 if (PlayerRunStats.Instance != null)
                     PlayerRunStats.Instance.ModifyHealth(-enemy.damage);
 
@@ -79,13 +92,16 @@ public class CellInteractionManager : MonoBehaviour
             case SpawnableType.Gold:
                 if (cell.spawnable is GoldSpawnableSO goldData)
                 {
+                    GameEvents.OnGoldCellRevealed?.Invoke(cell); //GoldRevealed event call
                     GameData.Instance.CollectGold(goldData.goldValue);
                     TransitionToClearedState(cell);
                 }
                 break;
 
             case SpawnableType.Exit:
+                GameEvents.OnExitRevealed?.Invoke(cell); //ExitRevealed event call
                 GameData.Instance.StopGame();
+                GameEvents.OnExitUsed?.Invoke(); //ExitUsed event call
 
                 if (SceneTransitionManager.Instance != null)
                     SceneTransitionManager.Instance.LoadScene("ResultsScreen");
@@ -109,6 +125,11 @@ public class CellInteractionManager : MonoBehaviour
         if (cell.State == CellState.Interacted)
         {
             GameData.Instance.DefeatedEnemy();
+            GameEvents.OnEnemyDefeated?.Invoke(cell); //EnemyDefeated event call
+            GameEvents.OnEnemyDefeatedCountReached?.Invoke(GameData.Instance.EnemiesDefeatedThisMatch); //EnemyDefeatedCountReached event call
+
+            if (cell.spawnable is EnemySpawnableSO defeatedEnemy && defeatedEnemy.isBoss)
+                GameEvents.OnBossDefeated?.Invoke(cell);
 
             if (cell.spawnable != null && cell.spawnable.abilities != null)
             {
