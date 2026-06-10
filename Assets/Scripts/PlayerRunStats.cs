@@ -70,11 +70,25 @@ public class PlayerRunStats : MonoBehaviour
 
     public void ModifyHealth(int amount)
     {
+        if (amount < 0) //DamageEvent call
+        {
+            DamageEvent dmgEvent = new DamageEvent(-amount);
+            GameEvents.OnDamageReceived?.Invoke(dmgEvent);
+            amount = -dmgEvent.FinalDamage;
+        }
+        else if (amount > 0) GameEvents.OnPlayerHealed?.Invoke(amount); //Heal Event
+
         CurrentHP = Mathf.Clamp(CurrentHP + amount, 0, MaxHp);
         OnHealthChanged?.Invoke(CurrentHP, MaxHp);
+        GameEvents.OnHealthChanged?.Invoke(CurrentHP, MaxHp); //Health Changed Event
+
+        if (CurrentHP > 0 && CurrentHP <= MaxHp * 0.25f) GameEvents.OnLowHealth?.Invoke(); //Low Health Event
+
+        if (CurrentHP == MaxHp) GameEvents.OnFullHealth?.Invoke(); //Full Health Event
 
         if (CurrentHP > 0) return;
 
+        GameEvents.OnPlayerDeath?.Invoke(); //Player Death Event
         OnPlayerDeath?.Invoke();
         Destroy(gameObject);
 

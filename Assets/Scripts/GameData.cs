@@ -28,7 +28,7 @@ public class GameData : MonoBehaviour
     private float timePassed;
 
     public int MinesFoundThisMatch { get; private set; }
-    public int GoldFoundThisMatch{ get; private set; }
+    public int GoldFoundThisMatch { get; private set; }
     public int EnemiesDefeatedThisMatch { get; private set; }
     public int TotalMines { get; private set; }
     public int TotalGold { get; private set; }
@@ -78,16 +78,34 @@ public class GameData : MonoBehaviour
         return string.Format("{0}:{1:00}", minutes, remainingSeconds);
     }
 
-    public void CollectGold(int amount)
+    public void CollectGold(int amount) //GoldEvent call
     {
-        GoldFoundThisMatch += amount;
-        OnGoldChanged?.Invoke(GoldFoundThisMatch);
+        GoldEvent goldEvent = new GoldEvent(amount);
+        GameEvents.OnGoldCollected?.Invoke(goldEvent);
+        int finalAmount = goldEvent.FinalAmount;
 
-        PlayerProfileManager.Instance.AddGoldToWallet(amount);
+        GoldFoundThisMatch += finalAmount;
+        OnGoldChanged?.Invoke(GoldFoundThisMatch);
+        PlayerProfileManager.Instance.AddGoldToWallet(finalAmount);
     }
 
     public void DefeatedEnemy() => EnemiesDefeatedThisMatch++;
     public void FoundMine() => MinesFoundThisMatch++;
-    public void StartGame() => GameStarted = true;
-    public void StopGame() => GameStarted = false;
+    public void StartGame()
+    {
+        GameStarted = true;
+        GameEvents.OnRunStart?.Invoke(); //GameStart event call
+    }
+    public void StopGame()
+    {
+        GameStarted = false;
+        GameEvents.OnRunEnd?.Invoke(); //GameEnd event call
+        GameEvents.OnFloorComplete?.Invoke(); //FloorComplete event call
+    }
+
+    public void SpendGold(int amount)
+    {
+        GameEvents.OnGoldSpent?.Invoke(amount); //GoldSpent event call
+        PlayerProfileManager.Instance.TrySpendGold(amount);
+    }
 }
