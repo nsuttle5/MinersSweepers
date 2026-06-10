@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cdd91813320cff43ba1fcf896dd64e2, type: 3}
   m_Name: ProspectorConfig
   m_EditorClassIdentifier: Assembly-CSharp::ShopConfigSO
-  artifactSlotCount: 3
-  consumableSlotCount: 2
+  artifactSlotCount: 2
+  consumableSlotCount: 1
   baseRerollCost: 10
   rerollCostIncrease: 5
   priceMultiplierPerFloor: 0.1
-  artifactPool: []
-  consumablePool: []
+  artifactPool:
+  - item: {fileID: 11400000, guid: 6d69c3fa2c3593f498618bbeb4231603, type: 2}
+    spawnWeight: 0.5
+  - item: {fileID: 11400000, guid: d77ab6e9b9023994b87a513f72b8e1eb, type: 2}
+    spawnWeight: 0.5
+  consumablePool:
+  - item: {fileID: 11400000, guid: 690623125f9bf8443bc10c0b22df7984, type: 2}
+    spawnWeight: 1
