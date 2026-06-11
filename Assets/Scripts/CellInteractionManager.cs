@@ -23,9 +23,7 @@ public class CellInteractionManager : MonoBehaviour
         if (interactedSpawnable == null)
         {
             if (cell.WasDirectlyClicked)
-            {
-                GameEvents.OnEmptyCellRevealed?.Invoke(cell); //EmptyCellRevealed event call
-            }
+                GameEvents.OnEmptyCellRevealed?.Invoke(cell);
             return;
         }
 
@@ -35,15 +33,15 @@ public class CellInteractionManager : MonoBehaviour
 
             if (interactedSpawnable is EnemySpawnableSO enemy)
             {
-                GameEvents.OnEnemyRevealed?.Invoke(cell); //EnemyRevealed event call
-                if (enemy.displayName == "Nathan") //Change to mine later
+                GameEvents.OnEnemyRevealed?.Invoke(cell);
+
+                if (enemy.displayName == "Nathan")
                 {
                     GameData.Instance.FoundMine();
-                    GameEvents.OnMineRevealed?.Invoke(cell); //MineFound event call
+                    GameEvents.OnMineRevealed?.Invoke(cell);
                 }
-                if (PlayerRunStats.Instance != null)
-                    PlayerRunStats.Instance.ModifyHealth(-enemy.damage);
 
+                TriggerAttackAnimation(cell, enemy.damage);
                 TransitionToInteractedState(cell);
             }
         }
@@ -70,9 +68,6 @@ public class CellInteractionManager : MonoBehaviour
 
                 if (cell.spawnable is EnemySpawnableSO revealedEnemy)
                 {
-                    if (PlayerRunStats.Instance != null)
-                        PlayerRunStats.Instance.ModifyHealth(-revealedEnemy.damage);
-
                     cell.spawnableBeforeAbilities = cell.spawnable;
                     if (revealedEnemy.abilities != null)
                     {
@@ -85,6 +80,7 @@ public class CellInteractionManager : MonoBehaviour
                     if (cell.spawnable is MoleHoleSpawnableSO)
                         return;
 
+                    TriggerAttackAnimation(cell, revealedEnemy.damage);
                     TransitionToClearedState(cell);
                 }
                 break;
@@ -92,16 +88,16 @@ public class CellInteractionManager : MonoBehaviour
             case SpawnableType.Gold:
                 if (cell.spawnable is GoldSpawnableSO goldData)
                 {
-                    GameEvents.OnGoldCellRevealed?.Invoke(cell); //GoldRevealed event call
+                    GameEvents.OnGoldCellRevealed?.Invoke(cell);
                     GameData.Instance.CollectGold(goldData.goldValue);
                     TransitionToClearedState(cell);
                 }
                 break;
 
             case SpawnableType.Exit:
-                GameEvents.OnExitRevealed?.Invoke(cell); //ExitRevealed event call
+                GameEvents.OnExitRevealed?.Invoke(cell);
                 GameData.Instance.StopGame();
-                GameEvents.OnExitUsed?.Invoke(); //ExitUsed event call
+                GameEvents.OnExitUsed?.Invoke();
 
                 if (SceneTransitionManager.Instance != null)
                     SceneTransitionManager.Instance.LoadScene("ResultsScreen");
@@ -109,6 +105,14 @@ public class CellInteractionManager : MonoBehaviour
                     SceneManager.LoadScene("ResultsScreen");
                 break;
         }
+    }
+
+    private void TriggerAttackAnimation(CellView cell, int damage)
+    {
+        if (AttackAnimationManager.Instance == null || damage <= 0) return;
+        if (cell.spawnable?.sprite == null) return;
+
+        AttackAnimationManager.Instance.QueueAttack(cell.spawnable.sprite, damage, cell.transform.position);
     }
 
     private void TransitionToInteractedState(CellView cell)
@@ -125,8 +129,8 @@ public class CellInteractionManager : MonoBehaviour
         if (cell.State == CellState.Interacted)
         {
             GameData.Instance.DefeatedEnemy();
-            GameEvents.OnEnemyDefeated?.Invoke(cell); //EnemyDefeated event call
-            GameEvents.OnEnemyDefeatedCountReached?.Invoke(GameData.Instance.EnemiesDefeatedThisMatch); //EnemyDefeatedCountReached event call
+            GameEvents.OnEnemyDefeated?.Invoke(cell);
+            GameEvents.OnEnemyDefeatedCountReached?.Invoke(GameData.Instance.EnemiesDefeatedThisMatch);
 
             if (cell.spawnable is EnemySpawnableSO defeatedEnemy && defeatedEnemy.isBoss)
                 GameEvents.OnBossDefeated?.Invoke(cell);
