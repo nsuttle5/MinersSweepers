@@ -32,6 +32,9 @@ public class PlayerRunStats : MonoBehaviour
     public int CurrentHP { get; set; }
     public int MaxHp { get; private set; }
 
+    private List<ArtifactSO> artifacts;
+    public IReadOnlyList<ArtifactSO> Artifacts => artifacts;
+
     public UnityAction<int, int> OnHealthChanged;
     public UnityAction OnPlayerDeath;
 
@@ -47,6 +50,7 @@ public class PlayerRunStats : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(gameObject);
+        artifacts = new();
         seenInteractionIDs = new();
         GenerateRunStats();
     }
@@ -54,11 +58,15 @@ public class PlayerRunStats : MonoBehaviour
     private void OnEnable()
     {
         TavernManager.OnStateChanged += Refresh;
+        GameEvents.OnRunStart += HandleRunStart;
+        GameEvents.OnRunEnd += HandleRunEnd;
     }
 
     private void OnDisable()
     {
         TavernManager.OnStateChanged -= Refresh;
+        GameEvents.OnRunStart -= HandleRunStart;
+        GameEvents.OnRunEnd -= HandleRunEnd;
     }
 
     private void GenerateRunStats()
@@ -72,7 +80,7 @@ public class PlayerRunStats : MonoBehaviour
     {
         if (amount < 0) //DamageEvent call
         {
-            DamageEvent dmgEvent = new DamageEvent(-amount);
+            DamageEvent dmgEvent = new(-amount);
             GameEvents.OnDamageReceived?.Invoke(dmgEvent);
             amount = -dmgEvent.FinalDamage;
         }
@@ -90,6 +98,10 @@ public class PlayerRunStats : MonoBehaviour
 
         GameEvents.OnPlayerDeath?.Invoke(); //Player Death Event
         OnPlayerDeath?.Invoke();
+
+        foreach (ArtifactSO a in artifacts) a.OnRemove();
+        artifacts.Clear();
+
         Destroy(gameObject);
 
         if (SceneTransitionManager.Instance != null)
@@ -112,5 +124,37 @@ public class PlayerRunStats : MonoBehaviour
     public bool IsInteractionSeen(string id)
     {
         return seenInteractionIDs.Contains(id);
+    }
+
+    public void AddArtifact(ArtifactSO artifact)
+    {
+        if (artifacts.Contains(artifact)) return;
+        artifacts.Add(artifact);
+        artifact.OnObtain();
+        GameEvents.OnArtifactObtained?.Invoke(artifact);
+    }
+
+    public void RemoveArtifact(ArtifactSO artifact)
+    {
+        if (!artifacts.Contains(artifact)) return;
+        artifact.OnRemove();
+        artifacts.Remove(artifact);
+    }
+
+    public bool HasArtifact<T>() where T : ArtifactSO
+    {
+        foreach (ArtifactSO a in artifacts)
+            if (a is T) return true;
+        return false;
+    }
+
+    private void HandleRunStart()
+    {
+        foreach (ArtifactSO a in artifacts) a.OnRunStart();
+    }
+
+    private void HandleRunEnd()
+    {
+        foreach (ArtifactSO a in artifacts) a.OnRunEnd();
     }
 }

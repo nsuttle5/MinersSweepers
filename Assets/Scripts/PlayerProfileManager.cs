@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,7 +29,11 @@ public class PlayerProfileManager : MonoBehaviour
     public int HpUpgradeLevel { get; set; } = 1;
     public int LuckUpgradeLevel { get; set; } = 1;
 
+    private Dictionary<ConsumableSO, int> consumables;
+    public IReadOnlyDictionary<ConsumableSO, int> Consumables => consumables;
+
     public UnityAction<int> OnGlobalGoldChanged;
+    public UnityAction<ConsumableSO, int> OnConsumablesChanged;
 
     private void Awake()
     {
@@ -36,6 +41,8 @@ public class PlayerProfileManager : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(gameObject);
+
+        consumables = new();
     }
 
     public void AddGoldToWallet(int amount)
@@ -48,10 +55,29 @@ public class PlayerProfileManager : MonoBehaviour
     {
         if (TotalGold >= amount)
         {
-            TotalGold = Mathf.Max(0, TotalGold - amount);
-            OnGlobalGoldChanged?.Invoke(TotalGold);
+            AddGoldToWallet(-amount);
             return true;
         }
         return false;
     }
+
+    public void AddConsumable(ConsumableSO consumable)
+    {
+        if (!consumables.ContainsKey(consumable)) consumables[consumable] = 0;
+        consumables[consumable]++;
+        GameEvents.OnConsumableObtained?.Invoke(consumable);
+        OnConsumablesChanged?.Invoke(consumable, consumables[consumable]);
+    }
+
+    public void RemoveConsumable(ConsumableSO consumable)
+    {
+        if (consumables.ContainsKey(consumable) && consumables[consumable] > 0)
+        {
+            consumables[consumable]--;
+            OnConsumablesChanged?.Invoke(consumable, consumables[consumable]);
+        }
+    }
+
+    public int GetConsumableCount(ConsumableSO consumable) =>
+        consumables.TryGetValue(consumable, out int count) ? count : 0;
 }
