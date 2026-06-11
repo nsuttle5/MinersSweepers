@@ -46,6 +46,15 @@ public static class GameEvents
     public static UnityAction OnRunEnd;
     public static UnityAction OnFloorComplete;
     public static UnityAction OnExitUsed;
+
+    //Shop
+    public static UnityAction<ShopSlotData> OnItemPurchased;
+    public static UnityAction<ArtifactSO> OnArtifactPurchased;
+    public static UnityAction<ConsumableSO> OnConsumablePurchased;
+    public static UnityAction<int> OnShopRerolled;
+    public static UnityAction OnShopOpened;
+    public static UnityAction OnShopClosed;
+    public static UnityAction<int> OnShopItemsRemaining;
 }
 
 public class DamageEvent

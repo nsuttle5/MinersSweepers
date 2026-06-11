@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using System.Collections;
+using TMPro;
 
 public class FishingCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public FishingCellType cellType;
     public bool isRevealed = false;
     public bool isDestroyed = false;
+    public bool isMarked = false;
 
     [Header("Sprites")]
     [SerializeField] private SpriteRenderer sr;
@@ -15,6 +17,7 @@ public class FishingCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [SerializeField] private Sprite fishSprite;
     [SerializeField] private Sprite emptySprite;
     [SerializeField] private Sprite bombSprite;
+    [SerializeField] private Sprite markedSprite;
 
     [Header("Hover")]
     [SerializeField] private float hoverScale = 1.1f;
@@ -22,6 +25,9 @@ public class FishingCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [SerializeField] private AudioClip hoverSound;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private float hoverSoundCooldown = 0.08f;
+
+    [Header("Damage Text")]
+    [SerializeField] private TextMeshPro neighborBombText;
 
     private Vector3 _originalScale;
     private Coroutine _hoverCoroutine;
@@ -40,6 +46,7 @@ public class FishingCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         cellType = type;
         isRevealed = false;
         isDestroyed = false;
+        isMarked = false;
         transform.localScale = _originalScale;
         UpdateVisual();
     }
@@ -48,6 +55,14 @@ public class FishingCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     {
         if (isRevealed || isDestroyed) return;
         isRevealed = true;
+        isMarked = false;
+        UpdateVisual();
+    }
+
+    public void ToggleMark()
+    {
+        if (isRevealed || isDestroyed) return;
+        isMarked = !isMarked;
         UpdateVisual();
     }
 
@@ -57,7 +72,7 @@ public class FishingCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
         if (!isRevealed)
         {
-            sr.sprite = hiddenSprite;
+            sr.sprite = isMarked ? markedSprite : hiddenSprite;
             return;
         }
 
@@ -71,9 +86,12 @@ public class FishingCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left) return;
         if (isRevealed || isDestroyed) return;
-        OnCellClicked?.Invoke(this);
+
+        if (eventData.button == PointerEventData.InputButton.Left)
+            OnCellClicked?.Invoke(this);
+        else if (eventData.button == PointerEventData.InputButton.Right)
+            ToggleMark();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -105,6 +123,21 @@ public class FishingCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         }
         transform.localScale = to;
         _hoverCoroutine = null;
+    }
+
+    public void SetNeighborBombCount(int count)
+    {
+        if (!neighborBombText) return;
+
+        if (isRevealed && count > 0)
+        {
+            neighborBombText.text = count.ToString();
+            neighborBombText.gameObject.SetActive(true);
+        }
+        else
+        {
+            neighborBombText.gameObject.SetActive(false);
+        }
     }
 }
 

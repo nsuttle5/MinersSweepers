@@ -6,7 +6,7 @@ public class FishingRow : MonoBehaviour
     public List<FishingCell> cells = new();
     public bool hasPassedTop = false;
 
-    public void Setup(GameObject cellPrefab, int columnCount, float cellSize, FishingConfigSO config, float elapsedTime)
+    public void Setup(GameObject cellPrefab, int columnCount, float cellSize, FishingConfigSO config, float elapsedTime, bool safeRow = false)
     {
         foreach (var cell in cells)
             Destroy(cell.gameObject);
@@ -20,7 +20,10 @@ public class FishingRow : MonoBehaviour
             GameObject cellGO = Instantiate(cellPrefab, transform);
             cellGO.transform.localPosition = new Vector3(startX + i * cellSize, 0f, 0f);
             FishingCell cell = cellGO.GetComponent<FishingCell>();
-            cell.Setup(DetermineType(config, elapsedTime));
+            cell.Setup(safeRow ? FishingCellType.Empty : DetermineType(config, elapsedTime));
+
+            if (safeRow) cell.Reveal();
+
             cells.Add(cell);
         }
     }
@@ -46,7 +49,15 @@ public class FishingRow : MonoBehaviour
     public bool HasUnrevealedBomb()
     {
         foreach (var cell in cells)
-            if (cell.cellType == FishingCellType.Bomb && !cell.isRevealed && !cell.isDestroyed)
+            if (cell.cellType == FishingCellType.Bomb && !cell.isRevealed && !cell.isDestroyed && !cell.isMarked)
+                return true;
+        return false;
+    }
+
+    public bool HasIncorrectlyMarkedCell()
+    {
+        foreach (var cell in cells)
+            if (cell.isMarked && cell.cellType != FishingCellType.Bomb && !cell.isDestroyed)
                 return true;
         return false;
     }

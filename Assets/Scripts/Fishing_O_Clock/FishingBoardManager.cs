@@ -15,12 +15,16 @@ public class FishingBoardManager : MonoBehaviour
     [SerializeField] private Transform topBoundary;
     [SerializeField] private Transform bottomSpawnPoint;
 
+    [Header("Safe Rows")]
+    [SerializeField] private int safeRowCount = 3;
+
     private List<FishingRow> _activeRows = new();
     private Queue<FishingRow> _pool = new();
 
     private float _currentSpeed;
     private float _elapsedTime;
     private bool _isRunning = false;
+    private int _totalRowsSpawned = 0;
 
     private void Awake()
     {
@@ -43,6 +47,7 @@ public class FishingBoardManager : MonoBehaviour
         _currentSpeed = config.initialScrollSpeed;
         _elapsedTime = 0f;
         _isRunning = true;
+        _totalRowsSpawned = 0;
 
         foreach (var row in _activeRows)
             ReturnToPool(row);
@@ -51,6 +56,8 @@ public class FishingBoardManager : MonoBehaviour
         float spawnY = bottomSpawnPoint.position.y;
         for (int i = 0; i < config.visibleRowBuffer; i++)
             SpawnRow(spawnY + i * config.cellSize);
+
+        RefreshNeighborCounts();
     }
 
     public void StopGame()
@@ -74,6 +81,12 @@ public class FishingBoardManager : MonoBehaviour
 
             if (row.transform.position.y >= topBoundary.position.y)
             {
+                if (row.HasIncorrectlyMarkedCell())
+                {
+                    FishingGameManager.Instance.TriggerGameOver(GameOverReason.IncorrectMark);
+                    return;
+                }
+
                 if (row.HasUnrevealedBomb())
                 {
                     FishingGameManager.Instance.TriggerGameOver(GameOverReason.BombReachedTop);
@@ -91,11 +104,15 @@ public class FishingBoardManager : MonoBehaviour
 
     private void SpawnRow(float yPos)
     {
+        bool isSafe = _totalRowsSpawned < safeRowCount;
         FishingRow row = GetFromPool();
         row.transform.position = new Vector3(boardRoot.position.x, yPos, 0f);
-        row.Setup(fishingCellPrefab, config.columnCount, config.cellSize, config, _elapsedTime);
+        row.Setup(fishingCellPrefab, config.columnCount, config.cellSize, config, _elapsedTime, isSafe);
         row.hasPassedTop = false;
         _activeRows.Add(row);
+        _totalRowsSpawned++;
+
+        RefreshNeighborCounts();
     }
 
     private void HandleCellClicked(FishingCell cell)
@@ -108,6 +125,8 @@ public class FishingBoardManager : MonoBehaviour
             FishingGameManager.Instance.TriggerGameOver(GameOverReason.BombClicked);
         else if (cell.cellType == FishingCellType.Fish)
             FishingGameManager.Instance.OnFishCaught();
+
+        RefreshNeighborCounts();
     }
 
     private FishingRow GetFromPool()
@@ -128,6 +147,41 @@ public class FishingBoardManager : MonoBehaviour
     }
 
     public float GetElapsedTime() => _elapsedTime;
+
+    public FishingCell GetCell(int rowIndex, int colIndex)
+    {
+        if (rowIndex < 0 || rowIndex >= _activeRows.Count) return null;
+        if (colIndex < 0 || colIndex >= _activeRows[rowIndex].cells.Count) return null;
+        return _activeRows[rowIndex].cells[colIndex];
+    }
+
+    public void RefreshNeighborCounts()
+    {
+        for (int r = 0; r < _activeRows.Count; r++)
+        {
+            for (int c = 0; c < _activeRows[r].cells.Count; c++)
+            {
+                FishingCell cell = _activeRows[r].cells[c];
+                if (!cell.isRevealed) continue;
+
+                int bombCount = 0;
+
+                for (int dr = -1; dr <= 1; dr++)
+                {
+                    for (int dc = -1; dc <= 1; dc++)
+                    {
+                        if (dr == 0 && dc == 0) continue;
+                        FishingCell neighbor = GetCell(r + dr, c + dc);
+                        if (neighbor != null && neighbor.cellType == FishingCellType.Bomb
+                            && !neighbor.isRevealed && !neighbor.isDestroyed)
+                            bombCount++;
+                    }
+                }
+
+                cell.SetNeighborBombCount(bombCount);
+            }
+        }
+    }
 }
 
-public enum GameOverReason { BombClicked, BombReachedTop }
+public enum GameOverReason { BombClicked, BombReachedTop, IncorrectMark }

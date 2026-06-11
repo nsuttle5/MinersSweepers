@@ -53,8 +53,17 @@ public class FishingGameManager : MonoBehaviour
 
         float elapsed = FishingBoardManager.Instance.GetElapsedTime();
 
-        if (gameOverReasonText) gameOverReasonText.text = reason == GameOverReason.BombClicked
-            ? "Bomb hit" : "Bomb reached the top";
+        if (gameOverReasonText)
+        {
+            gameOverReasonText.text = reason switch
+            {
+                GameOverReason.BombClicked => "You hit a bomb!",
+                GameOverReason.BombReachedTop => "A bomb reached the top!",
+                GameOverReason.IncorrectMark => "You marked a safe tile!",
+                _ => "Game Over!"
+            };
+        }
+
         if (fishCaughtText) fishCaughtText.text = $"Fish Caught: {_fishCaught}";
         if (timeAliveText) timeAliveText.text = $"Time: {elapsed:F1}s";
         if (goldEarnedText) goldEarnedText.text = $"Gold Earned: {_goldEarned}";
