@@ -24,3 +24,4 @@ MonoBehaviour:
   onSpawnAudio: {fileID: 0}
   onDeathAudio: {fileID: 0}
   interactedSprite: {fileID: 21300000, guid: 31dc332559e09f140866fb11e812c72d, type: 3}
+  isBoss: 0
