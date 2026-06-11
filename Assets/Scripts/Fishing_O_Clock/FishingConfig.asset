@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FishingConfigSO
   columnCount: 3
   cellSize: 1
-  initialScrollSpeed: 2
+  initialScrollSpeed: 1
   maxScrollSpeed: 8
   speedIncreaseRate: 0.1
-  visibleRowBuffer: 10
+  visibleRowBuffer: 7
   difficultyTiers:
   - timeThreshold: 0
     bombChance: 0.1
