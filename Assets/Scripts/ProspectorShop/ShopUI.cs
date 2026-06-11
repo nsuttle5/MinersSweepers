@@ -22,10 +22,14 @@ public class ShopUI : MonoBehaviour
 
     private List<ShopSlotUI> _slotUIs = new();
 
+    [Header("Player Info")]
+    [SerializeField] private TextMeshProUGUI playerGoldText;
+
     private void Start()
     {
         rerollButton.onClick.AddListener(() => ShopManager.Instance.TryReroll());
         closeButton.onClick.AddListener(() => ShopManager.Instance.CloseShop());
+        UpdateGoldDisplay(PlayerProfileManager.Instance.TotalGold);
         Hide();
     }
 
@@ -70,5 +74,22 @@ public class ShopUI : MonoBehaviour
     public void Hide()
     {
         shopPanel.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        PlayerProfileManager.Instance.OnGlobalGoldChanged += UpdateGoldDisplay;
+    }
+
+    private void OnDisable()
+    {
+        if (PlayerProfileManager.HasInstance)
+            PlayerProfileManager.Instance.OnGlobalGoldChanged -= UpdateGoldDisplay;
+    }
+
+    private void UpdateGoldDisplay(int newGold)
+    {
+        if (playerGoldText)
+            playerGoldText.text = $"Gold: {newGold}g";
     }
 }

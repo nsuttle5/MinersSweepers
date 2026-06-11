@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LoseScreen.unity
     guid: 4ce3a3694c609444e98c626b6e9a6d4f
+  - enabled: 1
+    path: Assets/Scenes/ProspectorShop.unity
+    guid: 96ea8796763e7494885d2097185a8628
   m_configObjects: {}

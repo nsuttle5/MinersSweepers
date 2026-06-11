@@ -31,6 +31,7 @@ public class ShopManager : MonoBehaviour
         _currentRerollCost = config.baseRerollCost;
         _currentFloor = MapManager.Instance != null ? GetCurrentFloor() : 0;
         GenerateShop();
+        OpenShop();
     }
 
     private int GetCurrentFloor()
@@ -43,18 +44,26 @@ public class ShopManager : MonoBehaviour
     {
         _currentSlots.Clear();
 
+        HashSet<ItemSO> usedItems = new HashSet<ItemSO>();
+
         for (int i = 0; i < config.artifactSlotCount; i++)
         {
-            ItemSO item = PickWeightedItem(config.artifactPool);
+            ItemSO item = PickWeightedItem(config.artifactPool, usedItems);
             if (item != null)
+            {
+                usedItems.Add(item);
                 _currentSlots.Add(new ShopSlotData(item, GetScaledPrice(item)));
+            }
         }
 
         for (int i = 0; i < config.consumableSlotCount; i++)
         {
-            ItemSO item = PickWeightedItem(config.consumablePool);
+            ItemSO item = PickWeightedItem(config.consumablePool, usedItems);
             if (item != null)
+            {
+                usedItems.Add(item);
                 _currentSlots.Add(new ShopSlotData(item, GetScaledPrice(item)));
+            }
         }
 
         shopUI.Populate(_currentSlots, _currentRerollCost);
@@ -69,6 +78,15 @@ public class ShopManager : MonoBehaviour
         slot.item.OnPurchase();
         slot.isSold = true;
 
+        GameEvents.OnItemPurchased?.Invoke(slot); // General event for any item purchase
+        if (slot.item is ArtifactSO artifact)
+            GameEvents.OnArtifactPurchased?.Invoke(artifact); // Specific event for artifact purchase
+        else if (slot.item is ConsumableSO consumable)
+            GameEvents.OnConsumablePurchased?.Invoke(consumable); // Specific event for consumable purchase
+
+        int remaining = _currentSlots.FindAll(s => !s.isSold).Count;
+        GameEvents.OnShopItemsRemaining?.Invoke(remaining); // Notify about remaining items
+
         shopUI.MarkSlotSold(slot);
     }
 
@@ -80,6 +98,7 @@ public class ShopManager : MonoBehaviour
         _currentRerollCost += config.rerollCostIncrease;
 
         GenerateShop();
+        GameEvents.OnShopRerolled?.Invoke(_currentRerollCost); // Notify about reroll with new cost
         OnShopRerolled?.Invoke();
     }
 
@@ -89,34 +108,44 @@ public class ShopManager : MonoBehaviour
         return Mathf.RoundToInt(item.goldCost * multiplier);
     }
 
-    private ItemSO PickWeightedItem(List<ShopItemEntry> pool)
+    private ItemSO PickWeightedItem(List<ShopItemEntry> pool, HashSet<ItemSO> exclude)
     {
         if (pool == null || pool.Count == 0) return null;
 
+        List<ShopItemEntry> available = pool.FindAll(e => !exclude.Contains(e.item));
+        if (available.Count == 0) return null;
+
         float total = 0f;
-        foreach (var entry in pool) total += entry.spawnWeight;
+        foreach (var entry in available) total += entry.spawnWeight;
 
         float roll = Random.value * total;
         float running = 0f;
-        foreach (var entry in pool)
+        foreach (var entry in available)
         {
             running += entry.spawnWeight;
             if (roll <= running) return entry.item;
         }
 
-        return pool[pool.Count - 1].item;
+        return available[available.Count - 1].item;
     }
 
     public void OpenShop()
     {
         shopUI.Show();
+        GameEvents.OnShopOpened?.Invoke(); // Notify about shop opening
         OnShopOpened?.Invoke();
     }
 
     public void CloseShop()
     {
         shopUI.Hide();
+        GameEvents.OnShopClosed?.Invoke(); // Notify about shop closing
         OnShopClosed?.Invoke();
+
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadScene("MapTesting");
+        else
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MapTesting");
     }
 }
 
@@ -128,8 +157,8 @@ public class ShopSlotData
 
     public ShopSlotData(ItemSO item, int price)
     {
-        this.item     = item;
+        this.item = item;
         this.finalPrice = price;
-        this.isSold   = false;
+        this.isSold = false;
     }
 }
