@@ -303,6 +303,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2867fe7edb2f12c488d19b2cd28e071a, type: 3}
+--- !u!223 &323086618 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 345798197040366446, guid: 2867fe7edb2f12c488d19b2cd28e071a, type: 3}
+  m_PrefabInstance: {fileID: 323086617}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &323086619 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 9170037835598938112, guid: 2867fe7edb2f12c488d19b2cd28e071a, type: 3}
+  m_PrefabInstance: {fileID: 323086617}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &438863992
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,8 +655,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5da2b396140852478245fcc5cda9013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackAnimationManager
-  playerUITransform: {fileID: 0}
-  canvas: {fileID: 0}
+  playerUITransform: {fileID: 323086619}
+  canvas: {fileID: 323086618}
   animationRoot: {fileID: 1671254368}
   mainCamera: {fileID: 519420031}
   attackSortingLayer: AttackAnimation
