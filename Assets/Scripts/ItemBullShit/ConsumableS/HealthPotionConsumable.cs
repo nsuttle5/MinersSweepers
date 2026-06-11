@@ -7,6 +7,6 @@ public class HealthPotionConsumable : ConsumableSO
 
     protected override void ApplyEffect()
     {
-        PlayerRunStats.Instance?.ModifyHealth(healAmount);
+        PlayerRunStats.Instance.ModifyHealth(healAmount);
     }
 }

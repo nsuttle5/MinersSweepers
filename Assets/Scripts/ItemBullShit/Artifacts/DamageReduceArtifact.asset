@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageReduceArtifact
   itemName: Test_DamageReduction
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 22a05f37b2f53694489b1b94f47f23b1, type: 3}
   goldCost: 5
   itemType: 1
   reductionPercent: 0.2

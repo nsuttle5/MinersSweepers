@@ -15,30 +15,9 @@ public abstract class ItemSO : ScriptableObject
     [Header("Type")]
     public ItemType itemType;
 
-    ///called when the item is purchased and added to inventory
-    public virtual void OnPurchase()
-    {
-        Debug.Log($"{itemName} purchased!");
-    }
-
-    ///called when a consumable item is used
-    public virtual void OnUse()
-    {
-        Debug.Log($"{itemName} used!");
-    }
-
-    public virtual void OnRunStart()
-    {
-        Debug.Log($"{itemName} run started!");
-    }
-
-    public virtual void OnRunEnd()
-    {
-        Debug.Log($"{itemName} run ended!");
-    }
-
-    ///called every frame for continuous effects on artifacts
-    public virtual void OnUpdate()
-    {
-    }
+    public abstract void OnPurchase(); // Item purchased
+    public virtual void OnUse() => Debug.Log($"{itemName} used!"); // Consumable Used
+    public virtual void OnRunStart() => Debug.Log($"{itemName} run started!");
+    public virtual void OnRunEnd() => Debug.Log($"{itemName} run ended!");
+    public virtual void OnUpdate() { }
 }
