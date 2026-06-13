@@ -33,6 +33,7 @@ public class MoleAbilitySO : SpawnableAbilitiesSO
         SpawnableSO mole = revealedCell.spawnable;
 
         targetHole.spawnable = mole;
+        BoardSidebarTracker.Instance?.RemoveSpawnable(moleHoleType);
 
         if (!targetHole.Revealed)
         {
