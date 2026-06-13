@@ -148,6 +148,11 @@ public class CellInteractionManager : MonoBehaviour
             }
         }
 
+        if (cell.spawnable != null)
+        {
+            BoardSidebarTracker.Instance?.RemoveSpawnable(cell.spawnable);
+        }
+
         cell.spawnable = null;
         cell.SetState(CellState.Cleared);
 

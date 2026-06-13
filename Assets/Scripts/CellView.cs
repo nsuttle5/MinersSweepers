@@ -119,6 +119,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (spawnable != null)
         {
             LogbookManager.Instance.Discover(spawnable);
+            BoardSidebarTracker.OnTrackerUpdated?.Invoke();
 
             spawnableBeforeAbilities = spawnable;
 

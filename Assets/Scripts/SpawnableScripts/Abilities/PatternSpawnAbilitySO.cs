@@ -58,6 +58,7 @@ public class PatternSpawnAbilitySO : SpawnableAbilitiesSO, ISpawnableOnBoard
 
                 targetCell.spawnable = patternCell.spawnableToPlace;
                 targetCell.UpdateVisual();
+                BoardSidebarTracker.Instance?.AddSpawnable(patternCell.spawnableToPlace);
             }
         }
 

@@ -118,6 +118,11 @@ public class BoardManager : MonoBehaviour
         RefreshAllCellVisuals();
         totalCells = width * height;
         GameEvents.OnBoardGenerated?.Invoke(); //Board Generated event call
+
+        if (BoardSidebarTracker.Instance != null)
+        {
+            BoardSidebarTracker.Instance.RegisterBoard(this);
+        }
     }
 
     private List<SpawnableSO> ShuffleWithinPriorityGroups(List<SpawnConstraint> sortedConstraints)
