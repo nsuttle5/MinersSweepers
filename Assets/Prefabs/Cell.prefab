@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 5008826600018923118}
   - component: {fileID: 4690426318873035999}
   - component: {fileID: 4467667404828253959}
+  - component: {fileID: 4643880283547706724}
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
@@ -445,6 +446,7 @@ MonoBehaviour:
   hoverSound: {fileID: 8300000, guid: 6194a61e5e5ac3a4b874b64714a8e31b, type: 3}
   audioSource: {fileID: 4467667404828253959}
   hoverCooldown: 0.4
+  isDamageObscured: 0
 --- !u!82 &4467667404828253959
 AudioSource:
   m_ObjectHideFlags: 0
@@ -542,6 +544,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &4643880283547706724
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8040435263745436706}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 54f3c2c1d8563d44b97e2ac277e676bc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8680080688011006541
 GameObject:
   m_ObjectHideFlags: 0
