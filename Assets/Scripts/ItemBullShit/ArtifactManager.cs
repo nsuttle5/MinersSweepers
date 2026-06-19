@@ -11,6 +11,8 @@ public class ArtifactManager : MonoBehaviour
     public IReadOnlyList<ArtifactSO> Artifacts => _artifacts;
     public IReadOnlyList<ConsumableSO> Consumables => _consumables;
 
+    private bool _loadoutAppliedThisRun = false;
+
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -86,5 +88,32 @@ public class ArtifactManager : MonoBehaviour
             artifact.OnRemove();
         _artifacts.Clear();
         _consumables.Clear();
+        _loadoutAppliedThisRun = false;
+    }
+
+    public void ApplyCharacterLoadout(CharacterSO character)
+    {
+        if (character == null) return;
+
+        foreach (var artifact in character.characterPassives)
+        {
+            if (!_artifacts.Contains(artifact))
+            {
+                _artifacts.Add(artifact);
+                artifact.OnObtain();
+            }
+        }
+
+        foreach (var artifact in character.startingArtifacts)
+        {
+            AddArtifact(artifact);
+        }
+
+        foreach (var consumable in character.startingConsumables)
+        {
+            AddConsumable(consumable);
+        }
+
+        _loadoutAppliedThisRun = true;
     }
 }

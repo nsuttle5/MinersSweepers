@@ -72,7 +72,14 @@ public class PlayerRunStats : MonoBehaviour
     private void GenerateRunStats()
     {
         int hpLevel = PlayerProfileManager.Instance.HpUpgradeLevel;
-        MaxHp = startingMaxHP + ((hpLevel - 1) * 10);
+        int baseHP = startingMaxHP;
+
+        if (CharacterManager.Instance != null && CharacterManager.Instance.HasSelection)
+        {
+            baseHP = CharacterManager.Instance.SelectedCharacter.startingMaxHP;
+        }
+
+        MaxHp = baseHP + ((hpLevel - 1) * 10);
         CurrentHP = MaxHp;
     }
 
