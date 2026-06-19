@@ -73,12 +73,15 @@ public class MapManager : MonoBehaviour
     [ContextMenu("GenerateMap")]
     public void GenerateMap()
     {
+
         if (!FindAnchorsInScene())
             return;
 
         mapAlreadyGenerated = false;
         currentNode = null;
         nodeRows.Clear();
+
+
 
 #if UNITY_EDITOR
         foreach (Transform child in mapRoot)

@@ -39,6 +39,9 @@ public class BoardManager : MonoBehaviour
         if (MapManager.Instance == null) return;
         if (MapManager.Instance.currentNode.type is not MapLevelNodeTypeSO) return;
 
+        if (CharacterManager.Instance != null && CharacterManager.Instance.HasSelection)
+            ArtifactManager.Instance.ApplyCharacterLoadout(CharacterManager.Instance.SelectedCharacter);
+
         mapLayout = (MapManager.Instance.currentNode.type as MapLevelNodeTypeSO).mapLayout;
         GenerateBoard();
     }

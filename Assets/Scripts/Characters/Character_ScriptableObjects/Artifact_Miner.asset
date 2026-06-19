@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4e5be73314ed446b53e15394f5e1a7, type: 3}
+  m_Name: Artifact_Miner
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterSO
+  characterName: Artifact_Miner
+  description: Testing
+  icon: {fileID: 0}
+  portrait: {fileID: 0}
+  startingMaxHP: 120
+  startingArtifacts:
+  - {fileID: 11400000, guid: 6d69c3fa2c3593f498618bbeb4231603, type: 2}
+  startingConsumables: []
+  characterPassives: []
