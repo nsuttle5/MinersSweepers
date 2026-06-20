@@ -113,6 +113,7 @@ public class ArtifactManager : MonoBehaviour
                 {
                     _artifacts.Add(artifact);
                     artifact.OnObtain();
+                    GameEvents.OnArtifactObtained?.Invoke(artifact);
                 }
             }
         }

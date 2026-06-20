@@ -20,9 +20,9 @@ public class ArtifactUIDisplay : MonoBehaviour
     {
         foreach (Transform child in container) Destroy(child.gameObject);
 
-        if (!PlayerRunStats.HasInstance) return;
+        if (ArtifactManager.Instance == null) return;
 
-        foreach (ArtifactSO artifact in PlayerRunStats.Instance.Artifacts)
+        foreach (ArtifactSO artifact in ArtifactManager.Instance.Artifacts)
         {
             ItemSlotUI newSlot = Instantiate(slotPrefab, container);
             newSlot.Setup(artifact);

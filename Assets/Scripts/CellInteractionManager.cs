@@ -19,6 +19,11 @@ public class CellInteractionManager : MonoBehaviour
 
     private void HandleCellReveal(CellView cell)
     {
+        if (cell.boardTile != null && cell.WasDirectlyClicked)
+        {
+            cell.boardTile.OnReveal(cell, cell.boardManager);
+        }
+
         SpawnableSO interactedSpawnable = (cell != null) ? cell.spawnable : null;
         if (interactedSpawnable == null)
         {
