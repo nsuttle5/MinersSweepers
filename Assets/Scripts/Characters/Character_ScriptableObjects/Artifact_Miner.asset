@@ -18,6 +18,6 @@ MonoBehaviour:
   portrait: {fileID: 0}
   startingMaxHP: 120
   startingArtifacts:
-  - {fileID: 11400000, guid: 6d69c3fa2c3593f498618bbeb4231603, type: 2}
+  - {fileID: 11400000, guid: a98ac840c7aaa5245a6c05c23d48e604, type: 2}
   startingConsumables: []
   characterPassives: []

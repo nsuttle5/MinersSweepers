@@ -47,6 +47,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public bool isDamageObscured = false;
 
+    public BoardTileSO boardTile;
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -150,25 +152,40 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         switch (State)
         {
             case CellState.Hidden:
-                if (boardManager != null && y == boardManager.Height - 1 && edgeSprite != null)
+                if (boardTile != null && boardTile.tileSprite != null)
+                {
+                    sr.sprite = boardTile.tileSprite;
+                }
+                else if (boardManager != null && y == boardManager.Height - 1 && edgeSprite != null)
+                {
                     sr.sprite = edgeSprite;
+                }
                 else if (boardManager != null && boardManager.IsSurroundedByRevealed(x, y) && loneSprite != null)
+                {
                     sr.sprite = loneSprite;
+                }
                 else if (isPartialRevealed && edgeSprite != null)
+                {
                     sr.sprite = edgeSprite;
+                }
                 else if (hiddenSprite != null)
+                {
                     sr.sprite = hiddenSprite;
+                }
 
                 if (damageText) damageText.gameObject.SetActive(false);
                 break;
+
             case CellState.Revealed:
                 if (revealedSprite != null) sr.sprite = revealedSprite;
                 HandleOccupantVisual();
                 break;
+
             case CellState.Interacted:
                 if (revealedSprite != null) sr.sprite = revealedSprite;
                 HandleOccupantVisual();
                 break;
+
             case CellState.Cleared:
                 if (revealedSprite != null) sr.sprite = revealedSprite;
                 break;

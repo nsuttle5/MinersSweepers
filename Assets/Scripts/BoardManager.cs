@@ -37,6 +37,16 @@ public class BoardManager : MonoBehaviour
 
     private Coroutine _spawnAnimationCoroutine;
 
+    [Header("Board Tiles")]
+    [SerializeField] private List<BoardTileSpawnRule> activeTileSpawnRules = new();
+
+    public static BoardManager Instance { get; private set; }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
     public CellView GetCellView(int x, int y)
     {
         if (x < 0 || y < 0 || x >= width || y >= height) return null;
@@ -114,6 +124,40 @@ public class BoardManager : MonoBehaviour
             yield return null;
         }
         if (t != null) t.localScale = to;
+    }
+
+    private void PlaceBoardTiles()
+    {
+        foreach (var rule in activeTileSpawnRules)
+        {
+            if (rule.tileType == null) continue;
+            if (Random.value > rule.spawnChance) continue;
+
+            List<CellView> candidates = new();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    CellView cell = GetCellView(x, y);
+                    if (cell == null || cell.boardTile != null) continue;
+
+                    bool hasEnemy = cell.spawnable is EnemySpawnableSO;
+                    bool isEmpty = cell.spawnable == null;
+
+                    if (rule.requiresEnemyUnderneath && !hasEnemy) continue;
+                    if (rule.requiresEmptyUnderneath && !isEmpty) continue;
+
+                    candidates.Add(cell);
+                }
+            }
+
+            if (candidates.Count == 0) continue;
+
+            CellView chosen = candidates[Random.Range(0, candidates.Count)];
+            chosen.boardTile = rule.tileType;
+            chosen.UpdateVisual();
+            rule.tileType.OnBoardSpawn(chosen, this);
+        }
     }
 
     [ContextMenu("Generate Board")]
@@ -195,6 +239,7 @@ public class BoardManager : MonoBehaviour
             }
         }
 
+        PlaceBoardTiles();
         RefreshAllCellVisuals();
         _spawnAnimationCoroutine = StartCoroutine(AnimateBoardSpawn());
         totalCells = width * height;
@@ -428,5 +473,35 @@ public class BoardManager : MonoBehaviour
             unrevealedCells.Add(cell);
 
         GameEvents.OnCellHidden?.Invoke(cell); //CellHidden event call
+    }
+
+    public bool TryPlaceBoardTile(BoardTileSO tileType, bool requiresEnemy, bool requiresEmpty)
+    {
+        List<CellView> candidates = new();
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                CellView cell = GetCellView(x, y);
+                if (cell == null || cell.boardTile != null) continue;
+
+                bool hasEnemy = cell.spawnable is EnemySpawnableSO;
+                bool isEmpty = cell.spawnable == null;
+
+                if (requiresEnemy && !hasEnemy) continue;
+                if (requiresEmpty && !isEmpty) continue;
+
+                candidates.Add(cell);
+            }
+        }
+
+        if (candidates.Count == 0) return false;
+
+        CellView chosen = candidates[Random.Range(0, candidates.Count)];
+        chosen.boardTile = tileType;
+        chosen.UpdateVisual();
+        tileType.OnBoardSpawn(chosen, this);
+
+        return true;
     }
 }
