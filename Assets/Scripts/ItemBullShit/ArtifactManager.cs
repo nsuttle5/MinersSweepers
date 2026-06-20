@@ -34,6 +34,7 @@ public class ArtifactManager : MonoBehaviour
 
     public void AddArtifact(ArtifactSO artifact)
     {
+        if (artifact == null) return;
         if (_artifacts.Contains(artifact)) return;
         _artifacts.Add(artifact);
         artifact.OnObtain();
@@ -49,6 +50,7 @@ public class ArtifactManager : MonoBehaviour
 
     public void AddConsumable(ConsumableSO consumable)
     {
+        if (consumable == null) return;
         _consumables.Add(consumable);
     }
 
@@ -73,13 +75,20 @@ public class ArtifactManager : MonoBehaviour
     private void HandleRunStart()
     {
         foreach (var artifact in _artifacts)
+        {
+            if (artifact == null) continue;
             artifact.OnRunStart();
+        }
     }
 
     private void HandleRunEnd()
     {
         foreach (var artifact in _artifacts)
+        {
+            if (artifact == null) continue;
             artifact.OnRunEnd();
+        }
+
     }
 
     public void ClearAll()
@@ -93,25 +102,37 @@ public class ArtifactManager : MonoBehaviour
 
     public void ApplyCharacterLoadout(CharacterSO character)
     {
-        if (character == null) return;
+        if (character == null || _loadoutAppliedThisRun) return;
 
-        foreach (var artifact in character.characterPassives)
+        if (character.characterPassives != null)
         {
-            if (!_artifacts.Contains(artifact))
+            foreach (var artifact in character.characterPassives)
             {
-                _artifacts.Add(artifact);
-                artifact.OnObtain();
+                if (artifact == null) continue;
+                if (!_artifacts.Contains(artifact))
+                {
+                    _artifacts.Add(artifact);
+                    artifact.OnObtain();
+                }
             }
         }
 
-        foreach (var artifact in character.startingArtifacts)
+        if (character.startingArtifacts != null)
         {
-            AddArtifact(artifact);
+            foreach (var artifact in character.startingArtifacts)
+            {
+                if (artifact == null) continue;
+                AddArtifact(artifact);
+            }
         }
 
-        foreach (var consumable in character.startingConsumables)
+        if (character.startingConsumables != null)
         {
-            AddConsumable(consumable);
+            foreach (var consumable in character.startingConsumables)
+            {
+                if (consumable == null) continue;
+                AddConsumable(consumable);
+            }
         }
 
         _loadoutAppliedThisRun = true;
