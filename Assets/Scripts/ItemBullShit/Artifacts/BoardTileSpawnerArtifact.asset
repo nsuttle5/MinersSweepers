@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd950cf39efd5044a5e755249f45e48, type: 3}
   m_Name: BoardTileSpawnerArtifact
   m_EditorClassIdentifier: Assembly-CSharp::BoardTileSpawnerArtifact
-  itemName: Flare_test
+  itemName: Cave_Quake
   description: 
-  icon: {fileID: 21300000, guid: c38319c3001897141a658dee82348ddc, type: 3}
+  icon: {fileID: -3875830007296581951, guid: e85adbeff6457dd468f310b3f35f5630, type: 3}
   goldCost: 5
   itemType: 1
   tilesToSpawn:
-  - tileType: {fileID: 11400000, guid: 50d699c5d03a6d242b5ceb5c7d667902, type: 2}
+  - tileType: {fileID: 11400000, guid: 25f6b651cb19071469c2a351512dcaab, type: 2}
     quantity: 1
     requiresEnemyUnderneath: 0
     requiresEmptyUnderneath: 0
