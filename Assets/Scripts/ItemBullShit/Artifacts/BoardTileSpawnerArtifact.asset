@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd950cf39efd5044a5e755249f45e48, type: 3}
   m_Name: BoardTileSpawnerArtifact
   m_EditorClassIdentifier: Assembly-CSharp::BoardTileSpawnerArtifact
-  itemName: Tile_Tester
+  itemName: Flare_test
   description: 
-  icon: {fileID: 21300000, guid: 57d4bce743cd1c74eaa84fb81abd57dc, type: 3}
+  icon: {fileID: 21300000, guid: c38319c3001897141a658dee82348ddc, type: 3}
   goldCost: 5
   itemType: 1
   tilesToSpawn:
-  - tileType: {fileID: 11400000, guid: ee488fe285728a94ea105ed201cab7c6, type: 2}
+  - tileType: {fileID: 11400000, guid: 50d699c5d03a6d242b5ceb5c7d667902, type: 2}
     quantity: 1
     requiresEnemyUnderneath: 0
-    requiresEmptyUnderneath: 1
+    requiresEmptyUnderneath: 0
     spawnChance: 1

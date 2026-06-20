@@ -289,6 +289,14 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         transform.localScale = to;
         hoverCoroutine = null;
     }
+
+    public void SetTintOverride(Color color)
+    {
+        if (sr != null)
+        {
+            sr.color = color;
+        }
+    }
 }
 
 public enum CellState { Hidden, Revealed, Interacted, Cleared }
