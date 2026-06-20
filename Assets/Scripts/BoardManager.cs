@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using System.Collections;
 
 public class BoardManager : MonoBehaviour
 {
@@ -27,6 +28,15 @@ public class BoardManager : MonoBehaviour
 
     private int totalCells;
 
+    [Header("Spawn Animation")]
+    [SerializeField] private float popScaleUp = 1.2f;
+    [SerializeField] private float popDuration = 0.15f;
+    [SerializeField] private float popHoldDuration = .05f;
+    [SerializeField] private float popSettleDuration = 0.1f;
+    [SerializeField] private float diagonalDelay = 0.04f;
+
+    private Coroutine _spawnAnimationCoroutine;
+
     public CellView GetCellView(int x, int y)
     {
         if (x < 0 || y < 0 || x >= width || y >= height) return null;
@@ -46,9 +56,76 @@ public class BoardManager : MonoBehaviour
         GenerateBoard();
     }
 
+    private IEnumerator AnimateBoardSpawn()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                CellView cell = GetCellView(x, y);
+                if (cell != null)
+                {
+                    cell.transform.localScale = Vector3.zero;
+                }
+            }
+        }
+
+        int maxDiagonal = (width - 1) + (height - 1);
+
+        for (int diagonal = 0; diagonal <= maxDiagonal; diagonal++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int y = diagonal - x;
+                if (y < 0 || y >= height) continue;
+
+                CellView cell = GetCellView(x, y);
+                if (cell != null)
+                    StartCoroutine(PopCell(cell));
+            }
+
+            yield return new WaitForSeconds(diagonalDelay);
+        }
+    }
+    private IEnumerator PopCell(CellView cell)
+    {
+        if (cell == null) yield break;
+        Vector3 targetScale = Vector3.one;
+        Vector3 overshootScale = Vector3.one * popScaleUp;
+
+        yield return ScaleCell(cell.transform, Vector3.zero, overshootScale, popDuration);
+        if (cell == null) yield break;
+
+        yield return new WaitForSeconds(popHoldDuration);
+        if (cell == null) yield break;
+
+        yield return ScaleCell(cell.transform, overshootScale, targetScale, popSettleDuration);
+    }
+
+    private IEnumerator ScaleCell(Transform t, Vector3 from, Vector3 to, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            if (t == null) yield break;
+            elapsed += Time.deltaTime;
+            float e = Mathf.Clamp01(elapsed / duration);
+            t.localScale = Vector3.Lerp(from, to, e);
+            yield return null;
+        }
+        if (t != null) t.localScale = to;
+    }
+
     [ContextMenu("Generate Board")]
     public void GenerateBoard()
     {
+        if (_spawnAnimationCoroutine != null)
+        {
+            StopCoroutine(_spawnAnimationCoroutine);
+            _spawnAnimationCoroutine = null;
+        }
+        StopAllCoroutines();
+
         if (!mapLayout || !cellPrefab || !boardRoot)
         {
             Debug.LogError("Assign references idiot");
@@ -119,6 +196,7 @@ public class BoardManager : MonoBehaviour
         }
 
         RefreshAllCellVisuals();
+        _spawnAnimationCoroutine = StartCoroutine(AnimateBoardSpawn());
         totalCells = width * height;
         GameEvents.OnBoardGenerated?.Invoke(); //Board Generated event call
 
@@ -126,6 +204,8 @@ public class BoardManager : MonoBehaviour
         {
             BoardSidebarTracker.Instance.RegisterBoard(this);
         }
+
+        StartCoroutine(AnimateBoardSpawn());
     }
 
     private List<SpawnableSO> ShuffleWithinPriorityGroups(List<SpawnConstraint> sortedConstraints)
