@@ -243,7 +243,7 @@ public class BoardManager : MonoBehaviour
         PlaceBoardTiles();
         RefreshAllCellVisuals();
         _spawnAnimationCoroutine = StartCoroutine(AnimateBoardSpawn());
-        totalCells = width * height;
+        totalCells = CountNonVoidCells();
         GameEvents.OnBoardGenerated?.Invoke(); //Board Generated event call
 
         if (BoardSidebarTracker.Instance != null)
@@ -525,5 +525,22 @@ public class BoardManager : MonoBehaviour
                     constraint.requiresEmptyUnderneath);
             }
         }
+    }
+
+    private int CountNonVoidCells()
+    {
+        int count = 0;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                CellView cell = GetCellView(x, y);
+                if (cell != null && !cell.isVoid)
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }
