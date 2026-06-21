@@ -239,6 +239,7 @@ public class BoardManager : MonoBehaviour
             }
         }
 
+        PlaceMapConfigBoardTiles();
         PlaceBoardTiles();
         RefreshAllCellVisuals();
         _spawnAnimationCoroutine = StartCoroutine(AnimateBoardSpawn());
@@ -503,5 +504,26 @@ public class BoardManager : MonoBehaviour
         tileType.OnBoardSpawn(chosen, this);
 
         return true;
+    }
+
+    private void PlaceMapConfigBoardTiles()
+    {
+        if (mapLayout.boardTileConstraints == null) return;
+
+        foreach (var constraint in mapLayout.boardTileConstraints)
+        {
+            if (constraint.tileType == null) continue;
+
+            int quantity = constraint.GetQuantity();
+            for (int i = 0; i < quantity; i++)
+            {
+                if (Random.value > constraint.spawnChance) continue;
+
+                TryPlaceBoardTile(
+                    constraint.tileType,
+                    constraint.requiresEnemyUnderneath,
+                    constraint.requiresEmptyUnderneath);
+            }
+        }
     }
 }

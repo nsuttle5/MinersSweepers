@@ -45,3 +45,11 @@ MonoBehaviour:
     exactAmount: 4
     minMaxAmount: {x: 0, y: 0}
     priority: 1
+  boardTileConstraints:
+  - tileType: {fileID: 11400000, guid: ee488fe285728a94ea105ed201cab7c6, type: 2}
+    useRange: 0
+    exactAmount: 3
+    minMaxAmount: {x: 0, y: 0}
+    requiresEnemyUnderneath: 0
+    requiresEmptyUnderneath: 1
+    spawnChance: 1
