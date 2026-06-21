@@ -117,6 +117,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void Reveal(bool wasDirectClick = true, bool triggerAbilities = true)
     {
+        if (isVoid) return;
         if (Revealed) return;
 
         SetState(CellState.Revealed, wasDirectClick);
