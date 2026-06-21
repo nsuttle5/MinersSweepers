@@ -466,6 +466,11 @@ public class BoardManager : MonoBehaviour
         return total;
     }
 
+    public void OnCellRevealedNotify(CellView cell)
+    {
+        OnCellRevealed?.Invoke(cell);
+    }
+
     public void NotifyCellHidden(CellView cell)
     {
         if (revealedCells.Contains(cell))

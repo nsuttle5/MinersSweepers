@@ -46,7 +46,7 @@ MonoBehaviour:
     minMaxAmount: {x: 0, y: 0}
     priority: 1
   boardTileConstraints:
-  - tileType: {fileID: 11400000, guid: 863349317c78fc1498d132c1824f9a04, type: 2}
+  - tileType: {fileID: 11400000, guid: e70e0aa64584f514f8628258ce18ab40, type: 2}
     useRange: 0
     exactAmount: 3
     minMaxAmount: {x: 0, y: 0}
