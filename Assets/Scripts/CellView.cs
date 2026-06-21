@@ -49,6 +49,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public BoardTileSO boardTile;
 
+    public bool isVoid = false;
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -75,6 +77,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (isVoid) return;
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             if (boardManager != null)
@@ -148,6 +151,20 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (damageText) damageText.sortingOrder = sr.sortingOrder + 2;
 
         if (occupantSR) occupantSR.gameObject.SetActive(false);
+
+        if (isVoid)
+        {
+            if (boardTile != null && boardTile.tileSprite != null)
+            {
+                sr.sprite = boardTile.tileSprite;
+            }
+
+            if (damageText) damageText.gameObject.SetActive(false);
+            if (markText) markText.gameObject.SetActive(false);
+
+            sr.color = Color.white;
+            return;
+        }
 
         switch (State)
         {
@@ -261,6 +278,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (isVoid) return;
         if (hoverCoroutine != null) StopCoroutine(hoverCoroutine);
         hoverCoroutine = StartCoroutine(ScaleTo(transform.localScale, originalScale * hoverScale, hoverDuration));
 
@@ -273,6 +291,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (isVoid) return;
         if (hoverCoroutine != null) StopCoroutine(hoverCoroutine);
         hoverCoroutine = StartCoroutine(ScaleTo(transform.localScale, originalScale, hoverDuration));
     }
@@ -296,6 +315,12 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             sr.color = color;
         }
+    }
+
+    public void SetVoid(bool value)
+    {
+        this.isVoid = value;
+        UpdateVisual();
     }
 }
 

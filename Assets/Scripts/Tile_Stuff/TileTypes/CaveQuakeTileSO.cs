@@ -49,7 +49,7 @@ public class CaveQuakeTileSO : BoardTileSO
                 CellView candidate = board.GetCellView(x, y);
                 if (candidate == null) continue;
                 if (candidate.Revealed) continue;
-                //if (candidate.isVoid) continue;
+                if (candidate.isVoid) continue;
                 if (candidate == sourceCell) continue;
 
                 unrevealedCells.Add(candidate);

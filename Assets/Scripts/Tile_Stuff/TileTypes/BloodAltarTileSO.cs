@@ -36,7 +36,7 @@ public class BloodAltarTileSO : BoardTileSO
                 if (candidate.Revealed) continue;
                 if (candidate.spawnable != null) continue;
                 if (candidate.boardTile != null) continue;
-                //if (candidate.isVoid) continue;
+                if (candidate.isVoid) continue;
 
                 emptyCells.Add(candidate);
             }
