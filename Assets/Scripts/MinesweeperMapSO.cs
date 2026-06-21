@@ -7,4 +7,7 @@ public class MinesweeperMapSO : ScriptableObject
     public int width = 8;
     public int height = 8;
     public List<SpawnConstraint> spawnConstraints;
+
+    [Header("Board Tiles")]
+    public List<BoardTileConstraint> boardTileConstraints;
 }
