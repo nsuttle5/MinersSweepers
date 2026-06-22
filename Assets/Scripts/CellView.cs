@@ -170,28 +170,36 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             return;
         }
 
-        switch (State)
+        if (isKnown && State == CellState.Hidden)
         {
-            case CellState.Hidden:
-                AssignHiddenSprites();
-                if (damageText) damageText.gameObject.SetActive(false);
+            AssignHiddenSprites();
+            if (damageText) damageText.gameObject.SetActive(false);
+            HandleOccupantVisual(alphaPreview: true);
+        }
+        else
+        {
+            switch (State)
+            {
+                case CellState.Hidden:
+                    AssignHiddenSprites();
+                    if (damageText) damageText.gameObject.SetActive(false);
+                    break;
 
-                if (isKnown) HandleOccupantVisual();
-                break;
+                case CellState.Revealed:
+                    if (revealedSprite != null) sr.sprite = revealedSprite;
 
-            case CellState.Revealed:
-                if (revealedSprite != null) sr.sprite = revealedSprite;
-                if (isKnown) HandleOccupantVisual();
-                break;
+                    if (spawnable != null) HandleOccupantVisual(alphaPreview: false);
+                    break;
 
-            case CellState.Interacted:
-                if (revealedSprite != null) sr.sprite = revealedSprite;
-                HandleOccupantVisual();
-                break;
+                case CellState.Interacted:
+                    if (revealedSprite != null) sr.sprite = revealedSprite;
+                    HandleOccupantVisual(alphaPreview: false);
+                    break;
 
-            case CellState.Cleared:
-                if (revealedSprite != null) sr.sprite = revealedSprite;
-                break;
+                case CellState.Cleared:
+                    if (revealedSprite != null) sr.sprite = revealedSprite;
+                    break;
+            }
         }
 
         sr.color = Color.white;
@@ -222,7 +230,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
     }
 
-    private void HandleOccupantVisual()
+    private void HandleOccupantVisual(bool alphaPreview)
     {
         if (!occupantSR || spawnable == null) return;
 
@@ -241,6 +249,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             occupantSR.sprite = activeOccupantSprite;
             occupantSR.gameObject.SetActive(true);
+
+            occupantSR.color = alphaPreview ? new(1f, 1f, 1f, 0.5f) : Color.white;
         }
     }
 
