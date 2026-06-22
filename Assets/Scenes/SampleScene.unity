@@ -688,8 +688,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scroller
   rawImage: {fileID: 433795252}
-  scrollSpeedX: 0.02
-  scrollSpeedY: 0.02
+  scrollSpeedX: 0.04
+  scrollSpeedY: 0.04
 --- !u!114 &433795252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1048,6 +1048,7 @@ GameObject:
   m_Component:
   - component: {fileID: 622694358}
   - component: {fileID: 622694357}
+  - component: {fileID: 622694359}
   m_Layer: 0
   m_Name: AttackAnimationManager
   m_TagString: Untagged
@@ -1062,7 +1063,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622694356}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b5da2b396140852478245fcc5cda9013, type: 3}
   m_Name: 
@@ -1100,6 +1101,51 @@ Transform:
   - {fileID: 1671254368}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &622694359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622694356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5253932c734380e439dd4e7897b502e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackSequenceManager
+  playerUITransform: {fileID: 323086619}
+  canvas: {fileID: 323086618}
+  animationRoot: {fileID: 1671254368}
+  mainCamera: {fileID: 519420031}
+  attackSortingLayer: AttackAnimation
+  attackSortingOrder: 999
+  revealHoldDuration: 0.4
+  revealPulseCount: 2
+  revealPulseScale: 1.15
+  revealPulseDuration: 0.1
+  phase1Duration: 0.35
+  phase1RotationDegrees: 20
+  phase1Translation: {x: -0.3, y: 0.3}
+  phase2Duration: 0.2
+  phase2RotationDegrees: -40
+  phase2TargetScale: {x: 1.4, y: 1.4, z: 1}
+  shakeDuration: 0.25
+  shakeAngle: 12
+  shakeSpeed: 25
+  phase3Duration: 0.35
+  slashFrames:
+  - {fileID: 1393532141346676349, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: 3712848689049713366, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: 6985818223570035617, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: 5069491927826978949, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: -8205271320783850235, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: -883506377270848311, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: 3144962490572231493, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: -7635179211763498122, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: 6869100367894509734, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  - {fileID: -1272735854, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
+  slashFrameDuration: 0.05
+  slashHoldDuration: 0.15
 --- !u!1 &724246873
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,6 +1949,12 @@ MonoBehaviour:
   verticalSpacing: 0.87
   unrevealedCells: []
   revealedCells: []
+  popScaleUp: 1.2
+  popDuration: 0.15
+  popHoldDuration: 0.05
+  popSettleDuration: 0.1
+  diagonalDelay: 0.04
+  activeTileSpawnRules: []
 --- !u!4 &1752908687
 Transform:
   m_ObjectHideFlags: 0
