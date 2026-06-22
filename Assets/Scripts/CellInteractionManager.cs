@@ -60,9 +60,10 @@ public class CellInteractionManager : MonoBehaviour
                     GameEvents.OnMineRevealed?.Invoke(cell);
                 }
 
-                AttackSequenceManager.Instance?.QueueAttack(cell, enemy, enemy.damage);
+                AttackSequenceManager.Instance?.QueueAttack(cell, enemy, cell.effectiveDamage);
             }
         }
+
     }
 
     private void HandleRevealedClick(CellView cell)
@@ -204,6 +205,8 @@ public class CellInteractionManager : MonoBehaviour
 
     public void ForceTransitionToClearedState(CellView cell)
     {
+        if (cell == null) return;
+
         GameData.Instance.DefeatedEnemy();
         GameEvents.OnEnemyDefeated?.Invoke(cell);
         GameEvents.OnEnemyDefeatedCountReached?.Invoke(
@@ -227,6 +230,7 @@ public class CellInteractionManager : MonoBehaviour
             BoardSidebarTracker.Instance?.RemoveSpawnable(cell.spawnable);
 
         cell.spawnable = null;
+        cell.damageOverride = null;
         cell.SetState(CellState.Cleared);
 
         if (cell.boardManager != null)
