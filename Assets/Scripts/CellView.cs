@@ -26,6 +26,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     public int effectiveDamage => damageOverride.HasValue ? damageOverride.Value : (spawnable != null ? spawnable.damage : 0);
 
     public CellState State { get; private set; } = CellState.Hidden;
+    public bool isKnown = false;
     public bool WasDirectlyClicked { get; private set; } = false;
 
     private bool isPartialRevealed = false;
@@ -120,6 +121,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (isVoid) return;
         if (Revealed) return;
 
+        isKnown = true;
+
         SetState(CellState.Revealed, wasDirectClick);
 
         if (spawnable != null)
@@ -170,33 +173,15 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         switch (State)
         {
             case CellState.Hidden:
-                if (boardTile != null && boardTile.tileSprite != null)
-                {
-                    sr.sprite = boardTile.tileSprite;
-                }
-                else if (boardManager != null && y == boardManager.Height - 1 && edgeSprite != null)
-                {
-                    sr.sprite = edgeSprite;
-                }
-                else if (boardManager != null && boardManager.IsSurroundedByRevealed(x, y) && loneSprite != null)
-                {
-                    sr.sprite = loneSprite;
-                }
-                else if (isPartialRevealed && edgeSprite != null)
-                {
-                    sr.sprite = edgeSprite;
-                }
-                else if (hiddenSprite != null)
-                {
-                    sr.sprite = hiddenSprite;
-                }
-
+                AssignHiddenSprites();
                 if (damageText) damageText.gameObject.SetActive(false);
+
+                if (isKnown) HandleOccupantVisual();
                 break;
 
             case CellState.Revealed:
                 if (revealedSprite != null) sr.sprite = revealedSprite;
-                HandleOccupantVisual();
+                if (isKnown) HandleOccupantVisual();
                 break;
 
             case CellState.Interacted:
@@ -211,6 +196,30 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
         sr.color = Color.white;
         TryDisplaySurroundingDamage();
+    }
+
+    private void AssignHiddenSprites()
+    {
+        if (boardTile != null && boardTile.tileSprite != null)
+        {
+            sr.sprite = boardTile.tileSprite;
+        }
+        else if (boardManager != null && y == boardManager.Height - 1 && edgeSprite != null)
+        {
+            sr.sprite = edgeSprite;
+        }
+        else if (boardManager != null && boardManager.IsSurroundedByRevealed(x, y) && loneSprite != null)
+        {
+            sr.sprite = loneSprite;
+        }
+        else if (isPartialRevealed && edgeSprite != null)
+        {
+            sr.sprite = edgeSprite;
+        }
+        else if (hiddenSprite != null)
+        {
+            sr.sprite = hiddenSprite;
+        }
     }
 
     private void HandleOccupantVisual()
@@ -238,7 +247,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void TryDisplaySurroundingDamage()
     {
-        if (State == CellState.Hidden || isPartialRevealed)
+        if (State == CellState.Hidden || !isKnown || isPartialRevealed)
         {
             if (damageText) damageText.gameObject.SetActive(false);
             return;

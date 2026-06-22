@@ -60,6 +60,13 @@ public class CellInteractionManager : MonoBehaviour
             return;
         }
 
+        if (cell.State == CellState.Revealed && !cell.isKnown)
+        {
+            cell.isKnown = true;
+            cell.UpdateVisual();
+            return;
+        }
+
         if (cell.State != CellState.Revealed || cell.spawnable == null) return;
 
         switch (cell.spawnable.type)
