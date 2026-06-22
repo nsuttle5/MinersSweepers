@@ -81,9 +81,17 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (occupantSR) occupantSR.gameObject.SetActive(false);
     }
 
+    public bool isSequenceLocked { get; private set; } = false;
+
+    public void SetSequenceLocked(bool locked)
+    {
+        isSequenceLocked = locked;
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (isVoid) return;
+        if (isSequenceLocked) return;
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             if (boardManager != null)

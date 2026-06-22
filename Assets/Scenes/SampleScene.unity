@@ -340,6 +340,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 89.755615
       objectReference: {fileID: 0}
+    - target: {fileID: 3812199283895449041, guid: 2867fe7edb2f12c488d19b2cd28e071a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 10550efebb177e0449ba29fb1122034d, type: 3}
     - target: {fileID: 4499211625601143422, guid: 2867fe7edb2f12c488d19b2cd28e071a, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -463,6 +467,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9170037835598938112, guid: 2867fe7edb2f12c488d19b2cd28e071a, type: 3}
   m_PrefabInstance: {fileID: 323086617}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &323086620 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3812199283895449041, guid: 2867fe7edb2f12c488d19b2cd28e071a, type: 3}
+  m_PrefabInstance: {fileID: 323086617}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &331189140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,21 +1132,38 @@ MonoBehaviour:
   canvas: {fileID: 323086618}
   animationRoot: {fileID: 1671254368}
   mainCamera: {fileID: 519420031}
+  playerImage: {fileID: 323086620}
+  playerIdleSprite: {fileID: 21300000, guid: 10550efebb177e0449ba29fb1122034d, type: 3}
+  playerHitSprite: {fileID: 21300000, guid: 88d99a29ec9c86f4189c528253dba727, type: 3}
+  playerAttackFrames:
+  - {fileID: 256206866415307662, guid: 782c754902dafcc40b8c509bf00b06d6, type: 3}
+  - {fileID: -8510509690271674451, guid: 782c754902dafcc40b8c509bf00b06d6, type: 3}
+  - {fileID: 5420380789915834171, guid: 782c754902dafcc40b8c509bf00b06d6, type: 3}
+  - {fileID: -3481585233398555235, guid: 782c754902dafcc40b8c509bf00b06d6, type: 3}
+  - {fileID: -6056526772696086041, guid: 782c754902dafcc40b8c509bf00b06d6, type: 3}
+  - {fileID: -8800925290451366266, guid: 782c754902dafcc40b8c509bf00b06d6, type: 3}
+  playerAttackFrameDuration: 0.06
+  playerHitDuration: 0.3
+  playerHitKnockback: 0.15
+  playerHitFlashCount: 3
+  cameraRoot: {fileID: 519420032}
+  shakeIntensity: 0.08
+  shakeDuration: 0.25
   attackSortingLayer: AttackAnimation
   attackSortingOrder: 999
-  revealHoldDuration: 0.4
   revealPulseCount: 2
   revealPulseScale: 1.15
   revealPulseDuration: 0.1
+  revealHoldDuration: 0.4
   phase1Duration: 0.35
   phase1RotationDegrees: 20
   phase1Translation: {x: -0.3, y: 0.3}
   phase2Duration: 0.2
   phase2RotationDegrees: -40
   phase2TargetScale: {x: 1.4, y: 1.4, z: 1}
-  shakeDuration: 0.25
-  shakeAngle: 12
-  shakeSpeed: 25
+  enemyShakeDuration: 0.15
+  enemyShakeAngle: 10
+  enemyShakeSpeed: 30
   phase3Duration: 0.35
   slashFrames:
   - {fileID: 1393532141346676349, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
@@ -1145,7 +1177,6 @@ MonoBehaviour:
   - {fileID: 6869100367894509734, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
   - {fileID: -1272735854, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
   slashFrameDuration: 0.05
-  slashHoldDuration: 0.15
 --- !u!1 &724246873
 GameObject:
   m_ObjectHideFlags: 0
