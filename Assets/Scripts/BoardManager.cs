@@ -360,10 +360,18 @@ public class BoardManager : MonoBehaviour
                 if (x < 0 || x >= width || y < 0 || y >= height) continue;
 
                 var cell = cellObjs[x, y].GetComponent<CellView>();
-                if (cell != null && !cell.Revealed && cell.spawnable == null)
+                if (cell != null && !cell.Revealed)
                 {
-                    cell.Reveal(wasDirectClick: false, triggerAbilities: false);
-                    OnCellRevealed?.Invoke(cell);
+                    if (cell.spawnable == null)
+                    {
+                        cell.Reveal(wasDirectClick: false, triggerAbilities: false);
+                        OnCellRevealed?.Invoke(cell);
+                    }
+                    else
+                    {
+                        cell.isKnown = true;
+                        cell.UpdateVisual();
+                    }
                 }
             }
         }
