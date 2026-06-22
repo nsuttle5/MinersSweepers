@@ -87,7 +87,7 @@ public class PatternModifyDamageAbilitySO : SpawnableAbilitiesSO, ISpawnableOnBo
                 if (target == null || target == sourceCell) continue;
                 if (target.spawnable == null || target.spawnable.damage <= 0) continue;
 
-                int current = target.effectiveDamage;
+                int current = target.EffectiveDamage;
                 int newDamage = modCell.operation switch
                 {
                     DamageModifyOperation.Add => current + modCell.value,

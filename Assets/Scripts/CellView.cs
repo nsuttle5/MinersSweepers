@@ -23,7 +23,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     [SerializeField] private SpriteRenderer occupantSR;
 
     public int? damageOverride = null;
-    public int effectiveDamage => damageOverride.HasValue ? damageOverride.Value : (spawnable != null ? spawnable.damage : 0);
+    public int EffectiveDamage => damageOverride.HasValue ? damageOverride.Value : (spawnable != null ? spawnable.damage : 0);
 
     public CellState State { get; private set; } = CellState.Hidden;
     public bool isKnown = false;
