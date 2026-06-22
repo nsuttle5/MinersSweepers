@@ -5,6 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class CellInteractionManager : MonoBehaviour
 {
+    public static CellInteractionManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
     private void OnEnable()
     {
         BoardManager.OnCellRevealed += HandleCellReveal;
@@ -21,10 +34,11 @@ public class CellInteractionManager : MonoBehaviour
     {
         if (cell.boardTile != null && cell.WasDirectlyClicked)
         {
+            //GameEvents.OnBoardTileRevealed?.Invoke(cell, cell.boardTile);
             cell.boardTile.OnReveal(cell, cell.boardManager);
         }
 
-        SpawnableSO interactedSpawnable = (cell != null) ? cell.spawnable : null;
+        SpawnableSO interactedSpawnable = cell?.spawnable;
         if (interactedSpawnable == null)
         {
             if (cell.WasDirectlyClicked)
@@ -46,8 +60,7 @@ public class CellInteractionManager : MonoBehaviour
                     GameEvents.OnMineRevealed?.Invoke(cell);
                 }
 
-                TriggerAttackAnimation(cell, enemy.damage);
-                TransitionToInteractedState(cell);
+                AttackSequenceManager.Instance?.QueueAttack(cell, enemy, enemy.damage);
             }
         }
     }
@@ -82,18 +95,13 @@ public class CellInteractionManager : MonoBehaviour
                 {
                     cell.spawnableBeforeAbilities = cell.spawnable;
                     if (revealedEnemy.abilities != null)
-                    {
                         foreach (var ability in revealedEnemy.abilities)
-                        {
                             if (ability != null) ability.OnReveal(cell, cell.boardManager);
-                        }
-                    }
 
-                    if (cell.spawnable is MoleHoleSpawnableSO)
-                        return;
+                    if (cell.spawnable is MoleHoleSpawnableSO) return;
 
-                    TriggerAttackAnimation(cell, revealedEnemy.damage);
-                    TransitionToClearedState(cell);
+                    AttackSequenceManager.Instance?.QueueAttack(cell, revealedEnemy,
+                        revealedEnemy.damage);
                 }
                 break;
 
@@ -192,5 +200,36 @@ public class CellInteractionManager : MonoBehaviour
 
                 adjacentCell.TryDisplaySurroundingDamage();
             }
+    }
+
+    public void ForceTransitionToClearedState(CellView cell)
+    {
+        GameData.Instance.DefeatedEnemy();
+        GameEvents.OnEnemyDefeated?.Invoke(cell);
+        GameEvents.OnEnemyDefeatedCountReached?.Invoke(
+            GameData.Instance.EnemiesDefeatedThisMatch);
+
+        if (cell.spawnable is EnemySpawnableSO defeatedEnemy && defeatedEnemy.isBoss)
+            GameEvents.OnBossDefeated?.Invoke(cell);
+
+        if (cell.spawnable != null && cell.spawnable.abilities != null)
+        {
+            foreach (var ability in cell.spawnable.abilities)
+            {
+                if (ability is PatternModifyDamageAbilitySO modAbility)
+                    modAbility.RevertModifications(cell, cell.boardManager);
+                if (ability is ObscureAttackValuesAbilitySO obscureAbility)
+                    obscureAbility.RevertObscure(cell, cell.boardManager);
+            }
+        }
+
+        if (cell.spawnable != null)
+            BoardSidebarTracker.Instance?.RemoveSpawnable(cell.spawnable);
+
+        cell.spawnable = null;
+        cell.SetState(CellState.Cleared);
+
+        if (cell.boardManager != null)
+            cell.boardManager.RefreshAllCellDamageValues();
     }
 }

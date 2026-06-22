@@ -76,6 +76,11 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         UpdateVisual();
     }
 
+    public void HideOccupant()
+    {
+        if (occupantSR) occupantSR.gameObject.SetActive(false);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (isVoid) return;
