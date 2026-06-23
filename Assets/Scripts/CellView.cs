@@ -290,11 +290,13 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 {
                     damageText.text = "?";
                     damageText.gameObject.SetActive(true);
+                    damageText.color = Color.white;
                 }
                 else if (surroundingDamage > 0)
                 {
                     damageText.text = surroundingDamage.ToString();
                     damageText.gameObject.SetActive(true);
+                    damageText.color = Color.white;
                 }
                 else
                 {
