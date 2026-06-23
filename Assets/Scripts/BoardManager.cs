@@ -230,21 +230,19 @@ public class BoardManager : MonoBehaviour
             {
                 CellView cell = GetCellView(x, y);
                 if (cell == null || cell.spawnable == null || cell.spawnable.abilities == null) continue;
-
                 foreach (var ability in cell.spawnable.abilities)
-                {
                     if (ability is ISpawnableOnBoard boardAbility)
                         boardAbility.OnBoardSpawn(cell, this);
-                }
             }
         }
 
         PlaceMapConfigBoardTiles();
+        GameEvents.OnBoardGenerated?.Invoke(); //Board Generated event call
         PlaceBoardTiles();
         RefreshAllCellVisuals();
         _spawnAnimationCoroutine = StartCoroutine(AnimateBoardSpawn());
         totalCells = CountNonVoidCells();
-        GameEvents.OnBoardGenerated?.Invoke(); //Board Generated event call
+
 
         if (BoardSidebarTracker.Instance != null)
         {
