@@ -348,9 +348,9 @@ public class BoardManager : MonoBehaviour
         GameData.Instance.StartGame();
         GameEvents.OnFirstCellRevealed?.Invoke(); //First Cell Revealed event call
 
-        for (int x = cx - 1; x <= cx + 1; x++) /*for (int x = cx; x <= cx; x++)*/
+        for (int x = cx - 1; x <= cx + 1; x++)
         {
-            for (int y = cy - 1; y <= cy + 1; y++) /*for (int y = cy; y <= cy; y++)*/
+            for (int y = cy - 1; y <= cy + 1; y++)
             {
                 if (x < 0 || x >= width || y < 0 || y >= height) continue;
 
@@ -368,10 +368,6 @@ public class BoardManager : MonoBehaviour
                 }
                 else
                 {
-                    if (cell.spawnable.damage > 0)
-                    {
-                        print("Success");
-                    }
                     cell.isKnown = true;
                     cell.UpdateVisual();
                 }
