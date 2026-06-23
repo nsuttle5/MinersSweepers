@@ -178,7 +178,15 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (isKnown && State == CellState.Hidden)
         {
             AssignHiddenSprites();
-            if (damageText) damageText.gameObject.SetActive(false);
+
+            if (spawnable != null && damageText != null)
+            {
+                damageText.text = EffectiveDamage.ToString();
+                damageText.color = Color.red;
+                damageText.gameObject.SetActive(true);
+            }
+            else if (damageText) damageText.gameObject.SetActive(false);
+
             HandleOccupantVisual(alphaPreview: true);
         }
         else
@@ -187,7 +195,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             {
                 case CellState.Hidden:
                     AssignHiddenSprites();
-                    if (damageText) damageText.gameObject.SetActive(false);
+                    if (damageText && !isKnown) damageText.gameObject.SetActive(false);
                     break;
 
                 case CellState.Revealed:
@@ -262,9 +270,9 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void TryDisplaySurroundingDamage()
     {
-        if (State == CellState.Hidden || !isKnown || isPartialRevealed)
+        if (State == CellState.Hidden || isPartialRevealed)
         {
-            if (damageText) damageText.gameObject.SetActive(false);
+            if (damageText && !isKnown) damageText.gameObject.SetActive(false);
             return;
         }
 
