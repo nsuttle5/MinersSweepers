@@ -29,6 +29,8 @@ public class PlayerRunStats : MonoBehaviour
     [Header("Health")]
     [SerializeField] private int startingMaxHP = 100;
 
+    public int GoldCollectedThisRun { get; private set; } = 0; 
+    public float LossPenaltyPercentage { get; set; } = 0.5f;
     public int CurrentHP { get; set; }
     public int MaxHp { get; private set; }
 
@@ -36,8 +38,8 @@ public class PlayerRunStats : MonoBehaviour
     public IReadOnlyList<ArtifactSO> Artifacts => artifacts;
 
     public UnityAction<int, int> OnHealthChanged;
-    public UnityAction OnPlayerDeath;
 
+    public UnityAction<int> OnRunGoldChanged;
     private HashSet<string> seenInteractionIDs = new();
 
     private void Awake()
@@ -104,16 +106,41 @@ public class PlayerRunStats : MonoBehaviour
         if (CurrentHP > 0) return;
 
         GameEvents.OnPlayerDeath?.Invoke(); //Player Death Event
-        OnPlayerDeath?.Invoke();
-
-        foreach (ArtifactSO a in artifacts) a.OnRemove();
-        artifacts.Clear();
-
-        Destroy(gameObject);
 
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadScene("LoseScreen");
         else SceneManager.LoadScene("LoseScreen");
+    }
+
+    public void TrackGoldAddition(int amount)
+    {
+        GoldCollectedThisRun += amount;
+        OnRunGoldChanged?.Invoke(GoldCollectedThisRun);
+    }
+
+    public void CommitRunGoldOnWin()
+    {
+        if (PlayerProfileManager.Instance != null)
+        {
+            PlayerProfileManager.Instance.AddGoldToWallet(GoldCollectedThisRun);
+        }
+        CleanupRunStatsSingleton();
+    }
+
+    public void CommitRunGoldOnLoss(int finalSurvivingGold)
+    {
+        if (PlayerProfileManager.Instance != null)
+        {
+            PlayerProfileManager.Instance.AddGoldToWallet(finalSurvivingGold);
+        }
+        CleanupRunStatsSingleton();
+    }
+
+    private void CleanupRunStatsSingleton()
+    {
+        foreach (ArtifactSO a in artifacts) a.OnRemove();
+        artifacts.Clear();
+        Destroy(gameObject);
     }
 
     private void Refresh()

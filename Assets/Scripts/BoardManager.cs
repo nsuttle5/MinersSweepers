@@ -348,30 +348,28 @@ public class BoardManager : MonoBehaviour
         GameData.Instance.StartGame();
         GameEvents.OnFirstCellRevealed?.Invoke(); //First Cell Revealed event call
 
-
-        clickedCellView.Reveal(wasDirectClick: true, triggerAbilities: false);
-        OnCellRevealed?.Invoke(clickedCellView);
-
         for (int x = cx - 1; x <= cx + 1; x++)
         {
             for (int y = cy - 1; y <= cy + 1; y++)
             {
-                if (x == cx && y == cy) continue;
                 if (x < 0 || x >= width || y < 0 || y >= height) continue;
 
                 var cell = cellObjs[x, y].GetComponent<CellView>();
-                if (cell != null && !cell.Revealed)
+                if (cell == null || cell.isVoid) continue;
+
+                if (cell.spawnable == null)
                 {
-                    if (cell.spawnable == null)
+                    if (!cell.Revealed)
                     {
-                        cell.Reveal(wasDirectClick: false, triggerAbilities: false);
+                        bool isDirect = (x == cx && y == cy);
+                        cell.Reveal(wasDirectClick: isDirect, triggerAbilities: false);
                         OnCellRevealed?.Invoke(cell);
                     }
-                    else
-                    {
-                        cell.isKnown = true;
-                        cell.UpdateVisual();
-                    }
+                }
+                else
+                {
+                    cell.isKnown = true;
+                    cell.UpdateVisual();
                 }
             }
         }
@@ -468,7 +466,7 @@ public class BoardManager : MonoBehaviour
                 {
                     var neighbor = cellObjs[x, y].GetComponent<CellView>();
                     if (neighbor != null && neighbor.IsActiveThreat)
-                        total += neighbor.effectiveDamage;
+                        total += neighbor.EffectiveDamage;
                 }
             }
         return total;
