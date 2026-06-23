@@ -31,6 +31,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     private bool isPartialRevealed = false;
     public bool IsActiveThreat => (State == CellState.Hidden || State == CellState.Revealed) && spawnable != null && spawnable.type == SpawnableType.Enemy;
+    public string MarkText => markText.text;
 
     public static UnityAction<CellView, Vector2> OnCellRightClick;
 
