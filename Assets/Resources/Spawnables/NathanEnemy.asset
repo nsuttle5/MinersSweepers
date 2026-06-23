@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnableSO
   type: 0
   displayName: Nathan Enemy
-  sprite: {fileID: 21300000, guid: 2e8c499a55c0eb84395207c9373269f5, type: 3}
+  sprite: {fileID: 21300000, guid: 778d0671d738e844082ced364290c8ef, type: 3}
   damage: 1000
   health: 0
   description: 
@@ -22,4 +22,5 @@ MonoBehaviour:
   abilities: []
   onSpawnAudio: {fileID: 0}
   onDeathAudio: {fileID: 0}
-  interactedSprite: {fileID: 21300000, guid: 1cd8ad606b4d7c2488a54f8d71af0798, type: 3}
+  interactedSprite: {fileID: 21300000, guid: 778d0671d738e844082ced364290c8ef, type: 3}
+  isBoss: 0
