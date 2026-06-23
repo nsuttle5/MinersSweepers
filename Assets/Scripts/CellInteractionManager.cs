@@ -33,12 +33,9 @@ public class CellInteractionManager : MonoBehaviour
     private void HandleCellReveal(CellView cell)
     {
         if (cell.boardTile != null && cell.WasDirectlyClicked)
-        {
-            //GameEvents.OnBoardTileRevealed?.Invoke(cell, cell.boardTile);
             cell.boardTile.OnReveal(cell, cell.boardManager);
-        }
 
-        SpawnableSO interactedSpawnable = cell?.spawnable;
+        SpawnableSO interactedSpawnable = cell?.spawnableBeforeAbilities ?? cell?.spawnable;
         if (interactedSpawnable == null)
         {
             if (cell.WasDirectlyClicked)
@@ -60,10 +57,14 @@ public class CellInteractionManager : MonoBehaviour
                     GameEvents.OnMineRevealed?.Invoke(cell);
                 }
 
-                AttackSequenceManager.Instance?.QueueAttack(cell, enemy, cell.EffectiveDamage);
+
+                int damage = cell.damageOverride.HasValue
+                    ? cell.damageOverride.Value
+                    : enemy.damage;
+
+                AttackSequenceManager.Instance?.QueueAttack(cell, enemy, damage);
             }
         }
-
     }
 
     private void HandleRevealedClick(CellView cell)
@@ -88,7 +89,12 @@ public class CellInteractionManager : MonoBehaviour
             case SpawnableType.Enemy:
                 if (cell.spawnable is MoleHoleSpawnableSO)
                 {
-                    TransitionToInteractedState(cell);
+                    if (cell.boardManager != null)
+                        BoardSidebarTracker.Instance?.RemoveSpawnable(cell.spawnable);
+                    cell.spawnable = null;
+                    cell.SetState(CellState.Cleared);
+                    if (cell.boardManager != null)
+                        cell.boardManager.RefreshAllCellDamageValues();
                     break;
                 }
 
@@ -102,7 +108,7 @@ public class CellInteractionManager : MonoBehaviour
                     if (cell.spawnable is MoleHoleSpawnableSO) return;
 
                     AttackSequenceManager.Instance?.QueueAttack(cell, revealedEnemy,
-                        revealedEnemy.damage);
+                        cell.EffectiveDamage);
                 }
                 break;
 
@@ -237,3 +243,4 @@ public class CellInteractionManager : MonoBehaviour
             cell.boardManager.RefreshAllCellDamageValues();
     }
 }
+
