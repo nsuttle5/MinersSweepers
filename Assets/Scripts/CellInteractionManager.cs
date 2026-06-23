@@ -60,7 +60,7 @@ public class CellInteractionManager : MonoBehaviour
                     GameEvents.OnMineRevealed?.Invoke(cell);
                 }
 
-                AttackSequenceManager.Instance?.QueueAttack(cell, enemy, cell.effectiveDamage);
+                AttackSequenceManager.Instance?.QueueAttack(cell, enemy, cell.EffectiveDamage);
             }
         }
 
