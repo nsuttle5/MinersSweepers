@@ -35,6 +35,8 @@ public class GameData : MonoBehaviour
     public int TotalEnemies { get; private set; }
     public string TimePassed => GetTime();
     public bool GameStarted { get; private set; }
+    public int GoldLostOnDeath { get; private set; }
+    public int GoldPriorToDeath { get; private set; }
 
     public UnityAction<int> OnGoldChanged;
 
@@ -80,13 +82,17 @@ public class GameData : MonoBehaviour
 
     public void CollectGold(int amount) //GoldEvent call
     {
-        GoldEvent goldEvent = new GoldEvent(amount);
+        GoldEvent goldEvent = new(amount);
         GameEvents.OnGoldCollected?.Invoke(goldEvent);
         int finalAmount = goldEvent.FinalAmount;
 
         GoldFoundThisMatch += finalAmount;
         OnGoldChanged?.Invoke(GoldFoundThisMatch);
-        PlayerProfileManager.Instance.AddGoldToWallet(finalAmount);
+
+        if (PlayerRunStats.Instance != null)
+        {
+            PlayerRunStats.Instance.TrackGoldAddition(finalAmount);
+        }
     }
 
     public void DefeatedEnemy() => EnemiesDefeatedThisMatch++;
@@ -101,11 +107,5 @@ public class GameData : MonoBehaviour
         GameStarted = false;
         GameEvents.OnRunEnd?.Invoke(); //GameEnd event call
         GameEvents.OnFloorComplete?.Invoke(); //FloorComplete event call
-    }
-
-    public void SpendGold(int amount)
-    {
-        GameEvents.OnGoldSpent?.Invoke(amount); //GoldSpent event call
-        PlayerProfileManager.Instance.TrySpendGold(amount);
     }
 }

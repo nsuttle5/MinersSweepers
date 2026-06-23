@@ -26,7 +26,7 @@ public class CaveTotemTileSO : BoardTileSO
                 if (candidate.Revealed) continue;
                 if (candidate.spawnable is not EnemySpawnableSO) continue;
 
-                int current = candidate.effectiveDamage;
+                int current = candidate.EffectiveDamage;
                 candidate.damageOverride = current + damageBuffPerEnemy;
             }
         }

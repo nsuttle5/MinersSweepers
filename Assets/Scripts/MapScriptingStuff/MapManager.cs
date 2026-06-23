@@ -227,8 +227,7 @@ public class MapManager : MonoBehaviour
 
         ResultsUI.OnPlayerWin += () => Destroy(gameObject);
 
-        if (PlayerRunStats.HasInstance)
-            PlayerRunStats.Instance.OnPlayerDeath += () => Destroy(gameObject);
+        GameEvents.OnPlayerDeath += () => Destroy(gameObject);
     }
 
     void OnDisable()
@@ -237,8 +236,7 @@ public class MapManager : MonoBehaviour
 
         ResultsUI.OnPlayerWin -= () => Destroy(gameObject);
 
-        if (PlayerRunStats.HasInstance)
-            PlayerRunStats.Instance.OnPlayerDeath -= () => Destroy(gameObject);
+        GameEvents.OnPlayerDeath -= () => Destroy(gameObject);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
