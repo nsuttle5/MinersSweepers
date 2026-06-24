@@ -53,6 +53,10 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public bool isVoid = false;
 
+    private Vector3 _breatheBasePosition;
+    private bool _breatheBaseSet = false;
+    private bool _isHovered = false;
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -323,6 +327,8 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isVoid) return;
+        _isHovered = true;
+        ResetBreathe();
         if (hoverCoroutine != null) StopCoroutine(hoverCoroutine);
         hoverCoroutine = StartCoroutine(ScaleTo(transform.localScale, originalScale * hoverScale, hoverDuration));
 
@@ -336,6 +342,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     public void OnPointerExit(PointerEventData eventData)
     {
         if (isVoid) return;
+        _isHovered = false;
         if (hoverCoroutine != null) StopCoroutine(hoverCoroutine);
         hoverCoroutine = StartCoroutine(ScaleTo(transform.localScale, originalScale, hoverDuration));
     }
@@ -365,6 +372,32 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     {
         this.isVoid = value;
         UpdateVisual();
+    }
+
+    public void SetBreatheScale(float scale, float posOffset)
+    {
+        if (isVoid || isSequenceLocked || _isHovered) return;
+
+        if (!_breatheBaseSet)
+        {
+            _breatheBasePosition = transform.localPosition;
+            _breatheBaseSet = true;
+        }
+
+        transform.localScale = originalScale * scale;
+        transform.localPosition = _breatheBasePosition + new Vector3(0f, posOffset, 0f);
+    }
+
+    public void ResetBreathe()
+    {
+        if (!_breatheBaseSet) return;
+        transform.localScale = originalScale;
+        transform.localPosition = _breatheBasePosition;
+    }
+
+    public void ResetBreatheBase()
+    {
+        _breatheBaseSet = false;
     }
 }
 

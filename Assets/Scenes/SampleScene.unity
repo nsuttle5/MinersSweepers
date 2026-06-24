@@ -1212,6 +1212,14 @@ MonoBehaviour:
   - {fileID: 6869100367894509734, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
   - {fileID: -1272735854, guid: 7bb06b3bb240852489e41af41d522d98, type: 3}
   slashFrameDuration: 0.05
+  playerIdleFrames:
+  - {fileID: 4578697479300070592, guid: 7622505c6f2f9eb48b95847a5219b087, type: 3}
+  - {fileID: -4173840202665917087, guid: 7622505c6f2f9eb48b95847a5219b087, type: 3}
+  - {fileID: 7796777655010329987, guid: 7622505c6f2f9eb48b95847a5219b087, type: 3}
+  - {fileID: 2161811003949601554, guid: 7622505c6f2f9eb48b95847a5219b087, type: 3}
+  - {fileID: 7796777655010329987, guid: 7622505c6f2f9eb48b95847a5219b087, type: 3}
+  - {fileID: -4173840202665917087, guid: 7622505c6f2f9eb48b95847a5219b087, type: 3}
+  playerIdleFrameDuration: 0.12
 --- !u!1 &724246873
 GameObject:
   m_ObjectHideFlags: 0
@@ -2021,6 +2029,9 @@ MonoBehaviour:
   popSettleDuration: 0.1
   diagonalDelay: 0.04
   activeTileSpawnRules: []
+  breatheScale: 1.09
+  breatheSpeed: 0.8
+  breathePositionOffset: 0.005
 --- !u!4 &1752908687
 Transform:
   m_ObjectHideFlags: 0
