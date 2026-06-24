@@ -40,6 +40,13 @@ public class BoardManager : MonoBehaviour
     [Header("Board Tiles")]
     [SerializeField] private List<BoardTileSpawnRule> activeTileSpawnRules = new();
 
+    [Header("Idle breathing")]
+    [SerializeField] private float breatheScale = 1.02f;
+    [SerializeField] private float breatheSpeed = 0.8f;
+    [SerializeField] private float breathePositionOffset = 0.005f;
+
+    private Coroutine _breatheCoroutine;
+
     public static BoardManager Instance { get; private set; }
 
     void Awake()
@@ -163,6 +170,11 @@ public class BoardManager : MonoBehaviour
     [ContextMenu("Generate Board")]
     public void GenerateBoard()
     {
+        if (_breatheCoroutine != null)
+        {
+            StopCoroutine(_breatheCoroutine);
+            _breatheCoroutine = null;
+        }
         if (_spawnAnimationCoroutine != null)
         {
             StopCoroutine(_spawnAnimationCoroutine);
@@ -250,6 +262,7 @@ public class BoardManager : MonoBehaviour
         }
 
         StartCoroutine(AnimateBoardSpawn());
+        StartCoroutine(StartBreatheAfterDelay());
     }
 
     private List<SpawnableSO> ShuffleWithinPriorityGroups(List<SpawnConstraint> sortedConstraints)
@@ -551,5 +564,73 @@ public class BoardManager : MonoBehaviour
             }
         }
         return count;
+    }
+
+    private IEnumerator BreatheLoop()
+    {
+        while (true)
+        {
+            float t = Time.time * breatheSpeed;
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    CellView cell = GetCellView(x, y);
+                    if (cell == null || cell.Revealed || cell.isVoid) continue;
+
+                    float phase = t + (x * 0.3f) + (y * 0.2f);
+                    float sine = (Mathf.Sin(phase) + 1f) * 0.5f;
+
+                    float scale = Mathf.Lerp(1f, breatheScale, sine);
+                    float posOffset = Mathf.Lerp(0f, breathePositionOffset, sine);
+
+                    cell.SetBreatheScale(scale, posOffset);
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    private IEnumerator StartBreatheAfterDelay()
+    {
+        int maxDiagonal = (width - 1) + (height - 1);
+        float spawnAnimDuration = maxDiagonal * diagonalDelay + popDuration + popSettleDuration + 0.1f;
+
+        yield return new WaitForSeconds(spawnAnimDuration);
+
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+            {
+                CellView cell = GetCellView(x, y);
+                if (cell != null)
+                {
+                    cell.ResetBreatheBase();
+                }
+            }
+
+        if (_breatheCoroutine != null) StopCoroutine(_breatheCoroutine);
+        _breatheCoroutine = StartCoroutine(BreatheLoop());
+    }
+
+
+
+    public void StopBreatheAnimation()
+    {
+        if (_breatheCoroutine != null)
+        {
+            StopCoroutine(_breatheCoroutine);
+            _breatheCoroutine = null;
+        }
+    }
+
+    private void StartBreatheAnimation()
+    {
+        if (_breatheCoroutine != null)
+        {
+            StopCoroutine(_breatheCoroutine);
+        }
+        _breatheCoroutine = StartCoroutine(BreatheLoop());
     }
 }

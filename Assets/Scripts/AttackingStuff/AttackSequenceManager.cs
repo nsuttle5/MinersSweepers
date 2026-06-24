@@ -60,6 +60,13 @@ public class AttackSequenceManager : MonoBehaviour
     [SerializeField] private Sprite[] slashFrames;
     [SerializeField] private float slashFrameDuration = 0.05f;
 
+    [Header("Player Idle Animation")]
+    [SerializeField] private Sprite[] playerIdleFrames;
+    [SerializeField] private float playerIdleFrameDuration = 0.12f;
+
+    private Coroutine _playerIdleCoroutine;
+    private bool _playerBusy = false;
+
     public static UnityAction OnSequenceComplete;
 
     private HashSet<CellView> _cellsInQueue = new();
@@ -77,12 +84,43 @@ public class AttackSequenceManager : MonoBehaviour
             _playerOriginalPos = playerImage.rectTransform.anchoredPosition;
     }
 
+    private void Start()
+    {
+        StartIdleAnimation();
+    }
+
     public void QueueAttack(CellView cell, EnemySpawnableSO enemy, int damage)
     {
         if (_cellsInQueue.Contains(cell)) return;
         _cellsInQueue.Add(cell);
 
         StartCoroutine(PlaySequence(cell, enemy, damage));
+    }
+
+    private void StartIdleAnimation()
+    {
+        if (_playerIdleCoroutine != null)
+        {
+            StopCoroutine(_playerIdleCoroutine);
+        }
+        _playerIdleCoroutine = StartCoroutine(PlayerIdleLoop());
+    }
+
+    private IEnumerator PlayerIdleLoop()
+    {
+        if (playerImage == null || playerIdleFrames == null
+            || playerIdleFrames.Length == 0) yield break;
+
+        int frame = 0;
+        while (true)
+        {
+            if (!_playerBusy && playerImage != null)
+            {
+                playerImage.sprite = playerIdleFrames[frame];
+                frame = (frame + 1) % playerIdleFrames.Length;
+            }
+            yield return new WaitForSeconds(playerIdleFrameDuration);
+        }
     }
 
     //hell
@@ -227,6 +265,8 @@ public class AttackSequenceManager : MonoBehaviour
     {
         if (playerImage == null) yield break;
 
+        _playerBusy = true;
+
         RectTransform rt = playerImage.rectTransform;
         Vector2 originalPos = _playerOriginalPos;
 
@@ -270,6 +310,7 @@ public class AttackSequenceManager : MonoBehaviour
             playerImage.sprite = playerIdleSprite;
 
         playerImage.color = Color.white;
+        _playerBusy = false;
     }
 
     private void TriggerPlayerAttackAnimation()
@@ -282,6 +323,7 @@ public class AttackSequenceManager : MonoBehaviour
 
     private IEnumerator PlayerAttackRoutine()
     {
+        _playerBusy = true;
         foreach (var frame in playerAttackFrames)
         {
             if (playerImage == null) yield break;
@@ -291,6 +333,7 @@ public class AttackSequenceManager : MonoBehaviour
 
         if (playerImage != null && playerIdleSprite != null)
             playerImage.sprite = playerIdleSprite;
+        _playerBusy = false;
     }
 
     private void TriggerScreenShake()
