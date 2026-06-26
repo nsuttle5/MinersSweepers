@@ -64,6 +64,10 @@ public class AttackSequenceManager : MonoBehaviour
     [SerializeField] private Sprite[] playerIdleFrames;
     [SerializeField] private float playerIdleFrameDuration = 0.12f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip attackSwingClip;
+    [SerializeField] private AudioClip slashImpactClip;
+
     private Coroutine _playerIdleCoroutine;
     private bool _playerBusy = false;
 
@@ -236,6 +240,8 @@ public class AttackSequenceManager : MonoBehaviour
         if (slashFrames == null || slashFrames.Length == 0 || cell == null)
             yield break;
 
+        AudioManager.Instance.Play(slashImpactClip);
+
         GameObject slashObj = new GameObject("SlashEffect");
         slashObj.transform.SetParent(animationRoot);
         slashObj.transform.position = cell.transform.position;
@@ -318,6 +324,7 @@ public class AttackSequenceManager : MonoBehaviour
         if (playerImage == null || playerAttackFrames == null
             || playerAttackFrames.Length == 0) return;
         if (_playerAttackCoroutine != null) StopCoroutine(_playerAttackCoroutine);
+        AudioManager.Instance.Play(attackSwingClip);
         _playerAttackCoroutine = StartCoroutine(PlayerAttackRoutine());
     }
 
