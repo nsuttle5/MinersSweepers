@@ -1,38 +1,30 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "BloodAltarTile", menuName = "BoardTiles/BloodAltarTile")]
-public class BloodAltarTileSO : BoardTileSO
+[CreateAssetMenu(fileName = "BeeNest", menuName = "BoardTiles/BeeNest")]
+public class BeeNestSO : BoardTileSO
 {
-    [Header("Trade")]
-    public int goldReward = 25;
-    public int healthCost = 10;
-
-    [Header("Summoned Enemies")]
+    [Header("Bee Nest Settings")]
     public EnemySpawnableSO enemyToSummon;
-    public int enemyCount = 2;
 
     public override void OnBoardSpawn(CellView cell, BoardManager board) { }
 
     public override void OnReveal(CellView cell, BoardManager board)
     {
-        GameData.Instance.CollectGold(goldReward);
-        PlayerRunStats.Instance?.ModifyHealth(-healthCost);
-        AttackSequenceManager.Instance?.TriggerPlayerHitReaction();
-
-        SummonEnemies(board);
+        BeeSwarmSpawn(cell, board);
     }
 
-    private void SummonEnemies(BoardManager board)
+    public void BeeSwarmSpawn(CellView cell, BoardManager board)
     {
-        if (enemyToSummon == null || enemyCount <= 0) return;
-
+        /*
+        // Check surrounding tiles of the cell to see if they are empty, if they are empty, spawn the enemy, refresh the board, use CellView list for empty cells
         List<CellView> emptyCells = new();
-        for (int x = 0; x < board.Width; x++)
+        for (int x = -1; x <= 1; x++)
         {
-            for (int y = 0; y < board.Height; y++)
+            for (int y = -1; y <= 1; y++)
             {
-                CellView candidate = board.GetCellView(x, y);
+                if (x == 0 && y == 0) continue;
+                CellView candidate = board.GetCellView(cell.X + x, cell.Y + y);
                 if (candidate == null) continue;
                 if (candidate.Revealed) continue;
                 if (candidate.spawnable != null) continue;
@@ -57,5 +49,7 @@ public class BloodAltarTileSO : BoardTileSO
         }
 
         board.RefreshAllCellDamageValues();
+        */
     }
+
 }

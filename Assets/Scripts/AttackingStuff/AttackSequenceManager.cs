@@ -260,7 +260,7 @@ public class AttackSequenceManager : MonoBehaviour
         Destroy(slashObj);
     }
 
-    private void TriggerPlayerHitReaction()
+    public void TriggerPlayerHitReaction()
     {
         if (playerImage == null) return;
         if (_playerHitCoroutine != null) StopCoroutine(_playerHitCoroutine);
