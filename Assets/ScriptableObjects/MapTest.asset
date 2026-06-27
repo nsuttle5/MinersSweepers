@@ -95,7 +95,7 @@ MonoBehaviour:
     requiresEnemyUnderneath: 0
     requiresEmptyUnderneath: 0
     spawnChance: 1
-  - tileType: {fileID: 11400000, guid: 116360b4e8bd67a4f95db56e33e4a6ae, type: 2}
+  - tileType: {fileID: 11400000, guid: c0d92d876ed32ae4c96bb40d7eafc5d5, type: 2}
     useRange: 1
     exactAmount: 1
     minMaxAmount: {x: 1, y: 3}

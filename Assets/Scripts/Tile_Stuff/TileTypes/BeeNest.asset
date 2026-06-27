@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac53045510f28ed49aecee1187f70765, type: 3}
+  m_Name: BeeNest
+  m_EditorClassIdentifier: Assembly-CSharp::BeeNestSO
+  tileName: Bee_Nest
+  tileSprite: {fileID: 21300000, guid: 53707e7eeac39f248af0c8b4013bbafa, type: 3}
+  description: 
+  enemyToSummon: {fileID: 11400000, guid: 4d28876723d8cd944be0b44d692053ec, type: 2}
+  enemyCount: 0

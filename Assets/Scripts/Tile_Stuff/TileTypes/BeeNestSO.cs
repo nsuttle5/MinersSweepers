@@ -6,25 +6,23 @@ public class BeeNestSO : BoardTileSO
 {
     [Header("Bee Nest Settings")]
     public EnemySpawnableSO enemyToSummon;
+    public int enemyCount = 3;
 
     public override void OnBoardSpawn(CellView cell, BoardManager board) { }
 
     public override void OnReveal(CellView cell, BoardManager board)
     {
-        BeeSwarmSpawn(cell, board);
-    }
+        if (enemyToSummon == null) return;
 
-    public void BeeSwarmSpawn(CellView cell, BoardManager board)
-    {
-        /*
-        // Check surrounding tiles of the cell to see if they are empty, if they are empty, spawn the enemy, refresh the board, use CellView list for empty cells
         List<CellView> emptyCells = new();
-        for (int x = -1; x <= 1; x++)
+
+        for (int dx = -1; dx <= 1; dx++)
         {
-            for (int y = -1; y <= 1; y++)
+            for (int dy = -1; dy <= 1; dy++)
             {
-                if (x == 0 && y == 0) continue;
-                CellView candidate = board.GetCellView(cell.X + x, cell.Y + y);
+                if (dx == 0 && dy == 0) continue;
+
+                CellView candidate = board.GetCellView(cell.x + dx, cell.y + dy);
                 if (candidate == null) continue;
                 if (candidate.Revealed) continue;
                 if (candidate.spawnable != null) continue;
@@ -35,7 +33,7 @@ public class BeeNestSO : BoardTileSO
             }
         }
 
-        int toSummon = Mathf.Min(enemyCount, emptyCells.Count);
+        int toSummon = Mathf.Max(enemyCount, emptyCells.Count);
         for (int i = 0; i < toSummon; i++)
         {
             int index = Random.Range(0, emptyCells.Count);
@@ -49,7 +47,5 @@ public class BeeNestSO : BoardTileSO
         }
 
         board.RefreshAllCellDamageValues();
-        */
     }
-
 }

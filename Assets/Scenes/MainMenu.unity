@@ -1669,10 +1669,10 @@ MonoBehaviour:
   runWinClip: {fileID: 0}
   runLoseClip: {fileID: 0}
   bossDefeatedClip: {fileID: 0}
-  mineMusic: {fileID: 8300000, guid: 19552bb584a460648bad0268b979a0a5, type: 3}
-  mapMusic: {fileID: 8300000, guid: 19552bb584a460648bad0268b979a0a5, type: 3}
-  shopMusic: {fileID: 8300000, guid: 19552bb584a460648bad0268b979a0a5, type: 3}
-  bossMusic: {fileID: 8300000, guid: 19552bb584a460648bad0268b979a0a5, type: 3}
+  mineMusic: {fileID: 0}
+  mapMusic: {fileID: 0}
+  shopMusic: {fileID: 0}
+  bossMusic: {fileID: 0}
 --- !u!4 &1237858932
 Transform:
   m_ObjectHideFlags: 0
