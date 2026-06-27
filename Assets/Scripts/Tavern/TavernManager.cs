@@ -10,6 +10,10 @@ public static class TavernManager
         {
             TavernUpgradeType.Health => PlayerProfileManager.Instance.HpUpgradeLevel,
             TavernUpgradeType.Luck => PlayerProfileManager.Instance.LuckUpgradeLevel,
+            TavernUpgradeType.Gold_Gain => PlayerProfileManager.Instance.GoldGainUpgradeLevel,
+            TavernUpgradeType.Consumable_Slot => PlayerProfileManager.Instance.ConsumableSlotUpgradeLevel,
+            TavernUpgradeType.Initial_Radius => PlayerProfileManager.Instance.InitialRadiusUpgradeLevel,
+            TavernUpgradeType.Shop_Rerolls => PlayerProfileManager.Instance.ShopRerollsUpgradeLevel,
             _ => 0
         };
     }
@@ -36,6 +40,18 @@ public static class TavernManager
             case TavernUpgradeType.Luck:
                 PlayerProfileManager.Instance.LuckUpgradeLevel = level;
                 break;
+            case TavernUpgradeType.Gold_Gain:
+                PlayerProfileManager.Instance.GoldGainUpgradeLevel = level;
+                break;
+            case TavernUpgradeType.Consumable_Slot:
+                PlayerProfileManager.Instance.ConsumableSlotUpgradeLevel = level;
+                break;
+            case TavernUpgradeType.Initial_Radius:
+                PlayerProfileManager.Instance.InitialRadiusUpgradeLevel = level;
+                break;
+            case TavernUpgradeType.Shop_Rerolls:
+                PlayerProfileManager.Instance.ShopRerollsUpgradeLevel = level;
+                break;
         }
     }
 }
@@ -43,5 +59,9 @@ public static class TavernManager
 public enum TavernUpgradeType
 {
     Health,
-    Luck
+    Luck,
+    Gold_Gain,
+    Consumable_Slot,
+    Initial_Radius,
+    Shop_Rerolls
 }
