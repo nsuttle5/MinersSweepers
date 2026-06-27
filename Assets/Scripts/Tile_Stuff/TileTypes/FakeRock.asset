@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeec366f425358442a3cb4593d6d07e6, type: 3}
   m_Name: FakeRock
   m_EditorClassIdentifier: Assembly-CSharp::FakeRockTileSO
-  tileName: 
-  tileSprite: {fileID: 0}
+  tileName: FakeRock
+  tileSprite: {fileID: 21300000, guid: 4964af5892b0a5645a071e9af8373319, type: 3}
   description: 
   healthCost: 1

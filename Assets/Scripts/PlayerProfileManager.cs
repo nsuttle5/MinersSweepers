@@ -28,6 +28,10 @@ public class PlayerProfileManager : MonoBehaviour
     public int TotalGold { get; set; } = 0;
     public int HpUpgradeLevel { get; set; } = 1;
     public int LuckUpgradeLevel { get; set; } = 1;
+    public int GoldGainUpgradeLevel { get; set; } = 1;
+    public int ConsumableSlotUpgradeLevel { get; set; } = 1;
+    public int InitialRadiusUpgradeLevel { get; set; } = 1;
+    public int ShopRerollsUpgradeLevel { get; set; } = 1;
 
     private Dictionary<ConsumableSO, int> consumables;
     public IReadOnlyDictionary<ConsumableSO, int> Consumables => consumables;

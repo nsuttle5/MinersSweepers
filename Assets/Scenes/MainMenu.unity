@@ -1604,6 +1604,89 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1217178407}
   m_CullTransparentMesh: 1
+--- !u!1 &1237858930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1237858932}
+  - component: {fileID: 1237858931}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1237858931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237858930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69a8e84010a69a448f0dce9958b38e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  poolSize: 16
+  musicSource: {fileID: 0}
+  masterSFXVolume: 1
+  masterMusicVolume: 1
+  blockBreakClip: {fileID: 0}
+  emptyRevealClip: {fileID: 0}
+  boardGenerateClip: {fileID: 0}
+  exitRevealClip: {fileID: 0}
+  goldCollectClip: {fileID: 0}
+  cascadeRevealClip: {fileID: 0}
+  playerHurtClip: {fileID: 0}
+  playerAttackClip: {fileID: 0}
+  playerDeathClip: {fileID: 0}
+  playerHealClip: {fileID: 0}
+  playerLowHealthClip: {fileID: 0}
+  enemyRevealClip: {fileID: 0}
+  enemyDeathClip: {fileID: 0}
+  havenRevealClip: {fileID: 0}
+  bloodAltarRevealClip: {fileID: 0}
+  flareRevealClip: {fileID: 0}
+  caveQuakeRevealClip: {fileID: 0}
+  caveTotemRevealClip: {fileID: 0}
+  emptyRevealTileClip: {fileID: 0}
+  voidRevealClip: {fileID: 0}
+  shopOpenClip: {fileID: 0}
+  shopCloseClip: {fileID: 0}
+  itemPurchaseClip: {fileID: 0}
+  rerollClip: {fileID: 0}
+  cannotAffordClip: {fileID: 0}
+  nodeSelectClip: {fileID: 0}
+  mapTransitionClip: {fileID: 0}
+  runStartClip: {fileID: 0}
+  runWinClip: {fileID: 0}
+  runLoseClip: {fileID: 0}
+  bossDefeatedClip: {fileID: 0}
+  mineMusic: {fileID: 0}
+  mapMusic: {fileID: 0}
+  shopMusic: {fileID: 0}
+  bossMusic: {fileID: 0}
+--- !u!4 &1237858932
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237858930}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 238.3109, y: 160.90172, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1258450763
 GameObject:
   m_ObjectHideFlags: 0
@@ -2512,3 +2595,4 @@ SceneRoots:
   - {fileID: 1658539000}
   - {fileID: 1416513925}
   - {fileID: 1279397157}
+  - {fileID: 1237858932}

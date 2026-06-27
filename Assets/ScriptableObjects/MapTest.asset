@@ -95,3 +95,17 @@ MonoBehaviour:
     requiresEnemyUnderneath: 0
     requiresEmptyUnderneath: 0
     spawnChance: 1
+  - tileType: {fileID: 11400000, guid: 116360b4e8bd67a4f95db56e33e4a6ae, type: 2}
+    useRange: 1
+    exactAmount: 1
+    minMaxAmount: {x: 1, y: 3}
+    requiresEnemyUnderneath: 0
+    requiresEmptyUnderneath: 1
+    spawnChance: 1
+  - tileType: {fileID: 11400000, guid: bcb2ce9622bb959448d1e2d42bf81aaf, type: 2}
+    useRange: 1
+    exactAmount: 1
+    minMaxAmount: {x: 1, y: 3}
+    requiresEnemyUnderneath: 0
+    requiresEmptyUnderneath: 1
+    spawnChance: 1
