@@ -488,6 +488,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapViewController
   fullViewShowDuration: 1
   transitionSpeed: 5
+  panRightManualOffset: 300
 --- !u!1 &4390312298618741565
 GameObject:
   m_ObjectHideFlags: 0

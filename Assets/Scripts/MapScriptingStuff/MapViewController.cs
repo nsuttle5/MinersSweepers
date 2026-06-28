@@ -9,6 +9,9 @@ public class MapViewController : MonoBehaviour
     [SerializeField] private float fullViewShowDuration = 2.0f;
     [SerializeField] private float transitionSpeed = 3.5f;
 
+    [Header("Manual Offset")]
+    [SerializeField] private float panRightManualOffset = 0f;
+
     private ScrollRect scrollRect;
     private RectTransform viewportRt;
     private RectTransform contentRt;
@@ -29,26 +32,26 @@ public class MapViewController : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(ExecuteIntroSequencePipeline());
+        StartCoroutine(ExecuteIntroSequence());
     }
 
-    private IEnumerator ExecuteIntroSequencePipeline()
+    private IEnumerator ExecuteIntroSequence()
     {
+        yield return null;
+
         yield return new WaitUntil(() => MapManager.Instance != null);
 
-        Transform targetNodeTransform = null;
+        var currentNode = MapManager.Instance.currentNode;
+        Transform targetNodeTransform = (currentNode != null && currentNode.buttonUI != null) ? currentNode.buttonUI.transform : null;
 
-        if (MapManager.Instance.currentNode != null && MapManager.Instance.currentNode.buttonUI != null)
-        {
-            targetNodeTransform = MapManager.Instance.currentNode.buttonUI.transform;
-        }
-        else
+        if (targetNodeTransform == null)
         {
             for (int i = 0; i < contentRt.childCount; i++)
             {
-                if (contentRt.GetChild(i).GetComponent<MapNodeButton>() != null)
+                if (contentRt.GetChild(i).TryGetComponent<MapNodeButton>(out var btn))
                 {
-                    targetNodeTransform = contentRt.GetChild(i);
+                    targetNodeTransform = btn.transform;
+                    currentNode ??= btn.nodeData;
                     break;
                 }
             }
@@ -57,47 +60,86 @@ public class MapViewController : MonoBehaviour
         float contentWidth = contentRt.rect.width;
         float viewportWidth = viewportRt.rect.width;
 
-        if (contentWidth > viewportWidth && viewportWidth > 0)
+        if (MapManager.Instance.CurrentLevel == 0)
         {
-            float fitScaleFactor = viewportWidth / contentWidth;
-            initialFullViewScale = new Vector3(fitScaleFactor, fitScaleFactor, 1f);
+            if (contentWidth > viewportWidth && viewportWidth > 0)
+            {
+                float fitScaleFactor = viewportWidth / contentWidth;
+                initialFullViewScale = new Vector3(fitScaleFactor, fitScaleFactor, 1f);
+            }
+            else
+            {
+                initialFullViewScale = Vector3.one;
+            }
+
+            contentRt.localScale = initialFullViewScale;
+            scrollRect.horizontalNormalizedPosition = 0f;
+
+            if (targetNodeTransform != null)
+            {
+                CalculateFocusCenter(targetNodeTransform.GetComponent<RectTransform>().anchoredPosition, Vector3.one, 0f);
+            }
+
+            yield return new WaitForSeconds(fullViewShowDuration);
+            isAnimatingTransition = true;
         }
         else
         {
             initialFullViewScale = Vector3.one;
+            contentRt.localScale = Vector3.one;
+            targetScale = Vector3.one;
+
+            Transform previousNodeTransform = null;
+
+            for (int i = 0; i < contentRt.childCount; i++)
+            {
+                var btn = contentRt.GetChild(i).GetComponent<MapNodeButton>();
+                if (btn != null && btn.nodeData != null && btn.nodeData.levelIndex == currentNode.levelIndex - 1)
+                {
+                    previousNodeTransform = btn.transform;
+                    break;
+                }
+            }
+
+            if (previousNodeTransform != null)
+            {
+                CalculateFocusCenter(previousNodeTransform.GetComponent<RectTransform>().anchoredPosition, Vector3.one, panRightManualOffset);
+                scrollRect.horizontalNormalizedPosition = targetHorizontalNormalizedPos;
+            }
+            else
+            {
+                scrollRect.horizontalNormalizedPosition = 0f;
+            }
+
+            if (targetNodeTransform != null)
+            {
+                CalculateFocusCenter(targetNodeTransform.GetComponent<RectTransform>().anchoredPosition, Vector3.one, panRightManualOffset);
+            }
+
+            yield return new WaitForSeconds(fullViewShowDuration);
+            isAnimatingTransition = true;
         }
-
-        contentRt.localScale = initialFullViewScale;
-        scrollRect.horizontalNormalizedPosition = 0f;
-
-        if (targetNodeTransform != null)
-        {
-            CalculateFocusCenteringNormalization(targetNodeTransform.GetComponent<RectTransform>().anchoredPosition);
-        }
-
-        yield return new WaitForSeconds(fullViewShowDuration);
-
-        isAnimatingTransition = true;
     }
 
-    private void CalculateFocusCenteringNormalization(Vector2 nodeLocalPosition)
+    private void CalculateFocusCenter(Vector2 nodeLocalPosition, Vector3 referenceScale, float customOffsetPixels)
     {
         float contentWidth = contentRt.rect.width;
         float viewportWidth = viewportRt.rect.width;
 
-        if (contentWidth <= viewportWidth)
+        float currentScaleX = referenceScale.x;
+        float scaledContentWidth = contentWidth * currentScaleX;
+
+        if (scaledContentWidth <= viewportWidth)
         {
             targetHorizontalNormalizedPos = 0f;
             return;
         }
 
-        float desiredScrollPixelX = nodeLocalPosition.x - (viewportWidth * 0.5f);
-        float maxScrollableDistance = contentWidth - viewportWidth;
-
-        float clampedScrollPixelX = Mathf.Clamp(desiredScrollPixelX, 0f, maxScrollableDistance);
-
-        targetHorizontalNormalizedPos = clampedScrollPixelX / maxScrollableDistance;
-        targetScale = Vector3.one;
+        float localNodeXScaled = nodeLocalPosition.x * currentScaleX;
+        float targetCenterScrollPixel = localNodeXScaled - (viewportWidth * 0.5f) + customOffsetPixels;
+        float maxScrollablePixelDistance = scaledContentWidth - viewportWidth;
+        float clampedScrollPixel = Mathf.Clamp(targetCenterScrollPixel, 0f, maxScrollablePixelDistance);
+        targetHorizontalNormalizedPos = clampedScrollPixel / maxScrollablePixelDistance;
     }
 
     private void LateUpdate()

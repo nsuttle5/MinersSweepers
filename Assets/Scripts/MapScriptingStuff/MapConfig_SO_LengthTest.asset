@@ -77,7 +77,11 @@ MonoBehaviour:
   weightsPerLevel:
   - level: 0
     nodeWeights:
-    - nodeType: {fileID: 11400000, guid: 894613739ddd305478b09a1bca968b94, type: 2}
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+  - level: 1
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
       weight: 1
   - level: 19
     nodeWeights:

@@ -36,6 +36,7 @@ public class MapManager : MonoBehaviour
 
     List<List<MapNode>> nodeRows = new();
     public MapNode currentNode;
+    public int CurrentLevel => currentNode != null ? currentNode.levelIndex + 1 : 0;
     public static MapManager Instance { get; private set; }
 
     public bool IsMapDone => HasMapBeenCompleted();
@@ -73,7 +74,6 @@ public class MapManager : MonoBehaviour
     [ContextMenu("GenerateMap")]
     public void GenerateMap()
     {
-
         if (!FindAnchorsInScene())
             return;
 
@@ -81,15 +81,11 @@ public class MapManager : MonoBehaviour
         currentNode = null;
         nodeRows.Clear();
 
-
-
-#if UNITY_EDITOR
-        foreach (Transform child in mapRoot)
-            if (Application.isPlaying) Destroy(child.gameObject);
-            else DestroyImmediate(child.gameObject);
-#else
-        foreach (Transform child in mapRoot) Destroy(child.gameObject);
-#endif
+        for (int i = mapRoot.childCount - 1; i >= 0; i--)
+        {
+            if (Application.isPlaying) Destroy(mapRoot.GetChild(i).gameObject);
+            else DestroyImmediate(mapRoot.GetChild(i).gameObject);
+        }
 
         int levels = mapConfig.numLevels;
         Vector2 startPos = mapRoot.GetComponent<RectTransform>().InverseTransformPoint(startAnchor.position);
@@ -116,6 +112,7 @@ public class MapManager : MonoBehaviour
                 rowList.Add(node);
 
                 var go = Instantiate(nodePrefab, mapRoot);
+
                 var button = go.GetComponent<MapNodeButton>();
                 node.buttonUI = button;
                 if (button != null)
@@ -126,11 +123,16 @@ public class MapManager : MonoBehaviour
                 }
 
                 var rt = go.GetComponent<RectTransform>();
-                float totalColHeight = (nodesInRow - 1) * (endPos.y - startPos.y) / (nodesInRow > 1 ? nodesInRow - 1 : 1);
-                float yOffset = n * totalColHeight / (nodesInRow > 1 ? nodesInRow - 1 : 1) - totalColHeight / 2f;
-                float yPos = Mathf.Lerp(startPos.y, endPos.y, levelProgress) + yOffset;
 
-                Vector2 finalPos = new (xPos, yPos);
+                float yPos = Mathf.Lerp(startPos.y, endPos.y, levelProgress);
+                if (nodesInRow > 1)
+                {
+                    float totalColHeight = (endPos.y - startPos.y);
+                    float yOffset = n * totalColHeight / (nodesInRow - 1) - totalColHeight / 2f;
+                    yPos += yOffset;
+                }
+
+                Vector2 finalPos = new(xPos, yPos);
                 finalPos = ClampPositionToBoundingBox(finalPos);
                 rt.anchoredPosition = finalPos;
             }
@@ -142,6 +144,7 @@ public class MapManager : MonoBehaviour
         UpdateNodeInteractability();
         mapAlreadyGenerated = true;
     }
+
 
     [ContextMenu("ForceGenerateMap")]
     public void ForceGenerateMap()
