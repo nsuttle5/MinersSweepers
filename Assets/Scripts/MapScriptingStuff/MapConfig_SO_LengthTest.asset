@@ -17,15 +17,15 @@ MonoBehaviour:
   - useRange: 0
     setNumber: 1
     range: {x: 0, y: 0}
-  - useRange: 1
-    setNumber: 0
-    range: {x: 1, y: 3}
-  - useRange: 1
-    setNumber: 0
-    range: {x: 1, y: 3}
-  - useRange: 1
-    setNumber: 0
-    range: {x: 1, y: 2}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
   - useRange: 0
     setNumber: 1
     range: {x: 0, y: 0}
@@ -87,19 +87,13 @@ MonoBehaviour:
     nodeWeights:
     - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
       weight: 1
-    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
-      weight: 1
   - level: 3
     nodeWeights:
     - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
       weight: 1
-    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
-      weight: 1
   - level: 4
     nodeWeights:
     - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
-      weight: 1
-    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
       weight: 1
   - level: 5
     nodeWeights:
