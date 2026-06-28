@@ -1,0 +1,181 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75f0605095a82624eb2ce7a0a5749537, type: 3}
+  m_Name: MapConfig_SO_LengthTest
+  m_EditorClassIdentifier: Assembly-CSharp::MapGenConfigSO
+  numLevels: 20
+  nodesPerLevel:
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  - useRange: 0
+    setNumber: 1
+    range: {x: 0, y: 0}
+  weightsPerLevel:
+  - level: 0
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: 894613739ddd305478b09a1bca968b94, type: 2}
+      weight: 1
+  - level: 19
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: 77200b8f0a0b0c94d920d9729f0225c5, type: 2}
+      weight: 1
+  - level: 2
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+  - level: 3
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+  - level: 4
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+  - level: 5
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 6
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 7
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 8
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 9
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 10
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 11
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 12
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 13
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 14
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 15
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 16
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 17
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1
+  - level: 18
+    nodeWeights:
+    - nodeType: {fileID: 11400000, guid: d0af54c41e14b62478817e08634238ee, type: 2}
+      weight: 1
+    - nodeType: {fileID: 11400000, guid: bb7fdc60afee99641b72331f8d79b501, type: 2}
+      weight: 1

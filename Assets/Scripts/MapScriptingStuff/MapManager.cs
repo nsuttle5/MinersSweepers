@@ -42,10 +42,10 @@ public class MapManager : MonoBehaviour
 
     private bool FindAnchorsInScene()
     {
-        startAnchor = GameObject.Find(startAnchorName)?.transform;
-        endAnchor = GameObject.Find(endAnchorName)?.transform;
-        boundingBoxMin = GameObject.Find(boundingBoxMinName)?.transform;
-        boundingBoxMax = GameObject.Find(boundingBoxMaxName)?.transform;
+        startAnchor = GameObject.Find(startAnchorName).transform;
+        endAnchor = GameObject.Find(endAnchorName).transform;
+        boundingBoxMin = GameObject.Find(boundingBoxMinName).transform;
+        boundingBoxMax = GameObject.Find(boundingBoxMaxName).transform;
 
         if (startAnchor == null || endAnchor == null)
         {
@@ -130,7 +130,7 @@ public class MapManager : MonoBehaviour
                 float yOffset = n * totalColHeight / (nodesInRow > 1 ? nodesInRow - 1 : 1) - totalColHeight / 2f;
                 float yPos = Mathf.Lerp(startPos.y, endPos.y, levelProgress) + yOffset;
 
-                Vector2 finalPos = new Vector2(xPos, yPos);
+                Vector2 finalPos = new (xPos, yPos);
                 finalPos = ClampPositionToBoundingBox(finalPos);
                 rt.anchoredPosition = finalPos;
             }
@@ -199,7 +199,7 @@ public class MapManager : MonoBehaviour
                 float yOffset = n * totalColHeight / (nodesInRow > 1 ? nodesInRow - 1 : 1) - totalColHeight / 2f;
                 float yPos = Mathf.Lerp(startPos.y, endPos.y, levelProgress) + yOffset;
 
-                Vector2 finalPos = new Vector2(xPos, yPos);
+                Vector2 finalPos = new(xPos, yPos);
                 finalPos = ClampPositionToBoundingBox(finalPos);
                 rt.anchoredPosition = finalPos;
             }
@@ -225,18 +225,18 @@ public class MapManager : MonoBehaviour
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        ResultsUI.OnPlayerWin += () => Destroy(gameObject);
+        ResultsUI.OnPlayerWin += HandleMapCleanup;
 
-        GameEvents.OnPlayerDeath += () => Destroy(gameObject);
+        GameEvents.OnPlayerDeath += HandleMapCleanup;
     }
 
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
-        ResultsUI.OnPlayerWin -= () => Destroy(gameObject);
+        ResultsUI.OnPlayerWin -= HandleMapCleanup;
 
-        GameEvents.OnPlayerDeath -= () => Destroy(gameObject);
+        GameEvents.OnPlayerDeath -= HandleMapCleanup;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -367,5 +367,13 @@ public class MapManager : MonoBehaviour
 
         if (currentNode.levelIndex == nodeRows.Count - 1) return true;
         else return false;
+    }
+
+    private void HandleMapCleanup()
+    {
+        if (this != null && gameObject != null)
+        {
+            Destroy(gameObject);
+        }
     }
 }

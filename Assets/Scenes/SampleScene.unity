@@ -537,8 +537,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: List
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
+  m_sharedMaterial: {fileID: 1791204549171211684, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1220,6 +1220,8 @@ MonoBehaviour:
   - {fileID: 7796777655010329987, guid: 7622505c6f2f9eb48b95847a5219b087, type: 3}
   - {fileID: -4173840202665917087, guid: 7622505c6f2f9eb48b95847a5219b087, type: 3}
   playerIdleFrameDuration: 0.12
+  attackSwingClip: {fileID: 0}
+  slashImpactClip: {fileID: 0}
 --- !u!1 &724246873
 GameObject:
   m_ObjectHideFlags: 0
@@ -1383,8 +1385,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Enemies
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
+  m_sharedMaterial: {fileID: 1791204549171211684, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1661,8 +1663,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Board
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
+  m_sharedMaterial: {fileID: 1791204549171211684, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1827,9 +1829,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2820138009413193990, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
+      propertyPath: m_fontSize
+      value: 63.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2820138009413193990, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
+    - target: {fileID: 2820138009413193990, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 1791204549171211684, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
+    - target: {fileID: 2820138009413193990, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4990250576192420277, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
       propertyPath: m_Name
       value: Canvas - Timer_Objectives
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148852657544132627, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
+      propertyPath: m_fontSize
+      value: 34.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148852657544132627, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
+    - target: {fileID: 5148852657544132627, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 1791204549171211684, guid: 8e89b2edd8bb6fd47afd08ff0a47d9d3, type: 2}
+    - target: {fileID: 5148852657544132627, guid: 036e03564bcbdc945be3d59cf499d1dc, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
