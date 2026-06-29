@@ -29,7 +29,7 @@ public class PlayerRunStats : MonoBehaviour
     [Header("Health")]
     [SerializeField] private int startingMaxHP = 100;
 
-    public int GoldCollectedThisRun { get; private set; } = 0; 
+    public int GoldCollectedThisRun { get; private set; } = 0;
     public float LossPenaltyPercentage { get; set; } = 0.5f;
     public int CurrentHP { get; set; }
     public int MaxHp { get; private set; }
@@ -190,5 +190,13 @@ public class PlayerRunStats : MonoBehaviour
     private void HandleRunEnd()
     {
         foreach (ArtifactSO a in artifacts) a.OnRunEnd();
+    }
+
+    public void SetTempMaxHP(int newMaxHP)
+    {
+        MaxHp = newMaxHP;
+        if (CurrentHP > MaxHp) CurrentHP = MaxHp;
+        OnHealthChanged?.Invoke(CurrentHP, MaxHp);
+        GameEvents.OnHealthChanged?.Invoke(CurrentHP, MaxHp);
     }
 }

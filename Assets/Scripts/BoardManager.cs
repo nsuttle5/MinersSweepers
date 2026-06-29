@@ -634,4 +634,28 @@ public class BoardManager : MonoBehaviour
         _breatheCoroutine = StartCoroutine(BreatheLoop());
     }
 
+    public void SpawnOnRandomEmptyCell(SpawnableSO spawnable)
+    {
+        List<CellView> candidates = new();
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+            {
+                CellView cell = GetCellView(x, y);
+                if (cell == null) continue;
+                if (cell.Revealed) continue;
+                if (cell.spawnable != null) continue;
+                if (cell.boardTile != null) continue;
+                if (cell.isVoid) continue;
+                candidates.Add(cell);
+            }
+
+        if (candidates.Count == 0) return;
+
+        CellView target = candidates[Random.Range(0, candidates.Count)];
+        target.spawnable = spawnable;
+        target.UpdateVisual();
+        BoardSidebarTracker.Instance?.AddSpawnable(spawnable);
+        RefreshAllCellDamageValues();
+    }
+
 }

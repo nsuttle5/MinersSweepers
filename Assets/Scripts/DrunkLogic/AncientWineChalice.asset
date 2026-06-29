@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 988518db8a648af498d5801820f531f0, type: 3}
+  m_Name: AncientWineChalice
+  m_EditorClassIdentifier: Assembly-CSharp::AncientWineChaliceArtifact
+  itemName: Ancient Wine Chalice
+  description: Gain 50 hp, but you are drunk
+  icon: {fileID: 21300000, guid: 9dc9f9f18c652ca4980312130ffffbbb, type: 3}
+  goldCost: 10
+  itemType: 1
+  maxHPBoost: 10
+  hpDrainPerSecond: 1
+  drainAmount: 1
+  beerSpawnIntervalSeconds: 5
+  beerMugSpawnable: {fileID: 11400000, guid: 9084956f7a8ae7f4892c60a299578425, type: 2}
+  waterTile: {fileID: 11400000, guid: 171f5c089f9979a4589df55250e54ffe, type: 2}

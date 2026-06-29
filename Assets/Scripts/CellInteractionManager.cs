@@ -113,6 +113,12 @@ public class CellInteractionManager : MonoBehaviour
                 break;
 
             case SpawnableType.Gold:
+                if (cell.spawnable is BeerMugSpawnableSO beerMug)
+                {
+                    PlayerRunStats.Instance?.ModifyHealth(beerMug.healAmount);
+                    TransitionToClearedState(cell);
+                    break;
+                }
                 if (cell.spawnable is GoldSpawnableSO goldData)
                 {
                     GameEvents.OnGoldCellRevealed?.Invoke(cell);
