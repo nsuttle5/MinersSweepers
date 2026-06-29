@@ -18,7 +18,7 @@ MonoBehaviour:
   portrait: {fileID: 0}
   startingMaxHP: 120
   startingArtifacts:
-  - {fileID: 11400000, guid: 6d69c3fa2c3593f498618bbeb4231603, type: 2}
+  - {fileID: 11400000, guid: 436eaf929a68e774bb43a2f53c762024, type: 2}
   startingConsumables:
   - {fileID: 11400000, guid: 66cb6e98d3887af4482a58b560152ddf, type: 2}
   characterPassives: []
