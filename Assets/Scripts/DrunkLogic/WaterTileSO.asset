@@ -15,10 +15,8 @@ MonoBehaviour:
   tileName: Water_Tile
   tileSprite: {fileID: 21300000, guid: b1503f056cda1664dad1a274218d1155, type: 3}
   description: 
-  splashFrames:
+  rippleFrames:
   - {fileID: 21300000, guid: b1503f056cda1664dad1a274218d1155, type: 3}
   - {fileID: 21300000, guid: b40724c88e0f9f343b51089a13105d8e, type: 3}
   - {fileID: 21300000, guid: 44e5ae0ec19a48e41a900c0e627ae017, type: 3}
-  splashFrameDuration: 0.06
-  rippleColor: {r: 0.4, g: 0.8, b: 1, a: 1}
-  rippleSpeed: 3
+  rippleFrameDuration: 0.15

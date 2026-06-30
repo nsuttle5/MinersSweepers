@@ -232,6 +232,15 @@ public class CellView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         TryDisplaySurroundingDamage();
     }
 
+    public void SetOverlaySprite(Sprite sprite)
+    {
+        if (isVoid || State != CellState.Hidden) return;
+        if (sr != null && sprite != null)
+        {
+            sr.sprite = sprite;
+        }
+    }
+
     private void AssignHiddenSprites()
     {
         if (boardTile != null && boardTile.tileSprite != null)

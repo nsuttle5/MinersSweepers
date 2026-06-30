@@ -10,6 +10,7 @@ public class AncientWineChaliceArtifact : ArtifactSO, ISpawnableOnBoard
     public int maxHPBoost = 50;
     public float hpDrainPerSecond = 1f;
     public int drainAmount = 1;
+    private int _baseMaxHpBeforeBoost = -1;
 
     [Header("Beer Spawning")]
     public float beerSpawnIntervalSeconds = 15f;
@@ -40,9 +41,10 @@ public class AncientWineChaliceArtifact : ArtifactSO, ISpawnableOnBoard
     {
         if (PlayerRunStats.Instance == null) return;
 
+        if (_baseMaxHpBeforeBoost < 0)
+            _baseMaxHpBeforeBoost = PlayerRunStats.Instance.MaxHp;
 
-        PlayerRunStats.Instance.SetTempMaxHP(
-            PlayerRunStats.Instance.MaxHp + maxHPBoost);
+        PlayerRunStats.Instance.SetTempMaxHP(_baseMaxHpBeforeBoost + maxHPBoost);
         PlayerRunStats.Instance.ModifyHealth(maxHPBoost);
 
         DrunkStateManager.Instance?.StartDrunk();
@@ -52,11 +54,8 @@ public class AncientWineChaliceArtifact : ArtifactSO, ISpawnableOnBoard
             BoardManager.Instance.TryPlaceBoardTile(waterTile, false, true);
 
         StopMineCoroutines();
-
-        _drainCoroutine = ArtifactCoroutineRunner.Instance
-            .StartTracked(DrainLoop());
-        _beerCoroutine = ArtifactCoroutineRunner.Instance
-            .StartTracked(BeerSpawnLoop());
+        _drainCoroutine = ArtifactCoroutineRunner.Instance.StartTracked(DrainLoop());
+        _beerCoroutine = ArtifactCoroutineRunner.Instance.StartTracked(BeerSpawnLoop());
     }
 
     private void OnRunEnd()
@@ -64,11 +63,10 @@ public class AncientWineChaliceArtifact : ArtifactSO, ISpawnableOnBoard
         StopMineCoroutines();
         _activeInMine = false;
 
-        if (PlayerRunStats.HasInstance)
+        if (PlayerRunStats.HasInstance && _baseMaxHpBeforeBoost >= 0)
         {
-            int revert = Mathf.Max(0,
-                PlayerRunStats.Instance.MaxHp - maxHPBoost);
-            PlayerRunStats.Instance.SetTempMaxHP(revert);
+            PlayerRunStats.Instance.SetTempMaxHP(_baseMaxHpBeforeBoost);
+            _baseMaxHpBeforeBoost = -1;
         }
 
         DrunkStateManager.Instance?.Sober();
@@ -76,18 +74,15 @@ public class AncientWineChaliceArtifact : ArtifactSO, ISpawnableOnBoard
 
     private void HandleSobered()
     {
-        if (!PlayerRunStats.HasInstance) return;
+        if (!PlayerRunStats.HasInstance || _baseMaxHpBeforeBoost < 0) return;
 
-        int baseMax = PlayerRunStats.Instance.MaxHp - maxHPBoost;
-        if (PlayerRunStats.Instance.CurrentHP > baseMax)
+        if (PlayerRunStats.Instance.CurrentHP > _baseMaxHpBeforeBoost)
         {
-            PlayerRunStats.Instance.CurrentHP = baseMax;
+            PlayerRunStats.Instance.CurrentHP = _baseMaxHpBeforeBoost;
             PlayerRunStats.Instance.OnHealthChanged?.Invoke(
-                PlayerRunStats.Instance.CurrentHP,
-                PlayerRunStats.Instance.MaxHp);
+                PlayerRunStats.Instance.CurrentHP, PlayerRunStats.Instance.MaxHp);
             GameEvents.OnHealthChanged?.Invoke(
-                PlayerRunStats.Instance.CurrentHP,
-                PlayerRunStats.Instance.MaxHp);
+                PlayerRunStats.Instance.CurrentHP, PlayerRunStats.Instance.MaxHp);
         }
 
         StopMineCoroutines();
