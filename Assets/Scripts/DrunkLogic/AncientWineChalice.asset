@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 9dc9f9f18c652ca4980312130ffffbbb, type: 3}
   goldCost: 10
   itemType: 1
-  maxHPBoost: 10
+  maxHPBoost: 1
   hpDrainPerSecond: 1
   drainAmount: 1
   beerSpawnIntervalSeconds: 5
